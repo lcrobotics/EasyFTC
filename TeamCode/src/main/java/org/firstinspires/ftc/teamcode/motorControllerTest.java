@@ -5,9 +5,9 @@ import com.lcrobotics.easyftclib.CommandCenter.driveTrain.DriveMotor;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.DriveTrain;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelPosition;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelType;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@TeleOp
 public class motorControllerTest extends AdvancedOpMode {
     DriveMotor frontRightDrive;
     DriveMotor frontLeftDrive;
