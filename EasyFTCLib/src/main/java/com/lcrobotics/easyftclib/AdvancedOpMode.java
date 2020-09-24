@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public abstract class AdvancedOpMode extends OpMode {
 
-
+    // Wrapper around FTC's function to get a DcMotor and turn it into a DriveMotor
     public DriveMotor registerDriveMotor(String motorName, WheelPosition wheelPosition) {
         return new DriveMotor(hardwareMap.get(DcMotor.class, motorName), wheelPosition);
     }
