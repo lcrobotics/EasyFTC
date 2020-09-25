@@ -24,7 +24,7 @@ If you find a bug in the library, please follow the following steps before submi
 #### How Do I Submit A (Good) Bug Report?
 
 Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Once you follow the steps outlined above, please create a new issue following 
-[this template](https://github.com/ashermkn1/EasyFTC/.github/templates/bug_report.md)
+[this template](https://github.com/lcrobotics/EasyFTC/blob/cv-auto/.github/templates/bug_report.md)
 
 When outlining how this problem occurred, more detail is always appreciated.
 
@@ -41,7 +41,7 @@ Before creating enhancement suggestions, please check [this list](#before-submit
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). Once you follow the steps outlined above, please create a new issue following [this template](https://github.com/ashermkn1/EasyFTC/.github/templates/enhancement.md), including the steps that you imagine you would take if the feature you're requesting existed.
+Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). Once you follow the steps outlined above, please create a new issue following [this template](https://github.com/lcrobotics/EasyFTC/blob/cv-auto/.github/templates/feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
 ### Your First Code Contribution
 
@@ -62,7 +62,7 @@ The process described here has several goals:
 
 Please follow these steps to have your contribution considered by the maintainers:
 
-1. Follow all instructions in [the template](PULL_REQUEST_TEMPLATE.md)
+1. Follow all instructions in the templates outlined above
 2. Follow the [styleguides](#styleguides)
 
 ## Styleguides
