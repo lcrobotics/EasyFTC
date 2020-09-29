@@ -105,7 +105,7 @@ public class DriveTrain {
         }
     }
 
-    
+
     public void setPower(double turn, double drive) {
         double rightDrivePow = Range.clip(drive - turn, -1, 1);
 
