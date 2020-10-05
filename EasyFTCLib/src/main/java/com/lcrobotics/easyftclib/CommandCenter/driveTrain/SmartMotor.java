@@ -3,13 +3,20 @@ package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class SmartMotor extends DriveMotor {
+    private final int COUNTSPERREV = 28;
+    double wheelRadius;
     int reduction;
     double cmpercount;
 
-    public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction) {
+    public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction, int wheelRadius) {
         super(motor, motorPosition);
         this.reduction = reduction;
-        this.cmpercount = (5 * 3.1415) / (14 * reduction);
+        this.wheelRadius = wheelRadius;
+        this.cmpercount = (2 * wheelRadius * Math.PI) / (COUNTSPERREV * reduction);
+    }
+
+    public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction) {
+        this(motor, motorPosition, reduction, 5);
     }
 
     public void drive(double distance, double power) {
