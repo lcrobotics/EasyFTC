@@ -95,6 +95,7 @@ public class VisionAuto extends SuperOp {
                         // if 4 rings were detected
                         numRings = 4;
                     }
+                    telemetry.addData("number of rings: ", numRings);
                     driveTime = times[numRings];
                     status = AUTOSTATUS.MOVETOZONE;
                     wheels.setPower(0, 1, 0);
