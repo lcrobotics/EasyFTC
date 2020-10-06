@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptTensorFlowObjectDetectionWebcam;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Autonomous
-public class VisionAutoTest extends SuperOp {
+public class VisionAutoTest extends OpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
@@ -27,7 +28,6 @@ public class VisionAutoTest extends SuperOp {
     private static int numRings;
     @Override
     public void init() {
-        super.init();
         // initialize vuforia
         initVuforia();
         // initialize tfod
@@ -36,9 +36,6 @@ public class VisionAutoTest extends SuperOp {
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
-        // add logging for motor powers of the drive train
-        telemetry.addData("Drive Train: ", wheels);
-
         // activate the object detection
         if (tfod != null) {
             tfod.activate();
@@ -57,10 +54,13 @@ public class VisionAutoTest extends SuperOp {
             for (Recognition recognition : updatedRecognitions) {
                 // print recognition boundaries
                 telemetry.addData(String.format(Locale.US, "label (%d)", i), recognition.getLabel());
+
                 telemetry.addData(String.format(Locale.US, "  left,top (%d)", i), "%.03f , %.03f",
                         recognition.getLeft(), recognition.getTop());
+
                 telemetry.addData(String.format(Locale.US, "  right,bottom (%d)", i), "%.03f , %.03f",
                         recognition.getRight(), recognition.getBottom());
+
                 i++;
             }
             telemetry.update();
@@ -89,7 +89,8 @@ public class VisionAutoTest extends SuperOp {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
