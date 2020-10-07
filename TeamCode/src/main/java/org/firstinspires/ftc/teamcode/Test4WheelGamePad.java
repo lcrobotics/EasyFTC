@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Test4WheelGamepad", group="Test")
+@TeleOp
 public class Test4WheelGamePad extends Test4Wheel {
     @Override
     public void init() {

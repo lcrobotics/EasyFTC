@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.SuperOp;
 
 import java.util.List;
+import java.util.Locale;
 
 
 @Autonomous
@@ -78,10 +79,10 @@ public class VisionAuto extends SuperOp {
                     int i = 0;
                     for (Recognition recognition : updatedRecognitions) {
 
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                        telemetry.addData(String.format(Locale.US, "label (%d)", i), recognition.getLabel());
+                        telemetry.addData(String.format(Locale.US, "  left,top (%d)", i), "%.03f , %.03f",
                                 recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                        telemetry.addData(String.format(Locale.US, "  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
                     }
                     telemetry.update();
