@@ -34,29 +34,29 @@ public class DetectColor extends OpMode {
 
         try {
             frame = vuforia.getFrameQueue().take();
-
+            // loop through images
             for (int i = 0; i < frame.getNumImages(); i++) {
                 Image img = frame.getImage(i);
-
+                // make sure image is in rgb format
                 if (img.getFormat() == PIXEL_FORMAT.RGB565) {
                     rgb = frame.getImage(i);
 
+                    // convert image into bitmap
                     Bitmap bmp = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
-
                     bmp.copyPixelsFromBuffer(rgb.getPixels());
-
+                    // crop everything but the ring out of the bitmap
                     Bitmap cropped = Bitmap.createBitmap(bmp, 5, 5, 5, 5);
-
+                    // loop through each individual pixel
                     for (int h = 0; i < cropped.getWidth(); i++) {
                         for (int j = 0; j < cropped.getHeight(); j++) {
 
                             int pixel = cropped.getPixel(h, j);
-
+                            // convert packed int into individual color values
                             int red = Color.red(pixel);
                             int blue = Color.blue(pixel);
                             int green = Color.green(pixel);
                             int alpha = Color.alpha(pixel);
-
+                            // print out pixel data
                             telemetry.addData(String.format(Locale.US, "pixel %d %d", h, j),
                                     String.format(Locale.US, "red: %d green: %d blue: %d alpha: %d", red, green, blue, alpha));
                         }
