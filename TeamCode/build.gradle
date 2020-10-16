@@ -15,5 +15,6 @@
 apply from: '../build.common.gradle'
 dependencies {
     implementation project(path: ':EasyFTCLib')
+    implementation project(path: ':RobotCore')
     //compileOnly project(path: ':EasyFTCLib')
 }
