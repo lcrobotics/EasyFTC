@@ -32,9 +32,9 @@ public class SmartMotorTest extends AdvancedOpMode {
         if (once) {
             // robot moves forwards by 20cm (right motors are flipped)
             frontLeftDrive.drive(20, 0.5);
-            frontRightDrive.drive(-20, 0.5);
+            frontRightDrive.drive(20, 0.5);
             backLeftDrive.drive(20, 0.5);
-            backRightDrive.drive(-20, 0.5);
+            backRightDrive.drive(20, 0.5);
             once = false;
         }
     }
