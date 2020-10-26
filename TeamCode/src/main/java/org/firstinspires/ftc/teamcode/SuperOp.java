@@ -4,6 +4,7 @@ import com.lcrobotics.easyftclib.CommandCenter.driveTrain.DriveTrain;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelType;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public abstract class SuperOp extends OpMode {
 
@@ -26,8 +27,8 @@ public abstract class SuperOp extends OpMode {
 
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        BackRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        BackLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         wheels = new DriveTrain(WheelType.MECANUM, FrontLeftDrive, FrontRightDrive, BackLeftDrive, BackRightDrive);
     }

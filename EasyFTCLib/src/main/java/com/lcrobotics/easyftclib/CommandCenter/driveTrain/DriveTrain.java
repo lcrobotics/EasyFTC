@@ -16,15 +16,15 @@ public class DriveTrain {
     }
 
     // Creates a 4 wheel drive train
-    public DriveTrain(WheelType wheelType, DcMotor frontLeftMotor, DcMotor frontRightMotor, DcMotor BackLeftMotor, DcMotor BackRightMotor){
+    public DriveTrain(WheelType wheelType, DcMotor frontLeftMotor, DcMotor frontRightMotor, DcMotor backLeftMotor, DcMotor backRightMotor){
         // Stores what type of wheel (i.e mechanum, omni, etc
         this.wheelType = wheelType;
         // stores the motors in our DriveMotor[], this allows us to know what they are attached to
         this.motors = new DriveMotor[] {
                 new DriveMotor(frontLeftMotor, WheelPosition.FRONT_LEFT),
                 new DriveMotor(frontRightMotor, WheelPosition.FRONT_RIGHT),
-                new DriveMotor(BackLeftMotor, WheelPosition.BACK_LEFT),
-                new DriveMotor(BackRightMotor, WheelPosition.BACK_RIGHT)
+                new DriveMotor(backLeftMotor, WheelPosition.BACK_LEFT),
+                new DriveMotor(backRightMotor, WheelPosition.BACK_RIGHT)
         };
     }
 

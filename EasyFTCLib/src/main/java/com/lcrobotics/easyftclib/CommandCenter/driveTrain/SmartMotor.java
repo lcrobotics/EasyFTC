@@ -30,9 +30,9 @@ public class SmartMotor extends DriveMotor {
     public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction) {
         this(motor, motorPosition, reduction, 5);
     }
-
     // rotates the motor the given distance with the given power
     public void drive(double distance, double power) {
+
         // calculate number of encoder counts required to rotate given distance
         double counts = distance * countPerCm;
         // reset motor's encoder
@@ -44,7 +44,9 @@ public class SmartMotor extends DriveMotor {
         // run motor
         this.motor.setPower(power);
     }
-
+    public boolean isBusy() {
+        return Math.abs(this.motor.getTargetPosition() - this.motor.getCurrentPosition()) > 13;
+    }
     public int getReduction() {
         return reduction;
     }
