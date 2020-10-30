@@ -12,4 +12,8 @@ public class SmartCommand {
         this.measure = 0;
         this.type = CommandType.DRIVE;
     }
+    public String toString() {
+        return "measure: " + measure +
+                "\n" + (type == CommandType.STRAFE ? "Strafe" : type == CommandType.DRIVE ? "Drive" : "Rotate");
+    }
 }

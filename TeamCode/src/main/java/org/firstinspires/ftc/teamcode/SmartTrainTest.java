@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.lcrobotics.easyftclib.CommandCenter.driveTrain.CommandType;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.Location;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.MoveMode;
+import com.lcrobotics.easyftclib.CommandCenter.driveTrain.SmartCommand;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.SmartTrain;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelType;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -34,15 +36,21 @@ public class SmartTrainTest extends OpMode {
                 new Location(0, 30, 0, MoveMode.Y_FIRST),
                 new Location(-30, 30, 0, MoveMode.X_FIRST),
                 new Location(-30, 0, 0, MoveMode.Y_FIRST),
-                new Location(0, 0, 0, MoveMode.X_FIRST)};
-
-        wheels.addPoints(Arrays.asList(points));
+                new Location(0, 0, 0, MoveMode.X_FIRST)
+        };
+        //wheels.addPoints(Arrays.asList(points));
         telemetry.addData("SmartTrain", wheels);
     }
 
     @Override
+    public void start() {
+       wheels.execute(new SmartCommand(-30, CommandType.DRIVE));
+    }
+
+    @Override
     public void loop() {
-        wheels.update();
+        //wheels.update();
+
         telemetry.update();
     }
 }

@@ -14,7 +14,7 @@ public class SmartTrain {
 
 
     private WheelType wheelType;
-    Queue<SmartCommand> commandQueue;
+    public Queue<SmartCommand> commandQueue;
     public SmartMotor[] motors;
     SmartCommand currCommand;
     private final double radius;
@@ -53,7 +53,7 @@ public class SmartTrain {
     }
 
     public void update() {
-
+        // if any of the motors are busy, we are not finished with the command yet
         if (currCommand != null) {
             for (SmartMotor s : this.motors) {
                 if (s.isBusy()) {
@@ -61,17 +61,32 @@ public class SmartTrain {
                 }
             }
         }
+        resetMotors();
 
-        currCommand = commandQueue.remove();
+        // get next command and execute it
+        currCommand = commandQueue.poll();
         execute(currCommand);
     }
 
+    private void resetMotors() {
+        // turn off run_to_position
+        motors[0].motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors[1].motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors[2].motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors[3].motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // set all powers to 0
+        motors[0].motor.setPower(0);
+        motors[1].motor.setPower(0);
+        motors[2].motor.setPower(0);
+        motors[3].motor.setPower(0);
+    }
 
 
-    private void execute(SmartCommand command) {
+    public void execute(SmartCommand command) {
         // stop motors if queue is empty
         if (command == null) {
             drive(0);
+            return;
         }
         // call different methods based on command type
         switch (command.type) {
@@ -273,11 +288,10 @@ public class SmartTrain {
             doc.append("4 motors\n");
         }
         for (SmartMotor motor : motors) {
-
-
             doc.append(motor.motorName + " Distance to target position: "
                     + Math.abs(motor.motor.getCurrentPosition() - motor.motor.getTargetPosition()) + "\n");
         }
+        doc.append(currCommand);
         return doc.toString();
     }
 }

@@ -36,7 +36,7 @@ public class SmartMotor extends DriveMotor {
         // calculate number of encoder counts required to rotate given distance
         double counts = distance * countPerCm;
         // reset motor's encoder
-        this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // set target position for motor's encoder
         this.motor.setTargetPosition((int)Math.round(counts) + this.motor.getCurrentPosition());
