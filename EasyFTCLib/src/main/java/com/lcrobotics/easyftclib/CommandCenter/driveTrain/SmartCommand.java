@@ -1,19 +1,22 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
 public class SmartCommand {
-    CommandType type;
-    public double measure;
+    double theta;
+    double speed;
+    double distance;
 
-    public SmartCommand(double measure, CommandType type) {
-        this.measure = measure;
-        this.type = type;
+    public SmartCommand(double theta, double speed, double distance) {
+        this.theta = theta;
+        this.speed = speed;
+        this.distance = distance;
     }
-    public SmartCommand() {
-        this.measure = 0;
-        this.type = CommandType.DRIVE;
-    }
+
+    @Override
     public String toString() {
-        return "measure: " + measure +
-                "\n" + (type == CommandType.STRAFE ? "Strafe" : type == CommandType.DRIVE ? "Drive" : "Rotate");
+        return "SmartCommand{" +
+                "theta=" + theta +
+                ", speed=" + speed +
+                ", distance=" + distance +
+                '}';
     }
 }

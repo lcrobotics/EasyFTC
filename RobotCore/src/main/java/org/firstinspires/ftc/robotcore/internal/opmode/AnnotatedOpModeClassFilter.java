@@ -75,7 +75,7 @@ public class AnnotatedOpModeClassFilter implements ClassFilter
 
     public static final String TAG = "OpmodeRegistration";
 
-    private Context                                         context;
+    private final Context                                         context;
     private RegisteredOpModes                               registeredOpModes;
     private final String                                    defaultOpModeGroupName = OpModeMeta.DefaultGroup;
 
@@ -544,11 +544,8 @@ public class AnnotatedOpModeClassFilter implements ClassFilter
         {
         if (name == null)
             return false;
-        if ((name.equals(OpModeManager.DEFAULT_OP_MODE_NAME)) ||
-            (name.trim().equals("")))
-            return false;
-        else
-            return true;
+            return (!name.equals(OpModeManager.DEFAULT_OP_MODE_NAME)) &&
+                    (!name.trim().equals(""));
         }
 
     private boolean isOpMode(Class clazz)

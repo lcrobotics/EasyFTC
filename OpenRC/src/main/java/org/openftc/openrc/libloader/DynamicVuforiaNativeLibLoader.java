@@ -51,7 +51,7 @@ public class DynamicVuforiaNativeLibLoader
     private File protectedExtraFolder;
     private File libOnSdcard;
     private Activity rcActivity;
-    private CountDownLatch nativeLibLoadedLatch = new CountDownLatch(1);
+    private final CountDownLatch nativeLibLoadedLatch = new CountDownLatch(1);
 
     /*
      * By annotating this method with @OpModeRegistrar, it will be called

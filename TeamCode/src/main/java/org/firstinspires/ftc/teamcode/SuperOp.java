@@ -5,6 +5,7 @@ import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelType;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 public abstract class SuperOp extends OpMode {
 
@@ -31,5 +32,15 @@ public abstract class SuperOp extends OpMode {
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         wheels = new DriveTrain(WheelType.MECANUM, FrontLeftDrive, FrontRightDrive, BackLeftDrive, BackRightDrive);
+    }
+    double getBatteryVoltage() {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0) {
+                result = Math.min(result, voltage);
+            }
+        }
+        return result;
     }
 }

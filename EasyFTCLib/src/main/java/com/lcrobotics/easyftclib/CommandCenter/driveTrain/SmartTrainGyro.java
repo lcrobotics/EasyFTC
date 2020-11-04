@@ -1,35 +1,45 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
-import com.lcrobotics.easyftclib.tools.MathUtils;
+import com.lcrobotics.easyftclib.BuildConfig;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gyroscope;
+import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 // equivalent of DriveTrain with SmartMotors
 public class SmartTrainGyro {
 
+    // These constants define the desired driving/control characteristics
+    // The can/should be tweaked to suite the specific robot drive train.
+    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
-    private WheelType wheelType;
+    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+
+    private final WheelType wheelType;
     public SmartMotor[] motors;
-    private final double radius;
     private ModernRoboticsI2cGyro external;
     private BNO055IMU internal;
-    private double currentAngle;
+    Queue<SmartCommand> commandQueue;
+    SmartCommand currCommand;
+
     public SmartTrainGyro(WheelType wheelType, DcMotor leftMotor, DcMotor rightMotor, int ratio, double radius) {
         // reverse right motor
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        motors = new SmartMotor[]{new SmartMotor(leftMotor, WheelPosition.LEFT, ratio), new SmartMotor(rightMotor, WheelPosition.RIGHT, ratio)};
-        this.radius = radius;
+        motors = new SmartMotor[]{new SmartMotor(leftMotor, WheelPosition.LEFT, ratio, radius), new SmartMotor(rightMotor, WheelPosition.RIGHT, ratio, radius)};
         this.wheelType = wheelType;
+        commandQueue = new LinkedList<>();
     }
 
     public SmartTrainGyro(WheelType wheelType, DcMotor frontLeftMotor, DcMotor frontRightMotor, DcMotor backLeftMotor, DcMotor backRightMotor, int ratio, double radius) {
@@ -37,43 +47,118 @@ public class SmartTrainGyro {
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         motors = new SmartMotor[]{
-                new SmartMotor(frontLeftMotor, WheelPosition.FRONT_LEFT, ratio),
-                new SmartMotor(frontRightMotor, WheelPosition.FRONT_RIGHT, ratio),
-                new SmartMotor(backLeftMotor, WheelPosition.BACK_LEFT, ratio),
-                new SmartMotor(backRightMotor, WheelPosition.BACK_RIGHT, ratio)};
+                new SmartMotor(frontLeftMotor, WheelPosition.FRONT_LEFT, ratio, radius),
+                new SmartMotor(frontRightMotor, WheelPosition.FRONT_RIGHT, ratio, radius),
+                new SmartMotor(backLeftMotor, WheelPosition.BACK_LEFT, ratio, radius),
+                new SmartMotor(backRightMotor, WheelPosition.BACK_RIGHT, ratio, radius)};
 
-        this.radius = radius;
         this.wheelType = wheelType;
-
+        commandQueue = new LinkedList<>();
     }
     public SmartTrainGyro(WheelType wheelType, SmartMotor frontLeftMotor, SmartMotor frontRightMotor, SmartMotor backLeftMotor, SmartMotor backRightMotor, double radius) {
         motors = new SmartMotor[]{frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor};
         this.wheelType = wheelType;
-        this.radius = radius;
+        commandQueue = new LinkedList<>();
     }
-
+    // Sets the gyroscope to be used
     public void setGyro(Gyroscope gyro) {
+        // we are working with an IMU
         if (gyro instanceof BNO055IMU) {
             internal = (BNO055IMU) gyro;
             external = null;
         } else if (gyro instanceof ModernRoboticsI2cGyro) {
+            // this is an external gyroscope
             external = (ModernRoboticsI2cGyro) gyro;
             internal = null;
+            external.resetZAxisIntegrator();
         } else {
             throw new IllegalArgumentException("Please provide either a BNO055IMU or a ModernRoboticsI2cGyro");
         }
     }
-    public void update() {
-        if (internal == null && external == null) {
-            //throw new
-        } else if (internal == null){
 
-        } else {
-
-        }
+    // push new command to accelDrive
+    private void pushCommand(SmartCommand command) {
+        commandQueue.add(command);
+    }
+    // push new command onto command queue
+    public void pushCommand(double angle, double speed, double distance) {
+        pushCommand(new SmartCommand(angle, speed, distance));
     }
 
+    // correct heading to be on target for drive command
+    public void update() {
+
+        // only allow either an internal or external gyroscope, not both
+        if (internal == null ^ external == null) {
+            // if the last command has been completed
+            if (currCommand == null) {
+                // if there's nothing else to do, stop the motors
+                if (commandQueue.isEmpty()) {
+                    setPower(0);
+                    return;
+                }
+                // otherwise, execute the next command
+                currCommand = commandQueue.remove();
+
+                int moveCounts = (int)(currCommand.distance * motors[0].countPerCm);
+                for (SmartMotor motor : motors) {
+                    motor.motor.setTargetPosition(motor.motor.getCurrentPosition() + moveCounts);
+                    motor.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                }
+            }
+            // motors have reached their destination
+            if (!isBusy()) {
+                setPower(0);
+                for (SmartMotor motor : motors) {
+                    motor.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                }
+                return;
+            }
+            // get error relative to desired heading
+            double error = getError(currCommand.theta);
+            double steer = getSteer(error, P_DRIVE_COEFF);
+
+            // if we are going backwards, scale the error accordingly
+            if (currCommand.distance < 0)
+                steer *= -1;
+            double leftSpeed = currCommand.speed - steer;
+            double rightSpeed = currCommand.speed + steer;
+
+            double max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+            if (max > 1.0)
+            {
+                leftSpeed /= max;
+                rightSpeed /= max;
+            }
+
+            setPower(new double[]{leftSpeed, rightSpeed, leftSpeed, rightSpeed});
+        }
+    }
+    public double getError(double targetAngle) {
+
+        double robotError;
+        double angle;
+        // calculate error in -179 to +180 range
+        if (external == null) {
+            angle = internal.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX,AngleUnit.DEGREES).firstAngle;
+        } else {
+            angle = external.getIntegratedZValue();
+        }
+        robotError = targetAngle - angle;
+        while (robotError > 180)  robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
     private void resetMotors() {
         // turn off run_to_position
         motors[0].motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -85,27 +170,6 @@ public class SmartTrainGyro {
         motors[1].motor.setPower(0);
         motors[2].motor.setPower(0);
         motors[3].motor.setPower(0);
-    }
-
-
-    public void execute(SmartCommand command) {
-        // stop motors if queue is empty
-        if (command == null) {
-            drive(0);
-            return;
-        }
-        // call different methods based on command type
-        switch (command.type) {
-            case DRIVE:
-                drive(command.measure);
-                break;
-            case STRAFE:
-                strafe(command.measure);
-                break;
-            case ROTATION:
-                rotate(command.measure);
-                break;
-        }
     }
 
     private double getRotationAngle(double x, double y) {
@@ -121,26 +185,6 @@ public class SmartTrainGyro {
             return x < 0? absolute : -(absolute);
         }
     }
-    /*
-     * rotate theta degrees relative to robot's current heading
-     * counter-clockwise is positive, clockwise is negative, as per the unit circle
-     */
-    public void rotateDegrees(double theta) {
-        // convert to radians
-        double thetaRadians = Math.toRadians(theta);
-
-        // calculate arc length
-        double distance = radius * thetaRadians;
-
-        rotate(distance);
-    }
-    /*
-     * rotate so that robot is at angle theta relative to its starting position
-     * at the beginning of the opmode
-     */
-    public void rotateAbsolute(double theta) {
-
-    }
     private void rotate(double distance) {
         // invert distance for right motors
         motors[0].drive(distance, 0.5);
@@ -148,70 +192,27 @@ public class SmartTrainGyro {
         motors[2].drive(distance, 0.5);
         motors[3].drive(-distance, 0.5);
     }
-    private void drive(double distance) {
-        // drive each of the motors same distance
+
+    public void setPower(double power) {
+        for (SmartMotor motor : motors) {
+            motor.setPower(power);
+        }
+    }
+    public void setPower(double[] powers) {
+        if (BuildConfig.DEBUG && motors.length != powers.length) {
+            throw new AssertionError("Assertion failed");
+        }
         for (int i = 0; i < motors.length; i++) {
-            motors[i].drive(distance, 0.5);
+            motors[i].setPower(powers[i]);
         }
     }
-
-    private void strafe(double distance) {
-        // invert distance for front right and back left motors
-        motors[0].drive(distance, 0.5);
-        motors[1].drive(-distance, 0.5);
-        motors[2].drive(-distance, 0.5);
-        motors[3].drive(distance, 0.5);
-    }
-
-    /**
-     * move robot xDist cm on the x axis and yDist cm on the y axis
-     * @param mode move mode to determine how the robot gets to its destination
-     *             DIAGONAL: computes the shortest distance to the destination and moves along that line
-     *             X_FIRST: goes horizontal then vertical
-     *             Y_FIRST: goes vertical then horizontal.
-     *
-     *
-     */
-    public void move(double xDist, double yDist, MoveMode mode) {
-
-        switch (mode) {
-            case DIAGONAL:
-                // angle to rotate to get to shortest line
-                double theta;
-                if (xDist == 0 || yDist == 0) {
-                    theta = 0;
-                } else {
-                    theta = 90 - Math.atan(yDist / xDist);
-                }
-                // rotate to orient with diagonal
-                rotateDegrees(theta);
-                // compute diagonal distance
-                double distance = Math.hypot(xDist, yDist);
-                // drive
-                drive(distance);
-                // rotate back to original orientation
-                rotateDegrees(-theta);
-                break;
-
-            // strafe first then drive
-            case X_FIRST:
-                strafe(xDist);
-                drive(yDist);
-                break;
-
-            // drive first then strafe
-            case Y_FIRST:
-                drive(yDist);
-                strafe(xDist);
-                break;
-
+    public boolean isBusy() {
+        for (SmartMotor motor : motors) {
+            if (!motor.isBusy())
+                return false;
         }
+        return true;
     }
-    // overload method with default movemode of DIAGONAL
-    public void move(double xDist, double yDist) {
-        move(xDist, yDist, MoveMode.DIAGONAL);
-    }
-
     @Override
     public String toString() {
         StringBuilder doc = new StringBuilder();
@@ -226,5 +227,6 @@ public class SmartTrainGyro {
         }
         return doc.toString();
     }
+
 }
 

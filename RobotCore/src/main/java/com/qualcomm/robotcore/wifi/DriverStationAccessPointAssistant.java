@@ -62,7 +62,7 @@ public class DriverStationAccessPointAssistant extends AccessPointAssistant {
     private static DriverStationAccessPointAssistant wirelessAPAssistant = null;
 
     private final List<ScanResult> scanResults = new ArrayList<ScanResult>();
-    private IntentFilter intentFilter;
+    private final IntentFilter intentFilter;
     private BroadcastReceiver receiver;
     private ConnectStatus connectStatus;
 

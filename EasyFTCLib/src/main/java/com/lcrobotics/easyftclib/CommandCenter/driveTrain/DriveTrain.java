@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.Range;
 
 public class DriveTrain {
 
-    private WheelType wheelType;
+    private final WheelType wheelType;
     private DriveMotor[] motors;
 
 

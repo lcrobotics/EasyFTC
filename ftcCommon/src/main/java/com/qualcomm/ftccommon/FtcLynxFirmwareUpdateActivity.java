@@ -133,10 +133,10 @@ public class FtcLynxFirmwareUpdateActivity extends ThemedActivity
         {
         super.onStart();
 
-        TextView instructionsPre  = (TextView)findViewById(R.id.lynxFirmwareInstructionsPre);
-        ListView modulesListView  = (ListView)findViewById(R.id.lynxFirmwareModuleList);
-        TextView instructionsPost = (TextView)findViewById(R.id.lynxFirmwareInstructionsPost);
-        Button   button           = (Button)findViewById(R.id.lynxFirmwareUpdateButton);
+        TextView instructionsPre  = findViewById(R.id.lynxFirmwareInstructionsPre);
+        ListView modulesListView  = findViewById(R.id.lynxFirmwareModuleList);
+        TextView instructionsPost = findViewById(R.id.lynxFirmwareInstructionsPost);
+        Button   button           = findViewById(R.id.lynxFirmwareUpdateButton);
 
         CommandList.LynxFirmwareImagesResp candidateImages = getCandidateLynxFirmwareImages();
 
@@ -174,8 +174,8 @@ public class FtcLynxFirmwareUpdateActivity extends ThemedActivity
 
                 class Item
                     {
-                    String title;
-                    String banter;
+                    final String title;
+                    final String banter;
                     Item(String title, String banter) { this.title = title; this.banter = banter; }
                     }
                 final List<Item> itemList = new ArrayList<>();
@@ -199,8 +199,8 @@ public class FtcLynxFirmwareUpdateActivity extends ThemedActivity
                             view = LayoutInflater.from(getContext()).inflate(layoutRes, parent, false);
                             }
                         View itemView = super.getView(position, view, parent);
-                        TextView topLine = (TextView) itemView.findViewById(android.R.id.text1);
-                        TextView bottomLine = (TextView) itemView.findViewById(android.R.id.text2);
+                        TextView topLine = itemView.findViewById(android.R.id.text1);
+                        TextView bottomLine = itemView.findViewById(android.R.id.text2);
 
                         Item item = getItem(position);
                         topLine.setVisibility(View.GONE);

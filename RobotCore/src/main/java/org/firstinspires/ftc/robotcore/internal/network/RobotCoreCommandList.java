@@ -218,7 +218,8 @@ public class RobotCoreCommandList
     public static final String CMD_RECEIVE_FRAME_BEGIN = "CMD_RECEIVE_FRAME_BEGIN";
     public static class CmdReceiveFrameBegin
         {
-        private int frameNum, length;
+        private final int frameNum;
+            private final int length;
 
         public CmdReceiveFrameBegin(int frameNum, int length)
             {
@@ -250,11 +251,12 @@ public class RobotCoreCommandList
     public static final String CMD_RECEIVE_FRAME_CHUNK = "CMD_RECEIVE_FRAME_CHUNK";
     public static class CmdReceiveFrameChunk
         {
-        private int frameNum, chunkNum;
+        private final int frameNum;
+            private final int chunkNum;
 
         private transient byte[] data;
 
-        private String encodedData;
+        private final String encodedData;
 
         public CmdReceiveFrameChunk(int frameNum, int chunkNum, byte[] data, int offset, int length)
             {

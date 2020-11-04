@@ -79,7 +79,7 @@ public class WifiDirectAssistant extends NetworkConnection {
   private final WifiDirectPeerListListener peerListListener;
   private final WifiDirectGroupInfoListener groupInfoListener;
 
-  private PreferencesHelper preferencesHelper;
+  private final PreferencesHelper preferencesHelper;
   private WifiDirectInviteDialogMonitor inviteDialogMonitor = null;
   private boolean isWifiP2pEnabled = false;
   private WifiP2pBroadcastReceiver receiver;

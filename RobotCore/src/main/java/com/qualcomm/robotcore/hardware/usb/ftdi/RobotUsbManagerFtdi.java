@@ -52,8 +52,8 @@ public class RobotUsbManagerFtdi implements RobotUsbManager {
 
   public static final String TAG = "RobotUsbManagerFtdi";
 
-  private Context     context;
-  private FtDeviceManager ftDeviceManager;
+  private final Context     context;
+  private final FtDeviceManager ftDeviceManager;
   private int         numberOfDevices;
 
   /**

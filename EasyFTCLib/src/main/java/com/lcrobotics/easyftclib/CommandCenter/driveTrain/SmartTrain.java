@@ -13,7 +13,7 @@ import java.util.Queue;
 public class SmartTrain {
 
 
-    private WheelType wheelType;
+    private final WheelType wheelType;
     public Queue<SmartCommand> commandQueue;
     public SmartMotor[] motors;
     SmartCommand currCommand;
@@ -65,7 +65,7 @@ public class SmartTrain {
 
         // get next command and execute it
         currCommand = commandQueue.poll();
-        execute(currCommand);
+        //execute(currCommand);
     }
 
     private void resetMotors() {
@@ -82,7 +82,7 @@ public class SmartTrain {
     }
 
 
-    public void execute(SmartCommand command) {
+    /*public void execute(SmartCommand command) {
         // stop motors if queue is empty
         if (command == null) {
             drive(0);
@@ -100,9 +100,9 @@ public class SmartTrain {
                 rotate(command.measure);
                 break;
         }
-    }
+    }*/
     // parse path of points into drive commands needed to get there
-    public void addPoints(List<Location> points) {
+    /*public void addPoints(List<Location> points) {
         // start at (0, 0, 0)
         Location current = new Location();
         // loop through all points
@@ -173,7 +173,7 @@ public class SmartTrain {
             // advance current location
             current = l;
         }
-    }
+    }*/
 
     private double getRotationAngle(double x, double y) {
 

@@ -91,9 +91,9 @@ public abstract class InspectionActivity extends ThemedActivity
     TextView txtIsRCInstalled, txtIsDSInstalled, txtIsCCInstalled;
     Pattern teamNoRegex;
     Future refreshFuture = null;
-    int textOk = AppUtil.getInstance().getColor(R.color.text_okay);
-    int textWarning = AppUtil.getInstance().getColor(R.color.text_warning);
-    int textError = AppUtil.getInstance().getColor(R.color.text_error);
+    int textOk = AppUtil.getColor(R.color.text_okay);
+    int textWarning = AppUtil.getColor(R.color.text_warning);
+    int textError = AppUtil.getColor(R.color.text_error);
     StartResult nameManagerStartResult = new StartResult();
     private boolean properWifiConnectedState;
     private boolean properBluetoothState;
@@ -112,36 +112,36 @@ public abstract class InspectionActivity extends ThemedActivity
         setContentView(R.layout.activity_inspection);
 
         // Find our various bits on the screen
-        txtIsRCInstalled = (TextView) findViewById(R.id.txtIsRCInstalled);
-        txtIsDSInstalled = (TextView) findViewById(R.id.txtIsDSInstalled);
-        txtIsCCInstalled = (TextView) findViewById(R.id.txtIsCCInstalled);
+        txtIsRCInstalled = findViewById(R.id.txtIsRCInstalled);
+        txtIsDSInstalled = findViewById(R.id.txtIsDSInstalled);
+        txtIsCCInstalled = findViewById(R.id.txtIsCCInstalled);
 
-        widiName = (TextView) findViewById(R.id.widiName);
-        trafficCount = (TextView) findViewById(R.id.trafficCount);
-        bytesPerSecond = (TextView) findViewById(R.id.bytesPerSecond);
-        trafficCountLabel = (TextView) findViewById(R.id.trafficCountLabel);
-        bytesPerSecondLabel = (TextView) findViewById(R.id.bytesPerSecondLabel);
-        widiConnected = (TextView) findViewById(R.id.widiConnected);
-        wifiEnabled = (TextView) findViewById(R.id.wifiEnabled);
-        batteryLevel = (TextView) findViewById(R.id.batteryLevel);
-        osVersion = (TextView) findViewById(R.id.osVersion);
-        firmwareVersion = (TextView) findViewById(R.id.hubFirmware);
-        airplaneMode = (TextView) findViewById(R.id.airplaneMode);
-        bluetooth = (TextView) findViewById(R.id.bluetoothEnabled);
-        wifiConnected = (TextView) findViewById(R.id.wifiConnected);
-        appsStatus = (TextView) findViewById(R.id.appsStatus);
-        txtAppVersion = (TextView) findViewById(R.id.textDeviceName);
+        widiName = findViewById(R.id.widiName);
+        trafficCount = findViewById(R.id.trafficCount);
+        bytesPerSecond = findViewById(R.id.bytesPerSecond);
+        trafficCountLabel = findViewById(R.id.trafficCountLabel);
+        bytesPerSecondLabel = findViewById(R.id.bytesPerSecondLabel);
+        widiConnected = findViewById(R.id.widiConnected);
+        wifiEnabled = findViewById(R.id.wifiEnabled);
+        batteryLevel = findViewById(R.id.batteryLevel);
+        osVersion = findViewById(R.id.osVersion);
+        firmwareVersion = findViewById(R.id.hubFirmware);
+        airplaneMode = findViewById(R.id.airplaneMode);
+        bluetooth = findViewById(R.id.bluetoothEnabled);
+        wifiConnected = findViewById(R.id.wifiConnected);
+        appsStatus = findViewById(R.id.appsStatus);
+        txtAppVersion = findViewById(R.id.textDeviceName);
 
         txtAppVersion.setText(inspectingRobotController()
             ? getString(R.string.titleInspectionReportRC)
             : getString(R.string.titleInspectionReportDS));
 
-        txtManufacturer = (TextView) findViewById(R.id.txtManufacturer);
-        txtModel = (TextView) findViewById(R.id.txtModel);
+        txtManufacturer = findViewById(R.id.txtManufacturer);
+        txtModel = findViewById(R.id.txtModel);
 
         teamNoRegex = Pattern.compile("^\\d{1,5}(-\\w)?-(RC|DS)\\z", Pattern.CASE_INSENSITIVE);
 
-        ImageButton buttonMenu = (ImageButton) findViewById(R.id.menu_buttons);
+        ImageButton buttonMenu = findViewById(R.id.menu_buttons);
         if (useMenu())
             {
             buttonMenu.setOnClickListener(new View.OnClickListener()
@@ -204,7 +204,7 @@ public abstract class InspectionActivity extends ThemedActivity
 
     protected void makeWirelessAPModeSane()
         {
-        TextView labelWidiName = (TextView) findViewById(R.id.labelWidiName);
+        TextView labelWidiName = findViewById(R.id.labelWidiName);
         labelWidiName.setText(getString(R.string.wifiAccessPointLabel));
 
         properWifiConnectedState = true;

@@ -1103,8 +1103,8 @@ public class VuforiaWebcam implements VuforiaWebcamInternal, VuforiaWebcamNative
             super(pointerNativeVuforiaWebcam, MemoryAllocator.EXTERNAL);
             for (UvcFrameFormat uvcFrameFormat : UvcFrameFormat.values())
                 {
-                if (uvcFrameFormat == UvcFrameFormat.UNKNOWN) continue;;
-                FrameFormat vuforiaFormat = ImageFormatMapper.vuforiaWebcamFromUvc(uvcFrameFormat);
+                if (uvcFrameFormat == UvcFrameFormat.UNKNOWN) continue;
+                    FrameFormat vuforiaFormat = ImageFormatMapper.vuforiaWebcamFromUvc(uvcFrameFormat);
                 formatMap.put(uvcFrameFormat, vuforiaFormat);
                 }
             }

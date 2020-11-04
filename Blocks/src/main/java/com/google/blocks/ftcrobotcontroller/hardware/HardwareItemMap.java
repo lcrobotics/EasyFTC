@@ -282,7 +282,7 @@ public class HardwareItemMap {
    */
   public List<HardwareItem> getHardwareItems(HardwareType hardwareType) {
     return map.containsKey(hardwareType)
-        ? Collections.<HardwareItem>unmodifiableList(map.get(hardwareType))
+        ? Collections.unmodifiableList(map.get(hardwareType))
         : Collections.<HardwareItem>emptyList();
   }
 

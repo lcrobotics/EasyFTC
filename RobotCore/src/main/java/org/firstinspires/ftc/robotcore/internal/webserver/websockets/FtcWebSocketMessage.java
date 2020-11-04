@@ -52,9 +52,9 @@ import java.nio.charset.StandardCharsets;
 public final class FtcWebSocketMessage {
     private static final String TAG = "FtcWebSocketMessage";
 
-    @NonNull private String namespace;
-    @NonNull private String type;
-    @NonNull private String encodedPayload; // Base64 encoded over the wire so that it can safely contain JSON
+    @NonNull private final String namespace;
+    @NonNull private final String type;
+    @NonNull private final String encodedPayload; // Base64 encoded over the wire so that it can safely contain JSON
 
     //----------------------------------------------------------------------------------------------
     // Construction

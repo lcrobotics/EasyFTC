@@ -53,7 +53,7 @@ public class ReadXMLFileHandler extends ConfigurationUtility {
   private XmlPullParser parser;
   private DeviceManager deviceManager;
 
-  private static WarningManager warningManager;
+  private static final WarningManager warningManager;
 
   static {
     warningManager = new WarningManager();

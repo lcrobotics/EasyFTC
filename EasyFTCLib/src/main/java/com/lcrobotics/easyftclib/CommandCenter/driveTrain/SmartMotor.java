@@ -16,7 +16,7 @@ public class SmartMotor extends DriveMotor {
     double countPerCm;
 
     // constructor that asks for wheelRadius
-    public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction, int wheelRadius) {
+    public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction, double wheelRadius) {
         // initialize DriveMotor
         super(motor, motorPosition);
         // update reduction and wheelRadius
@@ -25,7 +25,9 @@ public class SmartMotor extends DriveMotor {
         // calculate encoder counts per cm
         this.countPerCm = (COUNTSPERREV * reduction) / (2 * wheelRadius * Math.PI);
     }
-
+    public void setPower(double power) {
+        this.motor.setPower(power);
+    }
     // constructor that assumes wheelRadius = 5
     public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction) {
         this(motor, motorPosition, reduction, 5);

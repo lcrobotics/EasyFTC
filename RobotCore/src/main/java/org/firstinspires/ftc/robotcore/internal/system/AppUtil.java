@@ -1119,7 +1119,7 @@ public class AppUtil
 
     public enum DialogFlavor { ALERT, CONFIRM, PROMPT }
 
-    private Map<String, DialogContext> dialogContextMap = new ConcurrentHashMap<>();
+    private final Map<String, DialogContext> dialogContextMap = new ConcurrentHashMap<>();
 
     public static class DialogContext
         {
@@ -1395,7 +1395,7 @@ public class AppUtil
             @Override public void run()
                 {
                 Toast toast = Toast.makeText(getDefContext(), msg, duration);
-                TextView message = (TextView) toast.getView().findViewById(android.R.id.message);
+                TextView message = toast.getView().findViewById(android.R.id.message);
                 message.setTextColor(getColor(R.color.text_toast));
                 message.setTextSize(18);
                 toast.show();
