@@ -1,6 +1,5 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
-import com.lcrobotics.easyftclib.AdvancedOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class DriveMotor {

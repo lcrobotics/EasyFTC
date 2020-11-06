@@ -9,15 +9,27 @@ public class DriveTrain {
     private final WheelType wheelType;
     private DriveMotor[] motors;
 
-
+    /**
+     * constructor for robots with 2 wheels
+     * @param wheelType  the type of wheel on this robot. Either mecanum, omni, or normal
+     * @param leftMotor  DcMotor controlling the left wheel
+     * @param rightMotor DcMotor controlling the right wheel
+     */
     public DriveTrain(WheelType wheelType, DcMotor leftMotor, DcMotor rightMotor){
         this.wheelType = wheelType;
         this.motors = new DriveMotor[]{new DriveMotor(leftMotor, WheelPosition.LEFT), new DriveMotor(rightMotor, WheelPosition.RIGHT)};
     }
 
-    // Creates a 4 wheel drive train
+    /**
+     * constructor for robots with 4 wheels
+     * @param wheelType       the type of wheel on this robot. Either mecanum, omni, or normal
+     * @param frontLeftMotor  DcMotor controlling the front left wheel
+     * @param frontRightMotor DcMotor controlling the front right wheel
+     * @param backLeftMotor   DcMotor controlling the back left wheel
+     * @param backRightMotor  DcMotor controlling the back right wheel
+     */
     public DriveTrain(WheelType wheelType, DcMotor frontLeftMotor, DcMotor frontRightMotor, DcMotor backLeftMotor, DcMotor backRightMotor){
-        // Stores what type of wheel (i.e mechanum, omni, etc
+        // Stores what type of wheel (i.e mechanum, omni, etc)
         this.wheelType = wheelType;
         // stores the motors in our DriveMotor[], this allows us to know what they are attached to
         this.motors = new DriveMotor[] {
@@ -28,6 +40,14 @@ public class DriveTrain {
         };
     }
 
+    /**
+     * constructor for robots with 4 wheels
+     * @param wheelType       the type of wheel on this robot. Either mecanum, omni, or normal
+     * @param frontLeftMotor  DriveMotor controlling the front left wheel
+     * @param frontRightMotor DriveMotor controlling the front right wheel
+     * @param backLeftMotor   DriveMotor controlling the back left wheel
+     * @param backRightMotor  DriveMotor controlling the back right wheel
+     */
     public DriveTrain(WheelType wheelType, DriveMotor frontLeftMotor, DriveMotor frontRightMotor, DriveMotor backLeftMotor, DriveMotor backRightMotor){
         // Stores what type of wheel (i.e mechanum, omni, etc
         this.wheelType = wheelType;
@@ -38,7 +58,12 @@ public class DriveTrain {
     }
 
 
-    // Given an array of DcMotors and their positions, reset drive train
+    /**
+     * sets motors to ones in given array
+     * @param motors array of {@link DcMotor}
+     * @param motorPos array of {@link WheelPosition} that will map to motors
+     * @throws DriveTrainException various errors
+     */
     public void setMotors(DcMotor[] motors, WheelPosition[] motorPos) throws DriveTrainException {
 
         int numMotors = motors.length;
@@ -106,7 +131,11 @@ public class DriveTrain {
         }
     }
 
-
+    /**
+     * sets power to drive train using a tank-style drive
+     * @param turn turning power
+     * @param drive driving power
+     */
     public void setPower(double turn, double drive) {
         double rightDrivePow = Range.clip(drive - turn, -1, 1);
 
@@ -123,6 +152,12 @@ public class DriveTrain {
         }
     }
 
+    /**
+     * sets power to drive train using 3 part drive (only for mechanum wheels)
+     * @param x strafing power
+     * @param y driving power
+     * @param w rotational power
+     */
     public void setPower(double x, double y, double w) {
         double frontLeftPow = Range.clip(y - x + w, -1, 1);
         double frontRightPow = Range.clip(y + x - w, -1, 1);
