@@ -44,7 +44,7 @@ public class SmartTrainTest extends OpMode {
 
     @Override
     public void start() {
-       wheels.execute(new SmartCommand(-30, CommandType.DRIVE));
+       //wheels.execute(new SmartCommand(-30, CommandType.DRIVE));
     }
 
     @Override

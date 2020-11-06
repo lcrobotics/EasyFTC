@@ -1,6 +1,6 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
-import com.lcrobotics.easyftclib.BuildConfig;
+import com.google.ftcresearch.tfod.BuildConfig;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;

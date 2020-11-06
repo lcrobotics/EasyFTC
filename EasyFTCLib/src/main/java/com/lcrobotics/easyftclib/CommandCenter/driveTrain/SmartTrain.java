@@ -1,57 +1,93 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
-import com.lcrobotics.easyftclib.tools.MathUtils;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 // equivalent of DriveTrain with SmartMotors
 public class SmartTrain {
-
-
+    // wheel type on robot
     private final WheelType wheelType;
-    public Queue<SmartCommand> commandQueue;
+    // queue for drive commands
+    public Queue <SmartCommand> commandQueue;
+    // array to hold all SmartMotors
     public SmartMotor[] motors;
+    // command currently on the top of the queue
     SmartCommand currCommand;
+    // radius of wheels on the robot
     private final double radius;
+
+    /**
+     * constructor that takes in wheel type, drive motors, ratio (reduction), and wheel radius
+     * this constructor is used for robots with two wheels
+     */
     public SmartTrain(WheelType wheelType, DcMotor leftMotor, DcMotor rightMotor, int ratio, double radius) {
-        // reverse right motor
+        // reverse right motor on our robot, the motor is mechanically reversed
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        // populate SmartMotor array of motors
+        // having the SmartMotor objects in a single array makes it easier to run motors and
+        // so we can have a variable amount of motors
         motors = new SmartMotor[]{new SmartMotor(leftMotor, WheelPosition.LEFT, ratio), new SmartMotor(rightMotor, WheelPosition.RIGHT, ratio)};
+        // allow user to set wheel radius and the wheel type
         this.radius = radius;
         this.wheelType = wheelType;
-        commandQueue = new LinkedList<>();
+        // initialize commandQueue
+        // commandQueue is used to get around First's loop detection and because it is much easier
+        // for the end user to put commands in a queue than call multiple methods
+        commandQueue = new LinkedList <>();
     }
 
+    /**
+     * constructor that takes in wheel type, drive motors, the ratio (reduction), and the wheel radius
+     * this constructor is for robots with four wheels
+     */
     public SmartTrain(WheelType wheelType, DcMotor frontLeftMotor, DcMotor frontRightMotor, DcMotor backLeftMotor, DcMotor backRightMotor, int ratio, double radius) {
-        // reverse the right motors
+        // reverse the right motors (this is because the motors on our robot are mechanically reversed)
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        // populate SmartMotor array
+        // having the SmartMotor objects in a single array makes it easier to run motors and
+        // so we can have a variable amount of motors
         motors = new SmartMotor[]{
                 new SmartMotor(frontLeftMotor, WheelPosition.FRONT_LEFT, ratio),
                 new SmartMotor(frontRightMotor, WheelPosition.FRONT_RIGHT, ratio),
                 new SmartMotor(backLeftMotor, WheelPosition.BACK_LEFT, ratio),
                 new SmartMotor(backRightMotor, WheelPosition.BACK_RIGHT, ratio)};
 
+        // allow user to set wheel radius and the wheel type
         this.radius = radius;
         this.wheelType = wheelType;
-        commandQueue = new LinkedList<>();
+        // initialize commandQueue
+        // commandQueue is used to get around First's loop detection and because it is much easier
+        // for the end user to put commands in a queue than call multiple methods
+        commandQueue = new LinkedList <>();
     }
 
-
+    /**
+     * constructor that takes in wheel type, drive motors, and wheel radius (it does not require the reduction)
+     * this constructor is for robots with four wheels
+     */
     public SmartTrain(WheelType wheelType, SmartMotor frontLeftMotor, SmartMotor frontRightMotor, SmartMotor backLeftMotor, SmartMotor backRightMotor, double radius) {
+        // populate SmartMotor array
+        // having the SmartMotor objects in a single array makes it easier to run motors and
+        // so we can have a variable amount of motors
         motors = new SmartMotor[]{frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor};
+        // allow user to set wheel radius and the wheel type
         this.wheelType = wheelType;
         this.radius = radius;
-        commandQueue = new LinkedList<>();
+        // initialize commandQueue
+        // commandQueue is used to get around First's loop detection and because it is much easier
+        // for the end user to put commands in a queue than call multiple methods
+        commandQueue = new LinkedList <>();
     }
 
+    /**
+     * check if current command is done, if it is, pop off queue and move onto next command, if not,
+     * continue completing the current command on the queue
+     */
     public void update() {
         // if any of the motors are busy, we are not finished with the command yet
         if (currCommand != null) {
@@ -61,13 +97,16 @@ public class SmartTrain {
                 }
             }
         }
+        // call method resetMotors to stop movement of motors (and the robot)
         resetMotors();
 
-        // get next command and execute it
+        // get next command on queue and execute it
         currCommand = commandQueue.poll();
-        //execute(currCommand);
     }
 
+    /**
+     * reset and stop the motors (and the robot)
+     */
     private void resetMotors() {
         // turn off run_to_position
         motors[0].motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -81,147 +120,65 @@ public class SmartTrain {
         motors[3].motor.setPower(0);
     }
 
-
-    /*public void execute(SmartCommand command) {
-        // stop motors if queue is empty
-        if (command == null) {
-            drive(0);
-            return;
-        }
-        // call different methods based on command type
-        switch (command.type) {
-            case DRIVE:
-                drive(command.measure);
-                break;
-            case STRAFE:
-                strafe(command.measure);
-                break;
-            case ROTATION:
-                rotate(command.measure);
-                break;
-        }
-    }*/
-    // parse path of points into drive commands needed to get there
-    /*public void addPoints(List<Location> points) {
-        // start at (0, 0, 0)
-        Location current = new Location();
-        // loop through all points
-        for (Location l : points) {
-            // change in x and y
-            double xDiff = l.x - current.x;
-            double yDiff = l.y - current.y;
-
-
-            // points that only require one command
-            if (l.angle != current.angle && l.y == current.y && l.x == current.x) {
-                // only a rotation is needed
-                commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
-                continue;
-            }
-            if (l.angle == current.angle && l.y != current.y && l.x == current.x) {
-                // only drive forward
-                commandQueue.add(new SmartCommand(yDiff, CommandType.DRIVE));
-                continue;
-            }
-            if (l.angle == current.angle && l.y == current.y && l.x != current.x) {
-                // only strafe
-                commandQueue.add(new SmartCommand(xDiff, CommandType.STRAFE));
-                continue;
-            }
-            // how we will get to the next point
-            switch (l.mode) {
-
-                // drive along hypotenuse
-                case DIAGONAL:
-                    // get shortest angle onto diagonal
-                    double wrappedAngle = MathUtils.angleWrap(getRotationAngle(xDiff, yDiff) - current.angle);
-                    // rotate onto diagonal
-                    commandQueue.add(new SmartCommand(wrappedAngle, CommandType.ROTATION));
-                    // drive on diagonal
-                    commandQueue.add(new SmartCommand(Math.hypot(xDiff, yDiff), CommandType.DRIVE));
-
-                    // if a rotate is required
-                    if (l.angle != MathUtils.angleWrap(current.angle + wrappedAngle)) {
-                        commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
-                    }
-                    break;
-
-                // drive horizontal leg first
-                case X_FIRST:
-
-                    commandQueue.add(new SmartCommand(xDiff, CommandType.STRAFE));
-                    commandQueue.add(new SmartCommand(yDiff, CommandType.DRIVE));
-                    // if a rotate is required after drive
-                    if (l.angle != current.angle) {
-                        commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
-                    }
-                    break;
-
-                // drive vertical leg first
-                case Y_FIRST:
-
-                    commandQueue.add(new SmartCommand(yDiff, CommandType.STRAFE));
-                    commandQueue.add(new SmartCommand(xDiff, CommandType.DRIVE));
-
-                    // if a rotate is required after drive
-                    if (l.angle != current.angle) {
-                        commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
-                    }
-
-                    break;
-            }
-            // advance current location
-            current = l;
-        }
-    }*/
-
+    /**
+     * gets the angle of the diagonal created by x and y relative to the positive y axis
+     */
     private double getRotationAngle(double x, double y) {
-
+        // if y is positive, do the math to find the angle
         if (y > 0) {
-
-            return x < 0? Math.toDegrees(Math.atan(x/y)) : Math.toDegrees(-Math.atan(x/y));
-
+            return x < 0 ? Math.toDegrees(Math.atan(x / y)) : Math.toDegrees(-Math.atan(x / y));
         } else {
-
-            double absolute = 90 + Math.toDegrees(Math.atan(y/x));
-
-            return x < 0? absolute : -(absolute);
+            // if y is negative, do the math to find the angle
+            double absolute = 90 + Math.toDegrees(Math.atan(y / x));
+            return x < 0 ? absolute : -(absolute);
         }
     }
-    /*
+
+    /**
      * rotate theta degrees relative to robot's current heading
      * counter-clockwise is positive, clockwise is negative, as per the unit circle
      */
     public void rotateDegrees(double theta) {
         // convert to radians
         double thetaRadians = Math.toRadians(theta);
-
         // calculate arc length
         double distance = radius * thetaRadians;
-
+        // rotate the length of the arc
         rotate(distance);
     }
-    /*
+
+    /**
      * rotate so that robot is at angle theta relative to its starting position
      * at the beginning of the opmode
      */
     public void rotateAbsolute(double theta) {
-
+        // TODO
     }
+
+    /**
+     * rotate each motor for a certain distance
+     */
     private void rotate(double distance) {
-        // invert distance for right motors
+        // invert distance for right motors so it turns instead of going forward
         motors[0].drive(distance, 0.5);
         motors[1].drive(-distance, 0.5);
         motors[2].drive(distance, 0.5);
         motors[3].drive(-distance, 0.5);
     }
+
+    /**
+     * loop through array of motors and drive forward for a certain distance
+     */
     private void drive(double distance) {
-        // drive each of the motors same distance
+        // loop through motors, set power and distance to travel
         for (int i = 0; i < motors.length; i++) {
             motors[i].drive(distance, 0.5);
         }
     }
 
+    /**
+     * set motor powers and distance for strafing
+     */
     private void strafe(double distance) {
         // invert distance for front right and back left motors
         motors[0].drive(distance, 0.5);
@@ -232,12 +189,11 @@ public class SmartTrain {
 
     /**
      * move robot xDist cm on the x axis and yDist cm on the y axis
+     *
      * @param mode move mode to determine how the robot gets to its destination
      *             DIAGONAL: computes the shortest distance to the destination and moves along that line
      *             X_FIRST: goes horizontal then vertical
      *             Y_FIRST: goes vertical then horizontal.
-     *
-     *
      */
     public void move(double xDist, double yDist, MoveMode mode) {
 
@@ -274,6 +230,7 @@ public class SmartTrain {
 
         }
     }
+
     // overload method with default movemode of DIAGONAL
     public void move(double xDist, double yDist) {
         move(xDist, yDist, MoveMode.DIAGONAL);
