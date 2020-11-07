@@ -2,12 +2,12 @@ package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
 public class SmartCommand {
     double theta;
-    double speed;
+    double power;
     double distance;
 
-    public SmartCommand(double distance, double theta, double speed) {
+    public SmartCommand(double distance, double theta, double power) {
         this.theta = theta;
-        this.speed = speed;
+        this.power = power;
         this.distance = distance;
     }
     public SmartCommand(double distance, double theta) {
@@ -17,7 +17,7 @@ public class SmartCommand {
     public String toString() {
         return "SmartCommand{" +
                 "theta=" + theta +
-                ", speed=" + speed +
+                ", speed=" + power +
                 ", distance=" + distance +
                 '}';
     }

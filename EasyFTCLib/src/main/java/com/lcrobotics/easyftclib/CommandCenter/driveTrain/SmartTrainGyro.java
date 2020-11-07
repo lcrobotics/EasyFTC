@@ -141,7 +141,7 @@ public class SmartTrainGyro {
     public void update() {
         // only allow either an internal or external gyroscope, not both
         if (internal == null ^ external == null) {
-            // if the last command has been completed
+            // first command hasnt been done yet
             if (currCommand == null) {
                 // if there's nothing else to do, stop the motors
                 if (commandQueue.isEmpty()) {
@@ -152,7 +152,13 @@ public class SmartTrainGyro {
                 currCommand = commandQueue.remove();
                 // check if it is just a rotation
                 if (currCommand.distance == 0) {
-                    updateRotation();
+                    // correct heading
+                    if(onHeading()) {
+                        // stop motors
+                        setPower(0);
+                        // get next command
+                        currCommand = commandQueue.poll();
+                    }
                     return;
                 }
                 // distance each encoder needs to move
@@ -164,8 +170,15 @@ public class SmartTrainGyro {
 
                 }
             }
+            // assume command is rotation
             if (currCommand.distance == 0) {
-                updateRotation();
+                // correct heading
+                if(onHeading()) {
+                    // stop motors
+                    setPower(0);
+                    // get next command
+                    currCommand = commandQueue.poll();
+                }
                 return;
             }
             // motors have reached their destination
@@ -175,6 +188,8 @@ public class SmartTrainGyro {
                 for (SmartMotor motor : motors) {
                     motor.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
+                // grab next command
+                currCommand = commandQueue.poll();
                 return;
             }
             // get error relative to desired heading
@@ -185,8 +200,8 @@ public class SmartTrainGyro {
             if (currCommand.distance < 0)
                 steer *= -1;
 
-            double leftSpeed = currCommand.speed - steer;
-            double rightSpeed = currCommand.speed + steer;
+            double leftSpeed = currCommand.power - steer;
+            double rightSpeed = currCommand.power + steer;
             // normalize speeds if either speed goes above 1
             double max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
 
@@ -204,8 +219,36 @@ public class SmartTrainGyro {
         }
     }
 
-    private void updateRotation() {
+    /**
+     * Perform one iteration of
+     * @return whether the robot is on target (the command is finished)
+     */
+    private boolean onHeading() {
+        boolean onTarget = false;
 
+        double leftPower;
+        double rightPower;
+        double steer;
+
+        // determine turn power based on +/- error
+        double error = getError(currCommand.theta);
+        // ignore insignificant error
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftPower = 0.0;
+            rightPower = 0.0;
+            onTarget = true;
+        } else {
+            // get steering power from error
+            steer = getSteer(error, P_TURN_COEFF);
+            // calculate powers for each side of robot
+            rightPower = currCommand.power * steer;
+            leftPower = -rightPower;
+        }
+        // set motor powers
+        setPower(new double[]{leftPower, rightPower, leftPower, rightPower});
+
+        return onTarget;
     }
 
     /**
