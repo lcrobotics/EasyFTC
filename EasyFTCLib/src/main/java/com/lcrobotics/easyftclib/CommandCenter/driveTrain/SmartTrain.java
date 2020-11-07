@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.LinkedList;
 import java.util.Queue;
 
-// equivalent of DriveTrain with SmartMotors
+/**
+ * equivalent of DriveTrain with SmartMotors
+ */
 public class SmartTrain {
     // wheel type on robot
     private final WheelType wheelType;
@@ -21,6 +23,11 @@ public class SmartTrain {
     /**
      * constructor that takes in wheel type, drive motors, ratio (reduction), and wheel radius
      * this constructor is used for robots with two wheels
+     * @param wheelType
+     * @param leftMotor
+     * @param rightMotor
+     * @param ratio
+     * @param radius
      */
     public SmartTrain(WheelType wheelType, DcMotor leftMotor, DcMotor rightMotor, int ratio, double radius) {
         // reverse right motor on our robot, the motor is mechanically reversed
@@ -42,6 +49,13 @@ public class SmartTrain {
     /**
      * constructor that takes in wheel type, drive motors, the ratio (reduction), and the wheel radius
      * this constructor is for robots with four wheels
+     * @param wheelType
+     * @param frontLeftMotor
+     * @param frontRightMotor
+     * @param backLeftMotor
+     * @param backRightMotor
+     * @param ratio
+     * @param radius
      */
     public SmartTrain(WheelType wheelType, DcMotor frontLeftMotor, DcMotor frontRightMotor, DcMotor backLeftMotor, DcMotor backRightMotor, int ratio, double radius) {
         // reverse the right motors (this is because the motors on our robot are mechanically reversed)
@@ -69,6 +83,12 @@ public class SmartTrain {
     /**
      * constructor that takes in wheel type, drive motors, and wheel radius (it does not require the reduction)
      * this constructor is for robots with four wheels
+     * @param wheelType
+     * @param frontLeftMotor
+     * @param frontRightMotor
+     * @param backLeftMotor
+     * @param backRightMotor
+     * @param radius
      */
     public SmartTrain(WheelType wheelType, SmartMotor frontLeftMotor, SmartMotor frontRightMotor, SmartMotor backLeftMotor, SmartMotor backRightMotor, double radius) {
         // populate SmartMotor array
@@ -122,6 +142,9 @@ public class SmartTrain {
 
     /**
      * gets the angle of the diagonal created by x and y relative to the positive y axis
+     * @param x
+     * @param y
+     * @return
      */
     private double getRotationAngle(double x, double y) {
         // if y is positive, do the math to find the angle
@@ -137,6 +160,7 @@ public class SmartTrain {
     /**
      * rotate theta degrees relative to robot's current heading
      * counter-clockwise is positive, clockwise is negative, as per the unit circle
+     * @param theta
      */
     public void rotateDegrees(double theta) {
         // convert to radians
@@ -150,6 +174,7 @@ public class SmartTrain {
     /**
      * rotate so that robot is at angle theta relative to its starting position
      * at the beginning of the opmode
+     * @param theta
      */
     public void rotateAbsolute(double theta) {
         // TODO
@@ -157,6 +182,7 @@ public class SmartTrain {
 
     /**
      * rotate each motor for a certain distance
+     * @param distance
      */
     private void rotate(double distance) {
         // invert distance for right motors so it turns instead of going forward
@@ -168,6 +194,7 @@ public class SmartTrain {
 
     /**
      * loop through array of motors and drive forward for a certain distance
+     * @param distance
      */
     private void drive(double distance) {
         // loop through motors, set power and distance to travel
@@ -178,6 +205,7 @@ public class SmartTrain {
 
     /**
      * set motor powers and distance for strafing
+     * @param distance
      */
     private void strafe(double distance) {
         // invert distance for front right and back left motors
@@ -231,7 +259,11 @@ public class SmartTrain {
         }
     }
 
-    // overload method with default movemode of DIAGONAL
+    /**
+     * overload method with default movemode of DIAGONAL
+     * @param xDist
+     * @param yDist
+     */
     public void move(double xDist, double yDist) {
         move(xDist, yDist, MoveMode.DIAGONAL);
     }

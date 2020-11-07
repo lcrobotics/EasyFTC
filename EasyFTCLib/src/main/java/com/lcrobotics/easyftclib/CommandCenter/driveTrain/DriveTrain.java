@@ -109,13 +109,19 @@ public class DriveTrain {
 
     }
 
+    /**
+     * boolean to confirm if robot has two wheel configuration
+     * @param pos
+     * @return
+     */
     public boolean is2Wheel(WheelPosition pos){
         return pos == WheelPosition.LEFT || pos == WheelPosition.RIGHT;
     }
 
-    // Maps wheel positions to index of motors[]
-    // LEFT, RIGHT: 0, 1
-    // FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT: 0, 1, 2, 3
+    /**Maps wheel positions to index of motors[]
+     * LEFT, RIGHT: 0, 1
+     * FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT: 0, 1, 2, 3
+    */
     public int posIndex(WheelPosition pos){
         switch (pos){
             case LEFT:

@@ -1,7 +1,9 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
-// First 4 values are used for motors in a 4 wheel configuration,
-// last 2 are used for a 2 wheeled robot
+/**
+ * First 2 values are used for motors in a 2 wheel configuration,
+ * last 4 are used for a 4 wheeled robot
+ */
 public enum  WheelPosition {
     LEFT,
     RIGHT,

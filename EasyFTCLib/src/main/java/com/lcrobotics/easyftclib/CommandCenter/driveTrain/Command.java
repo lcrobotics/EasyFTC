@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * encapsulates user-defined commands and basic ones we provide
  */
 public interface Command {
+
     /**
      * move through next step of command
      * @return error code
@@ -29,6 +30,7 @@ public interface Command {
      * @return true if successful, false otherwise
      */
     boolean initialize(@NonNull Parameters parameters);
+
     /**
      * Instances of Parameters contain data defining how a Command should operate and what data to use
      * @see #initialize(Parameters)

@@ -1,10 +1,11 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
-import com.lcrobotics.easyftclib.AdvancedOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-// SmartMotors use encoders to rotate a certain distance
+/**
+ * This class is very similar to the DcMotor class, except SmartMotors use encoders to rotate/move
+ * a certain distance.
+ */
 public class SmartMotor extends DriveMotor {
     // encoder counts per revolution
     private final int COUNTSPERREV = 28;
@@ -15,7 +16,13 @@ public class SmartMotor extends DriveMotor {
     // encoder counts per cm
     double countPerCm;
 
-    // constructor that asks for wheelRadius
+    /**
+     * constructor that asks for wheelRadius from user, sets all params to current value
+     * @param motor
+     * @param motorPosition
+     * @param reduction
+     * @param wheelRadius
+     */
     public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction, double wheelRadius) {
         // initialize DriveMotor
         super(motor, motorPosition);
@@ -25,14 +32,31 @@ public class SmartMotor extends DriveMotor {
         // calculate encoder counts per cm
         this.countPerCm = (COUNTSPERREV * reduction) / (2 * wheelRadius * Math.PI);
     }
+
+    /**
+     * set motor power
+     * @param power
+     */
     public void setPower(double power) {
         this.motor.setPower(power);
     }
-    // constructor that assumes wheelRadius = 5
+
+    /**
+     * constructor that assumes wheelRadius = 5, set motor, motorPosition, and reduction to their
+     * current values
+     * @param motor
+     * @param motorPosition
+     * @param reduction
+     */
     public SmartMotor(DcMotor motor, WheelPosition motorPosition, int reduction) {
         this(motor, motorPosition, reduction, 5);
     }
-    // rotates the motor the given distance with the given power
+
+    /**
+     * rotates the motor the given distance with the given power
+      * @param distance
+     * @param power
+     */
     public void drive(double distance, double power) {
 
         // calculate number of encoder counts required to rotate given distance
@@ -46,9 +70,17 @@ public class SmartMotor extends DriveMotor {
         // run motor
         this.motor.setPower(power);
     }
+
+    /**
+     * check if a motor is busy
+     * @return
+     */
     public boolean isBusy() {
         return Math.abs(this.motor.getTargetPosition() - this.motor.getCurrentPosition()) > 13;
     }
+
+    // setters and getters
+
     public int getReduction() {
         return reduction;
     }

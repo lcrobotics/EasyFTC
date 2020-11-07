@@ -1,0 +1,92 @@
+    public void execute(SmartCommand command) {
+        // stop motors if queue is empty
+        if (command == null) {
+            drive(0);
+            return;
+        }
+        // call different methods based on command type
+        switch (command.type) {
+            case DRIVE:
+                drive(command.measure);
+                break;
+            case STRAFE:
+                strafe(command.measure);
+                break;
+            case ROTATION:
+                rotate(command.measure);
+                break;
+        }
+    }*/
+    // parse path of points into drive commands needed to get there
+    /*public void addPoints(List<Location> points) {
+        // start at (0, 0, 0)
+        Location current = new Location();
+        // loop through all points
+        for (Location l : points) {
+            // change in x and y
+            double xDiff = l.x - current.x;
+            double yDiff = l.y - current.y;
+
+
+            // points that only require one command
+            if (l.angle != current.angle && l.y == current.y && l.x == current.x) {
+                // only a rotation is needed
+                commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
+                continue;
+            }
+            if (l.angle == current.angle && l.y != current.y && l.x == current.x) {
+                // only drive forward
+                commandQueue.add(new SmartCommand(yDiff, CommandType.DRIVE));
+                continue;
+            }
+            if (l.angle == current.angle && l.y == current.y && l.x != current.x) {
+                // only strafe
+                commandQueue.add(new SmartCommand(xDiff, CommandType.STRAFE));
+                continue;
+            }
+            // how we will get to the next point
+            switch (l.mode) {
+
+                // drive along hypotenuse
+                case DIAGONAL:
+                    // get shortest angle onto diagonal
+                    double wrappedAngle = MathUtils.angleWrap(getRotationAngle(xDiff, yDiff) - current.angle);
+                    // rotate onto diagonal
+                    commandQueue.add(new SmartCommand(wrappedAngle, CommandType.ROTATION));
+                    // drive on diagonal
+                    commandQueue.add(new SmartCommand(Math.hypot(xDiff, yDiff), CommandType.DRIVE));
+
+                    // if a rotate is required
+                    if (l.angle != MathUtils.angleWrap(current.angle + wrappedAngle)) {
+                        commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
+                    }
+                    break;
+
+                // drive horizontal leg first
+                case X_FIRST:
+
+                    commandQueue.add(new SmartCommand(xDiff, CommandType.STRAFE));
+                    commandQueue.add(new SmartCommand(yDiff, CommandType.DRIVE));
+                    // if a rotate is required after drive
+                    if (l.angle != current.angle) {
+                        commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
+                    }
+                    break;
+
+                // drive vertical leg first
+                case Y_FIRST:
+
+                    commandQueue.add(new SmartCommand(yDiff, CommandType.STRAFE));
+                    commandQueue.add(new SmartCommand(xDiff, CommandType.DRIVE));
+
+                    // if a rotate is required after drive
+                    if (l.angle != current.angle) {
+                        commandQueue.add(new SmartCommand(l.angle - current.angle, CommandType.ROTATION));
+                    }
+
+                    break;
+            }
+            // advance current location
+            current = l;
+        }
+    }
