@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.internal.$Gson$Preconditions;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.Gyroscope;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -24,6 +25,11 @@ public interface Command {
     int update();
 
     /**
+     * requests that the motors be set to given powers
+     * @param motorPowers array of powers that the motors should be set to
+     */
+    void setMotorPowers(double[] motorPowers);
+    /**
      * initialize Command with given parameters
      * @param parameters an instance of the {@link Parameters} class
      * @return true if successful, false otherwise
@@ -40,9 +46,9 @@ public interface Command {
         public AngleUnit angleUnit = AngleUnit.DEGREES;
         /** gyroscope to use to execute this command.
          * Defaults to gyroscope set in
-         * {@link com.lcrobotics.easyftclib.CommandCenter.driveTrain.SmartTrainGyro#setGyro(com.qualcomm.robotcore.hardware.Gyroscope)}
+         * {@link com.lcrobotics.easyftclib.CommandCenter.driveTrain.SmartTrainGyro#setGyro(com.qualcomm.robotcore.hardware.IntegratingGyroscope)}
          */
-        public Gyroscope gyroscope = null;
+        public IntegratingGyroscope gyroscope = null;
 
         public Parameters clone() {
             try {

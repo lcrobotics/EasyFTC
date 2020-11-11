@@ -5,13 +5,15 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gyroscope;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -19,7 +21,7 @@ import java.util.Queue;
 
 /**
  * A lot of code in this class was adapted from the gyro drive example in ftcrobotcontroller
- *
+ * <p>
  * This class uses {@link SmartMotor} as a basis to drive a robot given distances and angles. Each {@link SmartCommand}
  * contains a distance to drive, an angle to drive that distance upon, and an optional speed to go at
  */
@@ -33,15 +35,16 @@ public class SmartTrainGyro {
 
     static final double P_TURN_COEFF = 0.1;
     static final double P_DRIVE_COEFF = 0.15;
-
     private final WheelType wheelType;
     public SmartMotor[] motors;
     Queue<SmartCommand> commandQueue;
     SmartCommand currCommand;
     private ModernRoboticsI2cGyro external;
     private BNO055IMU internal;
+
     /**
      * constructor for robots with 2 wheels
+     *
      * @param wheelType  the type of wheel on this robot. Either mecanum, omni, or normal
      * @param leftMotor  DcMotor controlling the left wheel
      * @param rightMotor DcMotor controlling the right wheel
@@ -63,6 +66,7 @@ public class SmartTrainGyro {
 
     /**
      * constructor for robots with 4 wheels
+     *
      * @param wheelType       the type of wheel on this robot. Either mecanum, omni, or normal
      * @param frontLeftMotor  DcMotor controlling the front left wheel
      * @param frontRightMotor DcMotor controlling the front right wheel
@@ -106,7 +110,7 @@ public class SmartTrainGyro {
      *
      * @param gyro the Gyroscope object (either an IMU or a MR Gyro)
      */
-    public void setGyro(Gyroscope gyro) {
+    public void setGyro(IntegratingGyroscope gyro) {
         // we are working with an IMU
         if (gyro instanceof BNO055IMU) {
             internal = (BNO055IMU) gyro;
@@ -125,10 +129,12 @@ public class SmartTrainGyro {
     private void pushCommand(SmartCommand command) {
         commandQueue.add(command);
     }
+
     // push new command onto command queue
     public void pushCommand(double distance, double angle, double speed) {
         pushCommand(new SmartCommand(distance, angle, speed));
     }
+
     public void pushCommand(double distance, double angle) {
         // 0.7 is the optimal drive speed
         pushCommand(distance, angle, 0.7);
@@ -141,6 +147,7 @@ public class SmartTrainGyro {
     public void update() {
         // only allow either an internal or external gyroscope, not both
         if (internal == null ^ external == null) {
+            updateCommandData();
             // first command hasnt been done yet
             if (currCommand == null) {
                 // if there's nothing else to do, stop the motors
@@ -153,7 +160,7 @@ public class SmartTrainGyro {
                 // check if it is just a rotation
                 if (currCommand.distance == 0) {
                     // correct heading
-                    if(onHeading()) {
+                    if (onHeading()) {
                         // stop motors
                         setPower(0);
                         // get next command
@@ -173,7 +180,7 @@ public class SmartTrainGyro {
             // assume command is rotation
             if (currCommand.distance == 0) {
                 // correct heading
-                if(onHeading()) {
+                if (onHeading()) {
                     // stop motors
                     setPower(0);
                     // get next command
@@ -219,8 +226,29 @@ public class SmartTrainGyro {
         }
     }
 
+    private void updateCommandData() {
+        if (internal == null) {
+            CommandData.angularOrientation = external.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            CommandData.zOrientation = external.getIntegratedZValue();
+            CommandData.angularVelocity = external.getAngularVelocity(AngleUnit.DEGREES);
+        } else if (external == null) {
+            Orientation angle = internal.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            CommandData.angularOrientation = angle;
+            CommandData.acceleration = internal.getLinearAcceleration();
+            CommandData.velocity = internal.getVelocity();
+            CommandData.angularVelocity = internal.getAngularVelocity();
+            CommandData.zOrientation = angle.firstAngle;
+        }
+        int[] powers = new int[motors.length];
+        for (int i = 0; i < motors.length; i++) {
+            powers[i] = motors[i].motor.getCurrentPosition();
+        }
+        CommandData.currentPositions = powers;
+    }
+
     /**
      * Perform one iteration of
+     *
      * @return whether the robot is on target (the command is finished)
      */
     private boolean onHeading() {
