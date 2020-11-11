@@ -11,7 +11,11 @@ public class DriveMotor {
     // Stores whether the motor power has changed and needs to be set again by the OpMode
     boolean needsUpdate;
 
-    // Constructor that includes a motor and a position
+    /**
+     * Constructor that includes a motor and a position
+     * @param motor
+     * @param motorPosition
+     */
     public DriveMotor(DcMotor motor, WheelPosition motorPosition){
         this.motor = motor;
         this.position = motorPosition;
@@ -19,8 +23,12 @@ public class DriveMotor {
         this.needsUpdate = false;
     }
 
-    // Constructor that doesn't require a particular motor
-    // Object serves as a placeholder until a motor can be connected with setMotor()
+    /**
+     * Constructor that doesn't require a particular motor
+     * Object serves as a placeholder until a motor can be connected with setMotor()
+     * @param motorName
+     * @param motorPosition
+     */
     public DriveMotor(String motorName, WheelPosition motorPosition) {
         this.motorName = motorName;
         this.needsUpdate = true;
