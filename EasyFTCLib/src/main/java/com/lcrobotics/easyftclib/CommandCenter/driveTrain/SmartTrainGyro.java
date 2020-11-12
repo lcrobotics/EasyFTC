@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -26,15 +27,6 @@ import java.util.Queue;
  * contains a distance to drive, an angle to drive that distance upon, and an optional speed to go at
  */
 public class SmartTrainGyro {
-
-    // These constants define the desired driving/control characteristics
-    // The can/should be tweaked to suite the specific robot drive train.
-
-    // if we are within 1 degree of the desired heading, dont try and correct it
-    static final double HEADING_THRESHOLD = 1;
-
-    static final double P_TURN_COEFF = 0.1;
-    static final double P_DRIVE_COEFF = 0.15;
     private final WheelType wheelType;
     public SmartMotor[] motors;
     Queue<SmartCommand> commandQueue;
@@ -147,82 +139,8 @@ public class SmartTrainGyro {
     public void update() {
         // only allow either an internal or external gyroscope, not both
         if (internal == null ^ external == null) {
-            updateCommandData();
-            // first command hasnt been done yet
-            if (currCommand == null) {
-                // if there's nothing else to do, stop the motors
-                if (commandQueue.isEmpty()) {
-                    setPower(0);
-                    return;
-                }
-                // otherwise, execute the next command
-                currCommand = commandQueue.remove();
-                // check if it is just a rotation
-                if (currCommand.distance == 0) {
-                    // correct heading
-                    if (onHeading()) {
-                        // stop motors
-                        setPower(0);
-                        // get next command
-                        currCommand = commandQueue.poll();
-                    }
-                    return;
-                }
-                // distance each encoder needs to move
-                int moveCounts = (int) (currCommand.distance * motors[0].countPerCm);
-                // set target positions
-                for (SmartMotor motor : motors) {
-                    motor.motor.setTargetPosition(motor.motor.getCurrentPosition() + moveCounts);
-                    motor.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                }
-            }
-            // assume command is rotation
-            if (currCommand.distance == 0) {
-                // correct heading
-                if (onHeading()) {
-                    // stop motors
-                    setPower(0);
-                    // get next command
-                    currCommand = commandQueue.poll();
-                }
-                return;
-            }
-            // motors have reached their destination
-            if (!isBusy()) {
-                // stop all movement
-                setPower(0);
-                for (SmartMotor motor : motors) {
-                    motor.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                }
-                // grab next command
-                currCommand = commandQueue.poll();
-                return;
-            }
-            // get error relative to desired heading
-            double error = getError(currCommand.theta);
-            double steer = getSteer(error, P_DRIVE_COEFF);
-
-            // if we are going backwards, scale the error accordingly
-            if (currCommand.distance < 0)
-                steer *= -1;
-
-            double leftSpeed = currCommand.power - steer;
-            double rightSpeed = currCommand.power + steer;
-            // normalize speeds if either speed goes above 1
-            double max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
-
-            if (max > 1.0) {
-                leftSpeed /= max;
-                rightSpeed /= max;
-            }
             // set power of motors
-            if (motors.length == 4) {
-                setPower(new double[]{leftSpeed, rightSpeed, leftSpeed, rightSpeed});
-            } else {
-                setPower(new double[]{leftSpeed, rightSpeed});
-            }
-
+            setPower(CommandData.motorPowers);
         }
     }
 
@@ -239,79 +157,11 @@ public class SmartTrainGyro {
             CommandData.angularVelocity = internal.getAngularVelocity();
             CommandData.zOrientation = angle.firstAngle;
         }
-        int[] powers = new int[motors.length];
+        int[] positions = new int[motors.length];
         for (int i = 0; i < motors.length; i++) {
-            powers[i] = motors[i].motor.getCurrentPosition();
+            positions[i] = motors[i].motor.getCurrentPosition();
         }
-        CommandData.currentPositions = powers;
-    }
-
-    /**
-     * Perform one iteration of
-     *
-     * @return whether the robot is on target (the command is finished)
-     */
-    private boolean onHeading() {
-        boolean onTarget = false;
-
-        double leftPower;
-        double rightPower;
-        double steer;
-
-        // determine turn power based on +/- error
-        double error = getError(currCommand.theta);
-        // ignore insignificant error
-        if (Math.abs(error) <= HEADING_THRESHOLD) {
-            steer = 0.0;
-            leftPower = 0.0;
-            rightPower = 0.0;
-            onTarget = true;
-        } else {
-            // get steering power from error
-            steer = getSteer(error, P_TURN_COEFF);
-            // calculate powers for each side of robot
-            rightPower = currCommand.power * steer;
-            leftPower = -rightPower;
-        }
-        // set motor powers
-        setPower(new double[]{leftPower, rightPower, leftPower, rightPower});
-
-        return onTarget;
-    }
-
-    /**
-     * returns the error between the target angle and the robot's current heading
-     *
-     * @param targetAngle Desired angle (relative to last Gyro reset).
-     * @return error angle: Degrees in the range +/- 180.
-     * +ve error means the robot should turn LEFT (CCW) to reduce error.
-     */
-    public double getError(double targetAngle) {
-
-        double robotError;
-        double angle;
-        // calculate error in -179 to +180 range
-        if (external == null) {
-            angle = internal.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        } else {
-            angle = external.getIntegratedZValue();
-        }
-        // make sure angle is in correct range
-        robotError = targetAngle - angle;
-        while (robotError > 180) robotError -= 360;
-        while (robotError <= -180) robotError += 360;
-        return robotError;
-    }
-
-    /**
-     * returns desired steering force.  +/- 1 range.  +ve = steer left
-     *
-     * @param error  Error angle in robot relative degrees
-     * @param PCoeff Proportional Gain Coefficient
-     * @return desired steering force
-     */
-    public double getSteer(double error, double PCoeff) {
-        return Range.clip(error * PCoeff, -1, 1);
+        CommandData.currentPositions = positions;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
+package com.lcrobotics.easyftclib.CommandCenter.driveTrain.Commands;
 
 import android.support.annotation.NonNull;
 
@@ -14,7 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * encapsulates user-defined commands and basic ones we provide
  */
 public interface Command {
-
+    /**
+     * start command
+     * @return error code
+     */
+    int init();
     /**
      * move through next step of command
      * @return error code
@@ -30,6 +34,9 @@ public interface Command {
      * @param motorPowers array of powers that the motors should be set to
      */
     void setMotorPowers(double[] motorPowers);
+    /**
+     *
+     */
     /**
      * initialize Command with given parameters
      * @param parameters an instance of the {@link Parameters} class

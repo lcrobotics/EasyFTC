@@ -1,4 +1,7 @@
-/**
+ext {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+} /**
  * Top-level build file for ftc_app project.
  *
  * It is extraordinarily rare that you will ever need to edit this file.
