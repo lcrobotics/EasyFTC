@@ -28,6 +28,7 @@ public class CommandImpl implements Command {
 
     @Override
     public int init() {
+        CommandData.needsEncoders = false;
         return 0;
     }
 
@@ -118,7 +119,7 @@ public class CommandImpl implements Command {
      */
     public double getZHeading() {
         if (gyroscope == null) {
-            return CommandData.zOrientation;
+            return CommandData.angularOrientation.firstAngle;
         } else {
             return gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, angleUnit).firstAngle;
         }

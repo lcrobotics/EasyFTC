@@ -27,16 +27,18 @@ public class CharlieTest extends OpMode {
     @Override
     public void init() {
         // drive motors
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "FrontLeftDrive");
+        /*frontLeftDrive = hardwareMap.get(DcMotor.class, "FrontLeftDrive");
         frontRightDrive = hardwareMap.get(DcMotor.class, "FrontRightDrive");
         backLeftDrive = hardwareMap.get(DcMotor.class, "BackLeftDrive");
         backRightDrive = hardwareMap.get(DcMotor.class, "BackRightDrive");
+        // reverse right drive motors
+        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);*/
+
         // grabbing motors and servos
         GrabMotor = hardwareMap.get(DcMotor.class, "GrabMotor");
         GrabServo = hardwareMap.get(Servo.class, "GrabServo");
-        // reverse right drive motors
-        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
         GrabMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         GrabMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -61,12 +63,12 @@ public class CharlieTest extends OpMode {
         }
 
         GrabMotor.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
-        GrabServo.setPosition(servo? 0 : 1);
+        GrabServo.setPosition(servo? .4 : 1);
         // drive using controller sticks
-        drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        //drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
     }
 
-    private void drive(double x, double y, double w) {
+    /*private void drive(double x, double y, double w) {
         // calculate power for each wheel
         double frontLeftPow = Range.clip(0.5 * (y - x + w), -1, 1);
         double frontRightPow = Range.clip(0.5 * (y + x - w), -1, 1);
@@ -77,5 +79,5 @@ public class CharlieTest extends OpMode {
         frontRightDrive.setPower(frontRightPow);
         backLeftDrive.setPower(backLeftPow);
         backRightDrive.setPower(backRightPow);
-    }
+    }*/
 }

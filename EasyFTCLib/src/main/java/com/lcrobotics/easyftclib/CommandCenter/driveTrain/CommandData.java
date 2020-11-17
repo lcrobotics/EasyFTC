@@ -8,10 +8,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 public class CommandData {
     // motor shit
+    public static boolean needsEncoders;
     public static int[] currentPositions;
-    public static int[] moveCounts;
+    public static int[] targetPositions;
     public static double[] motorPowers;
-    public static int countsPerCM;
+    public static double countsPerCM;
     public static int motorCount;
     // gyro shit
     public static double zOrientation;

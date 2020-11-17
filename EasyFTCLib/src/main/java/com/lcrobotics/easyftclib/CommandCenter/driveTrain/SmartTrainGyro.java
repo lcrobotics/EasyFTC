@@ -1,20 +1,17 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
 import com.google.ftcresearch.tfod.BuildConfig;
+import com.lcrobotics.easyftclib.CommandCenter.driveTrain.Commands.Command;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -29,8 +26,8 @@ import java.util.Queue;
 public class SmartTrainGyro {
     private final WheelType wheelType;
     public SmartMotor[] motors;
-    Queue<SmartCommand> commandQueue;
-    SmartCommand currCommand;
+    Queue<Command> commandQueue;
+    Command currCommand;
     private ModernRoboticsI2cGyro external;
     private BNO055IMU internal;
 
@@ -97,54 +94,76 @@ public class SmartTrainGyro {
         commandQueue = new LinkedList<>();
     }
 
-    /**
-     * sets the gyroscope that will be used for heading correction
-     *
-     * @param gyro the Gyroscope object (either an IMU or a MR Gyro)
-     */
-    public void setGyro(IntegratingGyroscope gyro) {
-        // we are working with an IMU
-        if (gyro instanceof BNO055IMU) {
-            internal = (BNO055IMU) gyro;
-            external = null;
-        } else if (gyro instanceof ModernRoboticsI2cGyro) {
-            // this is an external gyroscope
-            external = (ModernRoboticsI2cGyro) gyro;
-            internal = null;
-            external.resetZAxisIntegrator();
-        } else {
-            throw new IllegalArgumentException("Please provide either a BNO055IMU or a ModernRoboticsI2cGyro");
-        }
+    public void setGyro(BNO055IMU gyro) {
+        internal = gyro;
+        external = null;
+    }
+    public void setGyro(ModernRoboticsI2cGyro gyro) {
+        internal = null;
+        external = gyro;
     }
 
     // push new command to command queue
-    private void pushCommand(SmartCommand command) {
+    public void pushCommand(Command command) {
         commandQueue.add(command);
     }
 
-    // push new command onto command queue
-    public void pushCommand(double distance, double angle, double speed) {
-        pushCommand(new SmartCommand(distance, angle, speed));
-    }
-
-    public void pushCommand(double distance, double angle) {
-        // 0.7 is the optimal drive speed
-        pushCommand(distance, angle, 0.7);
-    }
-
     /**
-     * either performs one cycle of heading correction if the current command
-     * if not finished yet or starts running the next command in the queue
+     * Calls the update method on the current command. If the current command is finished,
+     * starts the next one and calls its init method
      */
     public void update() {
         // only allow either an internal or external gyroscope, not both
         if (internal == null ^ external == null) {
+            // update command data
+            updateCommandData();
+            if (currCommand == null) {
+                setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                // no commands left to do
+                if (commandQueue.isEmpty()) {
+                    return;
+                }
+                // initialize next command
+                currCommand = commandQueue.poll();
+                currCommand.init();
+                // set target positions if needed
+                if (CommandData.needsEncoders) {
+                    for (int i = 0; i < motors.length; i++) {
+                        motors[i].motor.setTargetPosition(CommandData.targetPositions[i]);
+                    }
+                    setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                }
+            }
+            // step through command
+            switch (currCommand.update()) {
+                // command is finished
+                case 0:
+                    currCommand = null;
+                    // stop motors and encoders
+                    setPower(0);
+                    setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    return;
+                case -1:
+                    throw new RuntimeException("Invalid Command");
+                case -2:
+                    throw new RuntimeException("Invalid Gyroscope");
+                case 1:
+                    setPower(CommandData.motorPowers);
+            }
+            updateCommandData();
             // set power of motors
             setPower(CommandData.motorPowers);
         }
     }
 
+    private void setMode(DcMotor.RunMode mode) {
+        for (int i = 0; i < motors.length; i++) {
+            motors[i].motor.setMode(mode);
+        }
+    }
+
     private void updateCommandData() {
+        // read data from gyroscopes
         if (internal == null) {
             CommandData.angularOrientation = external.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             CommandData.zOrientation = external.getIntegratedZValue();
@@ -152,16 +171,22 @@ public class SmartTrainGyro {
         } else if (external == null) {
             Orientation angle = internal.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             CommandData.angularOrientation = angle;
+            CommandData.zOrientation = angle.firstAngle;
+
+            CommandData.angularVelocity = internal.getAngularVelocity();
             CommandData.acceleration = internal.getLinearAcceleration();
             CommandData.velocity = internal.getVelocity();
-            CommandData.angularVelocity = internal.getAngularVelocity();
-            CommandData.zOrientation = angle.firstAngle;
+
         }
+        // read motor data if needed
         int[] positions = new int[motors.length];
         for (int i = 0; i < motors.length; i++) {
             positions[i] = motors[i].motor.getCurrentPosition();
+
         }
         CommandData.currentPositions = positions;
+        CommandData.motorCount = motors.length;
+        CommandData.countsPerCM = motors[0].countPerCm;
     }
 
     /**
@@ -181,25 +206,9 @@ public class SmartTrainGyro {
      * @param powers array of motor powers parallel to motors array
      */
     public void setPower(double[] powers) {
-        if (BuildConfig.DEBUG && motors.length != powers.length) {
-            throw new AssertionError("Invalid length of power array");
-        }
         for (int i = 0; i < motors.length; i++) {
             motors[i].setPower(powers[i]);
         }
-    }
-
-    /**
-     * check whether every motor is still trying to reach an encoder position
-     *
-     * @return whether the motors are still trying to reach a target position
-     */
-    public boolean isBusy() {
-        for (SmartMotor motor : motors) {
-            if (!motor.isBusy())
-                return false;
-        }
-        return true;
     }
 
     @Override
