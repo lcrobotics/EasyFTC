@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
-
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.CommandData;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.Commands.Command;
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.Commands.Drive;
@@ -12,7 +10,6 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -66,19 +63,13 @@ public class CommandTest extends OpMode {
 
     @Override
     public void loop() {
-        try {
-            wheels.update();
-            telemetry.addData("Front Left Power", frontLeftDrive.getPower());
-            telemetry.addData("Front Right Power", frontRightDrive.getPower());
-            telemetry.addData("Back Left Power", backLeftDrive.getPower());
-            telemetry.addData("Back Right Power", backRightDrive.getPower());
-            telemetry.addData("Target Positions", Arrays.toString(CommandData.targetPositions));
-            telemetry.addData("Current Positions", Arrays.toString(CommandData.currentPositions));
-            telemetry.addData("Motor Powers", Arrays.toString(CommandData.motorPowers));
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Log.wtf("BITCH", Log.getStackTraceString(e));
-            telemetry.addData("Bitch", e.getStackTrace());
-        }
-
+        wheels.update();
+        telemetry.addData("Front Left Power", frontLeftDrive.getPower());
+        telemetry.addData("Front Right Power", frontRightDrive.getPower());
+        telemetry.addData("Back Left Power", backLeftDrive.getPower());
+        telemetry.addData("Back Right Power", backRightDrive.getPower());
+        telemetry.addData("Target Positions", Arrays.toString(CommandData.targetPositions));
+        telemetry.addData("Current Positions", Arrays.toString(CommandData.currentPositions));
+        telemetry.addData("Motor Powers", Arrays.toString(CommandData.motorPowers));
     }
 }
