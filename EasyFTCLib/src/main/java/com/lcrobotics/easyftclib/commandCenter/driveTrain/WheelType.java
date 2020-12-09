@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
 /**
  * User can declare wheel type (for example mechanum allows for strafing, but normal does not)

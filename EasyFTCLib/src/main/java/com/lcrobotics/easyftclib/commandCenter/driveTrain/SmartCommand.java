@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
 /**
  * Class that is used for creating SmartCommands, allows for users to create own commands. These

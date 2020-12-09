@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
 /**
  * an enum declaring types of commands, allowing for driving forwards/backwards, rotation, and strafing

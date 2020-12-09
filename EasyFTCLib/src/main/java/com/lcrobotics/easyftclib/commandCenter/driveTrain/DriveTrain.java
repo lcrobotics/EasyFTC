@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
 import com.lcrobotics.easyftclib.tools.ArrayTools;
 import com.qualcomm.robotcore.hardware.DcMotor;

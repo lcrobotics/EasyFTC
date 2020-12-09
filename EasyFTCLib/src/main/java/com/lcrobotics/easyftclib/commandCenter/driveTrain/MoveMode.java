@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
 /**
  * MoveMode enum, create 3 new modes of travel: Diagonal, X_First -> drive x and then y, and

@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain.Commands;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
 
 public class Rotate extends CommandImpl {
     // if we are within 1 degree of the desired heading, dont try and correct it

@@ -1,10 +1,7 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain.Commands;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.internal.$Gson$Preconditions;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -55,7 +52,7 @@ public interface Command {
         public AngleUnit angleUnit = AngleUnit.DEGREES;
         /** gyroscope to use to execute this command.
          * Defaults to gyroscope set in
-         * {@link com.lcrobotics.easyftclib.CommandCenter.driveTrain.SmartTrainGyro#setGyro(com.qualcomm.robotcore.hardware.IntegratingGyroscope)}
+         * {@link com.lcrobotics.easyftclib.commandCenter.driveTrain.SmartTrainGyro#setGyro(com.qualcomm.robotcore.hardware.IntegratingGyroscope)}
          */
         public IntegratingGyroscope gyroscope = null;
 

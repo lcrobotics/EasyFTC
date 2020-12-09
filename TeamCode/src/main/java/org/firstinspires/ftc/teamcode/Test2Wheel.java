@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.lcrobotics.easyftclib.CommandCenter.driveTrain.DriveTrain;
-import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelType;
+import com.lcrobotics.easyftclib.commandCenter.driveTrain.DriveTrain;
+import com.lcrobotics.easyftclib.commandCenter.driveTrain.WheelType;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
