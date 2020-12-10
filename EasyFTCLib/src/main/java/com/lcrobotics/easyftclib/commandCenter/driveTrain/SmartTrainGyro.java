@@ -161,6 +161,9 @@ public class SmartTrainGyro {
         }
     }
 
+    /**
+     * Populate {@link CommandData} with current info
+     */
     private void updateCommandData() {
         // read data from gyroscopes
         if (internal == null) {

@@ -1,5 +1,9 @@
 package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
 
+/**
+ * This Command is designed to rotate a robot in place a certain angle,
+ * using the gyroscope to correct the heading
+ */
 public class Rotate extends CommandImpl {
     // if we are within 1 degree of the desired heading, dont try and correct it
     static final double HEADING_THRESHOLD = 1;
@@ -14,6 +18,10 @@ public class Rotate extends CommandImpl {
         this.power = power;
     }
 
+    /**
+     *
+     * @return 1 if command is still in progress, 0 if command is finished
+     */
     @Override
     public int update() {
         // correct heading

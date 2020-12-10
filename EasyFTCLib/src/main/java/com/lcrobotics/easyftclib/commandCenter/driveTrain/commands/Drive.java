@@ -14,7 +14,8 @@ public class Drive extends CommandImpl {
     public static final double P_DRIVE_COEFF = 0.15;
     /**
      * @param distance distance to drive
-     * @param angle angle to drive on relative to
+     * @param angle angle to drive on
+     * @param power power to set motors to
      */
     public Drive(double distance, double angle, double power) {
         this.distance = distance;
@@ -22,6 +23,10 @@ public class Drive extends CommandImpl {
         this.power = power;
     }
 
+    /**
+     * At the start of the command, the encoder ticks needed to move {@link #distance}
+     * and set target positions of motors
+     */
     @Override
     public int init() {
         // calculate encoder ticks needed to move distance provided
@@ -36,6 +41,11 @@ public class Drive extends CommandImpl {
         return 0;
     }
 
+    /**
+     * Perform heading correction using the gyroscope and check whether the
+     * Command is finished
+     * @return 1 if command is still in progress, 0 if finished
+     */
     @Override
     public int update() {
         // heading along z axis read from gyroscope
@@ -63,7 +73,7 @@ public class Drive extends CommandImpl {
     }
 
     /**
-     * checks if any motor is still reaching a target position
+     * Checks if any motor is still reaching a target position
      * @return true if any motor is busy, otherwise false
      */
     public boolean isBusy() {
