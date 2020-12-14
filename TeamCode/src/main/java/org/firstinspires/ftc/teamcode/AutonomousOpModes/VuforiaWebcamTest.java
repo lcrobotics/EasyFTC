@@ -32,6 +32,8 @@ package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.vuforia.Image;
+import com.vuforia.PIXEL_FORMAT;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -43,8 +45,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -89,6 +93,9 @@ Code describes phone orientation with respect to robot (requires to lie flat in 
     but supposedly uses webcam - why is phone orientation important? Can everything said about phone apply to webcam?
 Update camera displacement values from center of robot
 Test with and without waitForStart()
+How to turn location into movement commands
+    Give a destination (position + orientation),
+    difference is sent as a command
 */
 
 @TeleOp(name="ULTIMATEGOAL Vuforia Nav Webcam", group ="Concept")
@@ -97,7 +104,7 @@ public class VuforiaWebcamTest extends LinearOpMode {
 
     // IMPORTANT: If you are using a USB WebCam, you must select CAMERA_CHOICE = BACK; and PHONE_IS_PORTRAIT = false;
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-    private static final boolean PHONE_IS_PORTRAIT = false  ;
+    private static final boolean PHONE_IS_PORTRAIT = false;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -126,6 +133,7 @@ public class VuforiaWebcamTest extends LinearOpMode {
     // Class Members
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
+    private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue;
 
     /*
      * This is the webcam we are to use. As with other hardware devices such as motors and
@@ -185,6 +193,14 @@ public class VuforiaWebcamTest extends LinearOpMode {
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>(targetsUltimateGoal);
 
+        // Initialize frame queue
+        boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
+        if (!results[0]) { // Failed to get Vuforia to convert to RGB565.
+            throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
+        }
+        vuforia.setFrameQueueCapacity(1);
+        frameQueue = vuforia.getFrameQueue();
+
         /**
          * In order for localization to work, we need to tell the system where each target is on the field, and
          * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
@@ -237,17 +253,22 @@ public class VuforiaWebcamTest extends LinearOpMode {
         // pointing to the LEFT side of the Robot.
         // The two examples below assume that the camera is facing forward out the front of the robot.
 
+        // The next two blocks are modified because we are using a webcam
+        // and they are meant for a phone camera.)
+
         // We need to rotate the camera around it's long axis to bring the correct camera forward.
-        if (CAMERA_CHOICE == BACK) {
-            phoneYRotate = -90;
-        } else {
-            phoneYRotate = 90;
-        }
+        // if (CAMERA_CHOICE == BACK) {
+        //     phoneYRotate = -90;
+        // } else {
+        //    phoneYRotate = 90;
+        // }
+        phoneYRotate = 90;
 
         // Rotate the phone vertical about the X axis if it's in portrait mode
-        if (PHONE_IS_PORTRAIT) {
-            phoneXRotate = 90 ;
-        }
+        // if (PHONE_IS_PORTRAIT) {
+        //    phoneXRotate = 90 ;
+        //}
+        phoneXRotate = 0;
 
         // Next, translate the camera lens to where it is on the robot.
         // In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.
@@ -279,40 +300,17 @@ public class VuforiaWebcamTest extends LinearOpMode {
         targetsUltimateGoal.activate();
         while (!isStopRequested()) {
 
-            // check all the trackable targets to see which one (if any) is visible.
-            //targetVisible = false;
-            ArrayList<OpenGLMatrix> robotLocations = new ArrayList<OpenGLMatrix>();
-            for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
-                    //targetVisible = true;
-
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                    robotLocations.add(robotLocationTransform);
-                    //if (robotLocationTransform != null) {
-                    //    lastLocation = robotLocationTransform;
-                    //}
-                    //break;
-                }
-            }
+            OpenGLMatrix avgLocation = getAvgLocationFromTargets(allTrackables);
 
             // Provide feedback as to where the robot is located (if we know).
-            if (robotLocations.isEmpty()) {
+            if (avgLocation == null) {
                 telemetry.addData("Visible Target", "none");
             }
             else {
 
-                // Backup if average does not work
-                // lastLocation = robotLocations.get(0);
-
                 // express position (translation) of robot in inches.
 
-                lastLocation = robotLocations.get(0);
-                for (int i = 1; i < robotLocations.size(); i++)
-                    lastLocation.add(robotLocations.get(i));
-                lastLocation.multiply(1.0f/robotLocations.size());
+                lastLocation = avgLocation;
 
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
@@ -327,5 +325,48 @@ public class VuforiaWebcamTest extends LinearOpMode {
 
         // Disable Tracking when we are done;
         targetsUltimateGoal.deactivate();
+    }
+
+    OpenGLMatrix getAvgLocationFromTargets(List<VuforiaTrackable> allTrackables){
+        // check all the trackable targets to see which one (if any) is visible.
+        ArrayList<OpenGLMatrix> robotLocations = new ArrayList<>();
+        for (VuforiaTrackable trackable : allTrackables) {
+            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                telemetry.addData("Visible Target", trackable.getName());
+
+                // getUpdatedRobotLocation() will return null if no new information is available since
+                // the last time that call was made, or if the trackable is not currently visible.
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                robotLocations.add(robotLocationTransform);
+                if (robotLocationTransform != null) {
+                    robotLocations.add(robotLocationTransform);
+                }
+                //break;
+            }
+        }
+
+        // No targets visible (or no new info)
+        // In this case, lastLocation remains the same
+        if (robotLocations.isEmpty())
+            return null;
+
+        // Average all values in robotLocations
+        OpenGLMatrix avgLocation = robotLocations.get(0);
+        for (int i = 1; i < robotLocations.size(); i++)
+            avgLocation.add(robotLocations.get(i));
+        avgLocation.multiply(1.0f/robotLocations.size());
+        return avgLocation;
+    }
+
+    public ByteBuffer getFrame() throws InterruptedException {
+        VuforiaLocalizer.CloseableFrame vuforiaFrame = frameQueue.take();
+        for (int i = 0; i < vuforiaFrame.getNumImages(); i++) {
+            Image image = vuforiaFrame.getImage(i);
+            if (image.getFormat() == PIXEL_FORMAT.RGB565) {
+                return image.getPixels();
+            }
+        }
+        // We can't return a null frame, so this is the responsible thing to do.
+        throw new IllegalStateException("Didn't find an RGB565 image from Vuforia!");
     }
 }
