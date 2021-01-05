@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -43,11 +42,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.VuforiaFrameGetter;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -132,7 +130,8 @@ public class VuforiaWebcamTest extends LinearOpMode {
     // Class Members
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
-    private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue;
+    private VuforiaFrameGetter frameGetter = null;
+    // private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue;
 
     /*
      * This is the webcam we are to use. As with other hardware devices such as motors and
@@ -198,7 +197,8 @@ public class VuforiaWebcamTest extends LinearOpMode {
             throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
         }
         vuforia.setFrameQueueCapacity(1);
-        frameQueue = vuforia.getFrameQueue();
+        frameGetter = new VuforiaFrameGetter(vuforia.getFrameQueue());
+        // frameQueue = vuforia.getFrameQueue();
 
         /**
          * In order for localization to work, we need to tell the system where each target is on the field, and
@@ -357,15 +357,15 @@ public class VuforiaWebcamTest extends LinearOpMode {
         return avgLocation;
     }
 
-    public ByteBuffer getFrame() throws InterruptedException {
-        VuforiaLocalizer.CloseableFrame vuforiaFrame = frameQueue.take();
-        for (int i = 0; i < vuforiaFrame.getNumImages(); i++) {
-            Image image = vuforiaFrame.getImage(i);
-            if (image.getFormat() == PIXEL_FORMAT.RGB565) {
-                return image.getPixels();
-            }
-        }
-        // We can't return a null frame, so this is the responsible thing to do.
-        throw new IllegalStateException("Didn't find an RGB565 image from Vuforia!");
-    }
+//    public ByteBuffer getFrame() throws InterruptedException {
+//        VuforiaLocalizer.CloseableFrame vuforiaFrame = frameQueue.take();
+//        for (int i = 0; i < vuforiaFrame.getNumImages(); i++) {
+//            Image image = vuforiaFrame.getImage(i);
+//            if (image.getFormat() == PIXEL_FORMAT.RGB565) {
+//                return image.getPixels();
+//            }
+//        }
+//        // We can't return a null frame, so this is the responsible thing to do.
+//        throw new IllegalStateException("Didn't find an RGB565 image from Vuforia!");
+//    }
 }

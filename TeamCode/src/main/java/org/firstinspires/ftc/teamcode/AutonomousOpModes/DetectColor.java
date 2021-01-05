@@ -48,7 +48,7 @@ public class DetectColor extends OpMode {
 
                     Bitmap cropped = Bitmap.createBitmap(bmp, 5, 5, 5, 5);
 
-                    for (int h = 0; i < cropped.getWidth(); i++) {
+                    for (int h = 0; h < cropped.getWidth(); h++) {
                         for (int j = 0; j < cropped.getHeight(); j++) {
 
                             int pixel = cropped.getPixel(h, j);
