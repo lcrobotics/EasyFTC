@@ -6,6 +6,7 @@ import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.VuforiaFrameGetter;
 
@@ -19,7 +20,6 @@ public class DetectColor extends OpMode {
 
     private VuforiaFrameGetter frameGetter = null;
 
-
     Image rgb;
     @Override
     public void init() {
@@ -30,7 +30,7 @@ public class DetectColor extends OpMode {
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
