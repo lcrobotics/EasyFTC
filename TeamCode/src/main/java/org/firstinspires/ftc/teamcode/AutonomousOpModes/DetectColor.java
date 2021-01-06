@@ -11,6 +11,8 @@ import com.vuforia.PIXEL_FORMAT;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.tfod.VuforiaFrameGenerator;
+import org.firstinspires.ftc.teamcode.VuforiaFrameGetter;
 
 import java.util.Locale;
 
@@ -20,60 +22,12 @@ public class DetectColor extends OpMode {
 
     private VuforiaLocalizer vuforia;
 
+    private VuforiaFrameGetter frameGetter = null;
+
+
     Image rgb;
     @Override
     public void init() {
-        // initialize vuforia
-        initVuforia();
-    }
-
-
-
-    @Override
-    public void loop() {
-        VuforiaLocalizer.CloseableFrame frame;
-
-        try {
-            frame = vuforia.getFrameQueue().take();
-
-            for (int i = 0; i < frame.getNumImages(); i++) {
-                Image img = frame.getImage(i);
-
-                if (img.getFormat() == PIXEL_FORMAT.RGB565) {
-                    rgb = frame.getImage(i);
-
-                    Bitmap bmp = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
-
-                    bmp.copyPixelsFromBuffer(rgb.getPixels());
-
-                    Bitmap cropped = Bitmap.createBitmap(bmp, 5, 5, 5, 5);
-
-                    for (int h = 0; h < cropped.getWidth(); h++) {
-                        for (int j = 0; j < cropped.getHeight(); j++) {
-
-                            int pixel = cropped.getPixel(h, j);
-
-                            int red = Color.red(pixel);
-                            int blue = Color.blue(pixel);
-                            int green = Color.green(pixel);
-                            int alpha = Color.alpha(pixel);
-
-                            telemetry.addData(String.format(Locale.US, "pixel %d %d", h, j),
-                                    String.format(Locale.US, "red: %d green: %d blue: %d alpha: %d", red, green, blue, alpha));
-                        }
-                    }
-                }
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-    /*
-     * Taken from {@link ConceptTensorFlowObjectDetectionWebcam}
-     * initializes our vuforia object
-     */
-    private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -87,6 +41,29 @@ public class DetectColor extends OpMode {
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+
+        // This is necessary for getting pixels (integral image goal detection, etc)
+        boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
+        if (!results[0]) { // Failed to get Vuforia to convert to RGB565.
+            throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
+        }
+        vuforia.setFrameQueueCapacity(1);
+        frameGetter = new VuforiaFrameGetter(vuforia.getFrameQueue());
+    }
+
+    @Override
+    public void loop() {
+        frameGetter.updateFrame();
+        for (int h = 0; h < 5; h++) {
+            for (int j = 0; j < 5; j++) {
+                int red = frameGetter.rgbValues[0][h][j];
+                int green = frameGetter.rgbValues[1][h][j];
+                int blue = frameGetter.rgbValues[2][h][j];
+                telemetry.addData(String.format(Locale.US, "pixel %d %d", h, j),
+                        String.format(Locale.US, "red: %d green: %d blue: %d", red, green, blue));
+            }
+        }
+        telemetry.update();
     }
 }
 

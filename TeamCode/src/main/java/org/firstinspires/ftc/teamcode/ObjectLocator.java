@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -16,6 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 public class ObjectLocator {
+
     // Since ImageTarget trackables use mm to specify their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
@@ -25,21 +26,37 @@ public class ObjectLocator {
     private static final float halfField = 72 * mmPerInch;
     private static final float quadField  = 36 * mmPerInch;
 
-    public ObjectLocator(VuforiaTrackables targetsUltimateGoal) {
-        VuforiaTrackable blueTowerGoalTarget = targetsUltimateGoal.get(0);
-        blueTowerGoalTarget.setName("Blue Tower Goal Target");
-        VuforiaTrackable redTowerGoalTarget = targetsUltimateGoal.get(1);
-        redTowerGoalTarget.setName("Red Tower Goal Target");
-        VuforiaTrackable redAllianceTarget = targetsUltimateGoal.get(2);
-        redAllianceTarget.setName("Red Alliance Target");
-        VuforiaTrackable blueAllianceTarget = targetsUltimateGoal.get(3);
-        blueAllianceTarget.setName("Blue Alliance Target");
-        VuforiaTrackable frontWallTarget = targetsUltimateGoal.get(4);
-        frontWallTarget.setName("Front Wall Target");
-        // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>(targetsUltimateGoal);
+    // Next, translate the camera lens to where it is on the robot.
+    // In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.
+    final float CAMERA_FORWARD_DISPLACEMENT  = 4.0f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center
+    final float CAMERA_VERTICAL_DISPLACEMENT = 8.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
+    final float CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
-        /**
+    List<VuforiaTrackable> allTrackables;
+
+    VuforiaTrackable blueTowerGoalTarget;
+    VuforiaTrackable redTowerGoalTarget;
+    VuforiaTrackable redAllianceTarget;
+    VuforiaTrackable blueAllianceTarget;
+    VuforiaTrackable frontWallTarget;
+
+    public ObjectLocator(VuforiaTrackables targetsUltimateGoal) {
+
+        blueTowerGoalTarget = targetsUltimateGoal.get(0);
+        blueTowerGoalTarget.setName("Blue Tower Goal Target");
+        redTowerGoalTarget = targetsUltimateGoal.get(1);
+        redTowerGoalTarget.setName("Red Tower Goal Target");
+        redAllianceTarget = targetsUltimateGoal.get(2);
+        redAllianceTarget.setName("Red Alliance Target");
+        blueAllianceTarget = targetsUltimateGoal.get(3);
+        blueAllianceTarget.setName("Blue Alliance Target");
+        frontWallTarget = targetsUltimateGoal.get(4);
+        frontWallTarget.setName("Front Wall Target");
+
+        // For convenience, gather together all the trackable objects in one easily-iterable collection */
+        allTrackables = new ArrayList<>(targetsUltimateGoal);
+
+        /*
          * In order for localization to work, we need to tell the system where each target is on the field, and
          * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
          * Transformation matrices are a central, important concept in the math here involved in localization.
@@ -76,17 +93,27 @@ public class ObjectLocator {
         redTowerGoalTarget.setLocation(OpenGLMatrix
                 .translation(halfField, -quadField, mmTargetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
+
+        float phoneXRotate = 0;
+        float phoneYRotate = 90;
+        float phoneZRotate = 0;
+
+        OpenGLMatrix robotFromCamera = OpenGLMatrix
+                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
+
+        /*  Let all the trackable listeners know where the phone is.  */
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, VuforiaLocalizer.CameraDirection.BACK);
+        }
+
     }
 
-
-
-
-    OpenGLMatrix getAvgLocationFromTargets(List<VuforiaTrackable> allTrackables){
+    public OpenGLMatrix getAvgLocationFromTargets() {
         // check all the trackable targets to see which one (if any) is visible.
         ArrayList<OpenGLMatrix> robotLocations = new ArrayList<>();
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                // telemetry.addData("Visible Target", trackable.getName());
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
                 // the last time that call was made, or if the trackable is not currently visible.

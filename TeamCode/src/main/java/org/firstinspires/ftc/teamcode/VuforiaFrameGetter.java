@@ -13,16 +13,15 @@ import java.util.concurrent.BlockingQueue;
 
 public class VuforiaFrameGetter {
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue = null;
-    int[][][] rgbValues = null;
+    public int[][][] rgbValues = null;
     private int imgHeight = 0;
     private int imgWidth = 0;
 
     public VuforiaFrameGetter(BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue){
         this.frameQueue = frameQueue;
-        // rgbValues = new int[imgHeight][imgWidth][3];
     }
 
-    public void getFrame(){
+    public void updateFrame(){
         VuforiaLocalizer.CloseableFrame frame;
 
         try {
@@ -59,29 +58,5 @@ public class VuforiaFrameGetter {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        try {
-//            VuforiaLocalizer.CloseableFrame frame = frameQueue.take();
-//
-//            for (int i = 0; i < frame.getNumImages(); i++) {
-//                Image img = frame.getImage(i);
-//
-//                if (img.getFormat() == PIXEL_FORMAT.RGB565) {
-//                    Bitmap bmp = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
-//                    bmp.copyPixelsFromBuffer(img.getPixels());
-//                    Bitmap cropped = Bitmap.createBitmap(bmp, 5, 5, croppedWidth, croppedHeight);
-//
-//                    for (int y = 0; y < croppedHeight; y++) {
-//                        for (int x = 0; x < croppedWidth; x++) {
-//                            int pixel = cropped.getPixel(x, y);
-//                            rgbValues[y][x][0] = Color.red(pixel);
-//                            rgbValues[y][x][1] = Color.green(pixel);
-//                            rgbValues[y][x][2] = Color.blue(pixel);
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 }
