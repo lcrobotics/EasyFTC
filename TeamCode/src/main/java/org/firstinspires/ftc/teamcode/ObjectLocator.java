@@ -118,7 +118,7 @@ public class ObjectLocator {
                 // getUpdatedRobotLocation() will return null if no new information is available since
                 // the last time that call was made, or if the trackable is not currently visible.
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                robotLocations.add(robotLocationTransform);
+                // robotLocations.add(robotLocationTransform);
                 if (robotLocationTransform != null) {
                     robotLocations.add(robotLocationTransform);
                 }
