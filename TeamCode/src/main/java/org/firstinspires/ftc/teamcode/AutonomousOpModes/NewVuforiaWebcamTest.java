@@ -86,7 +86,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 
 @TeleOp(name="ULTIMATEGOAL Vuforia Nav Webcam", group ="Concept")
-@Disabled
+//@Disabled
 public class NewVuforiaWebcamTest extends LinearOpMode {
 
     // IMPORTANT: If you are using a USB WebCam, you must select CAMERA_CHOICE = BACK; and PHONE_IS_PORTRAIT = false;
@@ -119,6 +119,7 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
     // Class Members
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
+    private NewObjectLocator objectLocator = null;
 
     /*
      * This is the webcam we are to use. As with other hardware devices such as motors and
@@ -175,6 +176,7 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>(targetsUltimateGoal);
+        objectLocator = new NewObjectLocator(allTrackables);
 
         /**
          * In order for localization to work, we need to tell the system where each target is on the field, and
@@ -270,6 +272,7 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
         targetsUltimateGoal.activate();
         while (!isStopRequested()) {
 
+            /*
             // check all the trackable targets to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
@@ -285,6 +288,16 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
                     }
                     break;
                 }
+            }
+             */
+
+            OpenGLMatrix newLocation = objectLocator.getRobotLocation();
+            if (newLocation == null) {
+                targetVisible = false;
+            }
+            else {
+                lastLocation = newLocation;
+                targetVisible = true;
             }
 
             // Provide feedback as to where the robot is located (if we know).
