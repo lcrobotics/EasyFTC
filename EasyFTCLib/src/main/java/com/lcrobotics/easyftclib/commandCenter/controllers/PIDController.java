@@ -1,21 +1,21 @@
-package com.lcrobotics.easyftclib.commandCenter.driveTrain.controller;
+package com.lcrobotics.easyftclib.commandCenter.controllers;
 
 public class PIDController extends PIDFController {
     /**
-     * Base constructor
+     * Default constructor with just the coefficients
      */
-    public PIDController(double kp, double ki, double kd) {
+    public PIDController(double kp, double ki, double kd){
         super(kp, ki, kd, 0);
     }
 
     /**
-     * Extended constructor
+     * The extended constructor.
      */
     public PIDController(double kp, double ki, double kd, double sp, double pv) {
         super(kp, ki, kd, 0, sp, pv);
     }
 
     public void setPID(double kp, double ki, double kd) {
-        setPIDF(kp, ki, kd, 0);
+        setPIDF(kp,ki,kd,0);
     }
 }
