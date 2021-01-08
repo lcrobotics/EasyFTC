@@ -79,7 +79,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * is explained below.
  */
 
-@TeleOp(name="ULTIMATEGOAL Vuforia Nav Webcam", group ="Concept")
+@TeleOp(name="Do the other one", group ="Concept")
 //@Disabled
 public class VuforiaWebcamTest extends LinearOpMode {
 
