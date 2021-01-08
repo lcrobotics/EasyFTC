@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutonomousOpModes;
+package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
