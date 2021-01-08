@@ -289,16 +289,6 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
                     break;
                 }
             }
-             */
-
-            OpenGLMatrix newLocation = objectLocator.getRobotLocation();
-            if (newLocation == null) {
-                targetVisible = false;
-            }
-            else {
-                lastLocation = newLocation;
-                targetVisible = true;
-            }
 
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
@@ -315,6 +305,23 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
                 telemetry.addData("Visible Target", "none");
             }
             telemetry.update();
+             */
+
+            OpenGLMatrix newLocation = objectLocator.getRobotLocation();
+            if (newLocation == null){
+                telemetry.addData("Visible Target", "none");
+            }
+            else{
+                lastLocation = newLocation;
+                // express position (translation) of robot in inches.
+                VectorF translation = lastLocation.getTranslation();
+                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+
+                // express the rotation of the robot in degrees.
+                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            }
         }
 
         // Disable Tracking when we are done;
