@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -80,7 +81,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  */
 
 @TeleOp(name="Vuforia Webcam Test", group ="Concept")
-//@Disabled
+@Disabled
 public class VuforiaWebcamTest extends LinearOpMode {
 
     private static final float mmPerInch = 25.4f;
