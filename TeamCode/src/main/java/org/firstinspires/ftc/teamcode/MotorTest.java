@@ -28,11 +28,12 @@ public class MotorTest extends OpMode {
         frontRightDrive.setInverted(true);
         backRightDrive.setInverted(true);
 
-
+        /*
         frontRightDrive.setRunMode(Motor.RunMode.VelocityControl);
         frontLeftDrive.setRunMode(Motor.RunMode.VelocityControl);
         frontRightDrive.setRunMode(Motor.RunMode.VelocityControl);
         backLeftDrive.setRunMode(Motor.RunMode.VelocityControl);
+        */
 
         frontRightDrive.setPositionCoefficient(5);
         frontLeftDrive.setPositionCoefficient(5);
@@ -53,8 +54,8 @@ public class MotorTest extends OpMode {
     public void drive(double x, double y, double w) {
         frontLeftDrive.set(Range.clip(y - x + w, -1, 1));
         frontRightDrive.set(Range.clip(y + x - w, -1, 1));
-        backLeftDrive.set(Range.clip(y + x - w, -1, 1));
-        backRightDrive.set(Range.clip(y + x - w, -1, 1));
+        backLeftDrive.set(Range.clip(y + x + w, -1, 1));
+        backRightDrive.set(Range.clip(y - x - w, -1, 1));
 
     }
 }
