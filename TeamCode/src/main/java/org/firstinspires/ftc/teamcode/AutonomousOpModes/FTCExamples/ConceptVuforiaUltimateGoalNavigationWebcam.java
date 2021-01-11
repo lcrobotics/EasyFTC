@@ -27,8 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.AutonomousOpModes;
+package org.firstinspires.ftc.teamcode.AutonomousOpModes.FTCExamples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -41,7 +42,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.NewObjectLocator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,9 +85,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 
-@TeleOp(name="New Vuforia Webcam Test", group ="Concept")
+@TeleOp(name="ULTIMATEGOAL Vuforia Nav Webcam", group ="Concept")
 //@Disabled
-public class NewVuforiaWebcamTest extends LinearOpMode {
+public class ConceptVuforiaUltimateGoalNavigationWebcam extends LinearOpMode {
 
     // IMPORTANT: If you are using a USB WebCam, you must select CAMERA_CHOICE = BACK; and PHONE_IS_PORTRAIT = false;
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
@@ -119,7 +119,6 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
     // Class Members
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
-    private NewObjectLocator objectLocator = null;
 
     /*
      * This is the webcam we are to use. As with other hardware devices such as motors and
@@ -176,7 +175,6 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>(targetsUltimateGoal);
-        objectLocator = new NewObjectLocator(allTrackables);
 
         /**
          * In order for localization to work, we need to tell the system where each target is on the field, and
@@ -272,7 +270,6 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
         targetsUltimateGoal.activate();
         while (!isStopRequested()) {
 
-            /*
             // check all the trackable targets to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
@@ -305,23 +302,6 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
                 telemetry.addData("Visible Target", "none");
             }
             telemetry.update();
-             */
-
-            OpenGLMatrix newLocation = objectLocator.getRobotLocation();
-            if (newLocation == null){
-                telemetry.addData("Visible Target", "none");
-            }
-            else{
-                lastLocation = newLocation;
-                // express position (translation) of robot in inches.
-                VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-
-                // express the rotation of the robot in degrees.
-                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-            }
         }
 
         // Disable Tracking when we are done;
