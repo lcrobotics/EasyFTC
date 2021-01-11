@@ -53,8 +53,8 @@ public class MotorTest extends OpMode {
     public void drive(double x, double y, double w) {
         frontLeftDrive.set(Range.clip(y - x + w, -1, 1));
         frontRightDrive.set(Range.clip(y + x - w, -1, 1));
-        backLeftDrive.set(Range.clip(y + x - w, -1, 1));
-        backRightDrive.set(Range.clip(y + x - w, -1, 1));
+        backLeftDrive.set(Range.clip(y + x + w, -1, 1));
+        backRightDrive.set(Range.clip(y - x - w, -1, 1));
 
     }
 }
