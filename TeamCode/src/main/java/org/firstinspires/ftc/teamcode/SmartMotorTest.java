@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.lcrobotics.easyftclib.AdvancedOpMode;
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.SmartMotor;
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.WheelPosition;
+import com.lcrobotics.easyftclib.commandCenter.old.SmartMotor;
+import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 

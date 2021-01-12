@@ -1,5 +1,6 @@
 package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
+import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,10 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 // TODO: perhaps include methods contained in DcMotor for ease of access
 public class DriveMotor {
     // FTC motor class
-    DcMotorEx motor;
+    public DcMotorEx motor;
     // Stores whether the motor is left or right (and maybe front or back)
-    WheelPosition position;
-    String motorName;
+    public WheelPosition position;
+    public String motorName;
 
     boolean needsUpdate;
     double ticksPerCM;

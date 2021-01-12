@@ -1,7 +1,7 @@
 package com.lcrobotics.easyftclib;
 
 import com.lcrobotics.easyftclib.commandCenter.driveTrain.DriveMotor;
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.WheelPosition;
+import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 

@@ -1,6 +1,11 @@
-package com.lcrobotics.easyftclib.commandCenter.driveTrain;
+package com.lcrobotics.easyftclib.commandCenter.old;
 
 import com.lcrobotics.easyftclib.commandCenter.driveTrain.commands.Command;
+import com.lcrobotics.easyftclib.commandCenter.old.CommandData;
+import com.lcrobotics.easyftclib.commandCenter.old.SmartCommand;
+import com.lcrobotics.easyftclib.commandCenter.old.SmartMotor;
+import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
+import com.lcrobotics.easyftclib.commandCenter.old.WheelType;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;

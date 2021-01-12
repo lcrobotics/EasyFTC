@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.CommandData;
+import com.lcrobotics.easyftclib.commandCenter.old.CommandData;
 import com.lcrobotics.easyftclib.commandCenter.driveTrain.commands.Command;
 import com.lcrobotics.easyftclib.commandCenter.driveTrain.commands.Drive;
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.SmartTrainGyro;
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.WheelType;
+import com.lcrobotics.easyftclib.commandCenter.old.SmartTrainGyro;
+import com.lcrobotics.easyftclib.commandCenter.old.WheelType;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

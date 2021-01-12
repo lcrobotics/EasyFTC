@@ -7,7 +7,7 @@ package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
 
 import android.support.annotation.NonNull;
 
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.CommandData;
+import com.lcrobotics.easyftclib.commandCenter.old.CommandData;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 
