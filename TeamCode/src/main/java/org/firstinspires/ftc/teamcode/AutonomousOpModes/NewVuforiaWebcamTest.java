@@ -41,7 +41,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.BoolAndMatrix;
 import org.firstinspires.ftc.teamcode.NewObjectLocator;
 
 import java.util.ArrayList;
@@ -273,9 +272,12 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
         targetsUltimateGoal.activate();
         while (!isStopRequested()) {
 
-            BoolAndMatrix newLocation = objectLocator.getRobotLocation();
-            targetVisible = newLocation.targetVisible;
-            lastLocation = newLocation.lastLocation;
+            //BoolAndMatrix newLocation = objectLocator.getRobotLocation();
+            objectLocator.updateRobotLocation();
+            //targetVisible = newLocation.targetVisible;
+            //lastLocation = newLocation.lastLocation;
+            targetVisible = objectLocator.targetVisible;
+            lastLocation = objectLocator.lastLocation;
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
                 // express position (translation) of robot in inches.

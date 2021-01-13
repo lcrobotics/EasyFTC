@@ -9,14 +9,15 @@ import java.util.List;
 public class NewObjectLocator {
 
     List<VuforiaTrackable> allTrackables;
-    boolean targetVisible = false;
-    OpenGLMatrix lastLocation = null;
+    public boolean targetVisible = false;
+    public OpenGLMatrix lastLocation = null;
 
     public NewObjectLocator(List<VuforiaTrackable> allTrackables){
         this.allTrackables = allTrackables;
     }
 
-    public BoolAndMatrix getRobotLocation(){
+    //public BoolAndMatrix getRobotLocation(){
+    public void updateRobotLocation(){
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
@@ -33,6 +34,6 @@ public class NewObjectLocator {
                 break;
             }
         }
-        return new BoolAndMatrix(targetVisible, lastLocation);
+        //return new BoolAndMatrix(targetVisible, lastLocation);
     }
 }
