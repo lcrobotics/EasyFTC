@@ -41,6 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.BoolAndMatrix;
 import org.firstinspires.ftc.teamcode.NewObjectLocator;
 
 import java.util.ArrayList;
@@ -272,24 +273,9 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
         targetsUltimateGoal.activate();
         while (!isStopRequested()) {
 
-            /*
-            // check all the trackable targets to see which one (if any) is visible.
-            targetVisible = false;
-            for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
-                    targetVisible = true;
-
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                    if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
-                    }
-                    break;
-                }
-            }
-
+            BoolAndMatrix newLocation = objectLocator.getRobotLocation();
+            targetVisible = newLocation.targetVisible;
+            lastLocation = newLocation.lastLocation;
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
                 // express position (translation) of robot in inches.
@@ -305,9 +291,8 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
                 telemetry.addData("Visible Target", "none");
             }
             telemetry.update();
-             */
 
-            OpenGLMatrix newLocation = objectLocator.getRobotLocation();
+            /*
             if (newLocation == null){
                 telemetry.addData("Visible Target", "none");
             }
@@ -323,6 +308,8 @@ public class NewVuforiaWebcamTest extends LinearOpMode {
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
             }
             telemetry.update();
+             */
+
         }
 
         // Disable Tracking when we are done;
