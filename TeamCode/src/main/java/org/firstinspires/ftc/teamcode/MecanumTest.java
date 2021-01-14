@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.lcrobotics.easyftclib.commandCenter.driveTrain.MecanumDrive;
 import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@TeleOp
 public class MecanumTest extends OpMode {
     final int CPR = 448;
     final int MAX_RPM = 64;
