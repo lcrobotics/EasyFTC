@@ -35,7 +35,7 @@ public class MecanumDrive extends SmartTrainEx {
     public MecanumDrive(boolean autoInvert, double radius, Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight) {
         motors = new Motor[]{frontLeft, frontRight, backLeft, backRight};
         this.radius = radius;
-
+        setRightSideInverted(autoInvert);
     }
 
     /**
