@@ -2,10 +2,9 @@ package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
 import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
 import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import java.util.Arrays;
-
+@TeleOp
 public class MecanumDrive extends SmartTrainEx {
 
     private double rightMultiplier;
