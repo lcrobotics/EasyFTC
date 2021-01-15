@@ -49,6 +49,7 @@ public class DetectColor extends OpMode {
     @Override
     public void loop() {
         frameGetter.updateFrame();
+        telemetry.addData("image dims", String.format(Locale.US, "%d %d", frameGetter.imgWidth, frameGetter.imgHeight));
         for (int h = 0; h < 5; h++) {
             for (int j = 0; j < 5; j++) {
                 int red = frameGetter.rgbValues[0][h][j];

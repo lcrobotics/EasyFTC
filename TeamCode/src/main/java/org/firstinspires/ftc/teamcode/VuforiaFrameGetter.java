@@ -14,8 +14,8 @@ public class VuforiaFrameGetter {
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue = null;
     public int[][][] rgbValues = null;
     public int[][][] integralImg = null;
-    private int imgHeight = 0;
-    private int imgWidth = 0;
+    public int imgWidth = 0;
+    public int imgHeight = 0;
     public int xMax = -1, yMax = -1;
 
     public VuforiaFrameGetter(BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue){
