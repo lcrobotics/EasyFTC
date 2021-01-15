@@ -16,6 +16,7 @@ public class VuforiaFrameGetter {
     public int[][][] integralImg = null;
     private int imgHeight = 0;
     private int imgWidth = 0;
+    public int xMax = -1, yMax = -1;
 
     public VuforiaFrameGetter(BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue){
         this.frameQueue = frameQueue;
@@ -87,7 +88,7 @@ public class VuforiaFrameGetter {
     }
 
     // Return the sum of the values in channel c of the image
-    int sumOfRect(int c, int x, int y, int w, int h) {
+    public int sumOfRect(int c, int x, int y, int w, int h) {
         if (integralImg == null) {
             return 0;
         }
@@ -98,4 +99,19 @@ public class VuforiaFrameGetter {
                 +integralImg[c][y][x];
     }
 
+    public void updateMaxRect(int c, int w, int h) {
+        xMax = -1;
+        yMax = -1;
+        int sMax = -1;
+        for (int x = 0; x <= imgWidth-w; x++) {
+            for (int y = 0; y <= imgHeight-h; y++) {
+                int s = sumOfRect(c, x, y, w, h);
+                if (s > sMax) {
+                    xMax = x;
+                    yMax = y;
+                    sMax = s;
+                }
+            }
+        }
+    }
 }

@@ -113,7 +113,9 @@ public class ObjectLocator {
     public void updateRobotLocation(){
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
-        ArrayList<OpenGLMatrix> robotLocations = new ArrayList<>();
+        OpenGLMatrix avgLocation = null;
+        int numTargetsVisible = 0;
+        //ArrayList<OpenGLMatrix> robotLocations = new ArrayList<>();
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                 //telemetry.addData("Visible Target", trackable.getName());
@@ -123,11 +125,24 @@ public class ObjectLocator {
                 // the last time that call was made, or if the trackable is not currently visible.
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
-                    robotLocations.add(robotLocationTransform);
+                    numTargetsVisible++;
+                    if (avgLocation == null) {
+                        avgLocation = robotLocationTransform;
+                    }
+                    else {
+                        avgLocation.add(robotLocationTransform);
+                    }
+                    //robotLocations.add(robotLocationTransform);
                 }
             }
         }
 
+        if (numTargetsVisible != 0){
+            avgLocation.multiply(1.0f / numTargetsVisible);
+            lastLocation = avgLocation;
+        }
+
+        /*
         if (!robotLocations.isEmpty()) {
             // Average all values in robotLocations
             OpenGLMatrix avgLocation = robotLocations.get(0);
@@ -136,5 +151,6 @@ public class ObjectLocator {
             avgLocation.multiply(1.0f / robotLocations.size());
             lastLocation = avgLocation;
         }
+         */
     }
 }
