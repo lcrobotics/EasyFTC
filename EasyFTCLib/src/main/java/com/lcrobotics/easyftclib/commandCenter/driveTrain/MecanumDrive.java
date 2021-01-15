@@ -88,6 +88,9 @@ public class MecanumDrive extends SmartTrainEx {
         setPower(wheelSpeeds);
     }
 
+    public void drive(double strafe, double forward, double turn) {
+        drive(strafe, forward, turn, false);
+    }
     public void setPower(double[] powers) {
         if (powers.length != motors.length) {
             throw new RuntimeException("Array length mismatch when setting motor powers");
