@@ -50,6 +50,7 @@ public class DetectColor extends OpMode {
     public void loop() {
         frameGetter.updateFrame();
         telemetry.addData("image dims", String.format(Locale.US, "%d %d", frameGetter.imgWidth, frameGetter.imgHeight));
+        /*
         for (int h = 0; h < 5; h++) {
             for (int j = 0; j < 5; j++) {
                 int red = frameGetter.rgbValues[0][h][j];
@@ -59,6 +60,12 @@ public class DetectColor extends OpMode {
                         String.format(Locale.US, "red: %d green: %d blue: %d", red, green, blue));
             }
         }
+         */
+        int w = 100, h = 100;
+        frameGetter.updateMaxRect(0, w, h);
+        telemetry.addData(
+                String.format(Locale.US, "Max %dx%d rect", w, h),
+                String.format(Locale.US, "%d %d", frameGetter.xMax, frameGetter.yMax));
         telemetry.update();
     }
 }
