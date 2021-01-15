@@ -16,7 +16,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 public class ObjectLocator {
-
     // Since ImageTarget trackables use mm to specify their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
@@ -40,7 +39,10 @@ public class ObjectLocator {
     VuforiaTrackable blueAllianceTarget;
     VuforiaTrackable frontWallTarget;
 
-    public ObjectLocator(VuforiaTrackables targetsUltimateGoal) {
+    public boolean targetVisible = false;
+    public OpenGLMatrix lastLocation = null;
+
+    public ObjectLocator(VuforiaTrackables targetsUltimateGoal){
 
         blueTowerGoalTarget = targetsUltimateGoal.get(0);
         blueTowerGoalTarget.setName("Blue Tower Goal Target");
@@ -106,36 +108,33 @@ public class ObjectLocator {
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, VuforiaLocalizer.CameraDirection.BACK);
         }
-
     }
 
-    public OpenGLMatrix getAvgLocationFromTargets() {
+    public void updateRobotLocation(){
         // check all the trackable targets to see which one (if any) is visible.
+        targetVisible = false;
         ArrayList<OpenGLMatrix> robotLocations = new ArrayList<>();
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                //telemetry.addData("Visible Target", trackable.getName());
+                targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
                 // the last time that call was made, or if the trackable is not currently visible.
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                // robotLocations.add(robotLocationTransform);
                 if (robotLocationTransform != null) {
                     robotLocations.add(robotLocationTransform);
                 }
-                //break;
             }
         }
 
-        // No targets visible (or no new info)
-        // In this case, lastLocation remains the same
-        if (robotLocations.isEmpty())
-            return null;
-
-        // Average all values in robotLocations
-        OpenGLMatrix avgLocation = robotLocations.get(0);
-        for (int i = 1; i < robotLocations.size(); i++)
-            avgLocation.add(robotLocations.get(i));
-        avgLocation.multiply(1.0f/robotLocations.size());
-        return avgLocation;
+        if (!robotLocations.isEmpty()) {
+            // Average all values in robotLocations
+            OpenGLMatrix avgLocation = robotLocations.get(0);
+            for (int i = 1; i < robotLocations.size(); i++)
+                avgLocation.add(robotLocations.get(i));
+            avgLocation.multiply(1.0f / robotLocations.size());
+            lastLocation = avgLocation;
+        }
     }
 }

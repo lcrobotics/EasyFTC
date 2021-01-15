@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -42,7 +41,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.ObjectLocator;
-import org.firstinspires.ftc.teamcode.VuforiaFrameGetter;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -80,8 +78,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  * is explained below.
  */
 
-@TeleOp(name="Vuforia Webcam Test", group ="Concept")
-@Disabled
+
+@TeleOp(name="New Vuforia Webcam Test", group ="Concept")
+//@Disabled
 public class VuforiaWebcamTest extends LinearOpMode {
 
     private static final float mmPerInch = 25.4f;
@@ -103,7 +102,6 @@ public class VuforiaWebcamTest extends LinearOpMode {
     // Class Members
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
-    private VuforiaFrameGetter frameGetter = null;
     private ObjectLocator objectLocator = null;
 
     /*
@@ -111,6 +109,8 @@ public class VuforiaWebcamTest extends LinearOpMode {
      * servos, this device is identified using the robot configuration tool in the FTC application.
      */
     WebcamName webcamName = null;
+
+    //private boolean targetVisible = false;
 
     @Override public void runOpMode() {
         /*
@@ -126,7 +126,6 @@ public class VuforiaWebcamTest extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
 
         /*
@@ -137,8 +136,6 @@ public class VuforiaWebcamTest extends LinearOpMode {
         // Make sure extended tracking is disabled for this example.
         parameters.useExtendedTracking = false;
 
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
@@ -146,17 +143,6 @@ public class VuforiaWebcamTest extends LinearOpMode {
         // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsUltimateGoal = this.vuforia.loadTrackablesFromAsset("UltimateGoal");
         objectLocator = new ObjectLocator(targetsUltimateGoal);
-
-        // This is only necessary for getting pixels (integral image goal detection, etc)
-        /*
-        // Initialize frame queue
-        boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
-        if (!results[0]) { // Failed to get Vuforia to convert to RGB565.
-            throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
-        }
-        vuforia.setFrameQueueCapacity(1);
-        frameGetter = new VuforiaFrameGetter(vuforia.getFrameQueue());
-        */
 
         // WARNING:
         // In this sample, we do not wait for PLAY to be pressed.  Target Tracking is started immediately when INIT is pressed.
@@ -173,18 +159,14 @@ public class VuforiaWebcamTest extends LinearOpMode {
         targetsUltimateGoal.activate();
         while (!isStopRequested()) {
 
-            OpenGLMatrix avgLocation = objectLocator.getAvgLocationFromTargets();
+            objectLocator.updateRobotLocation();
+            //targetVisible = objectLocator.targetVisible;
+            lastLocation = objectLocator.lastLocation;
 
             // Provide feedback as to where the robot is located (if we know).
-            if (avgLocation == null) {
-                telemetry.addData("Visible Target", "none");
-            }
-            else {
-
+            //if (targetVisible) {
+            if (objectLocator.targetVisible) {
                 // express position (translation) of robot in inches.
-
-                lastLocation = avgLocation;
-
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                         translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
@@ -192,6 +174,9 @@ public class VuforiaWebcamTest extends LinearOpMode {
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            }
+            else {
+                telemetry.addData("Visible Target", "none");
             }
             telemetry.update();
         }
