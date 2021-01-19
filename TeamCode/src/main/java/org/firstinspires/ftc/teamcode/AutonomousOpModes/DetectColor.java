@@ -61,11 +61,14 @@ public class DetectColor extends OpMode {
             }
         }
          */
+        /*
         int w = 100, h = 100;
         frameGetter.updateMaxRect(0, w, h);
         telemetry.addData(
                 String.format(Locale.US, "Max %dx%d rect", w, h),
                 String.format(Locale.US, "%d %d", frameGetter.xMax, frameGetter.yMax));
+         */
+        telemetry.addData("Rect sum", frameGetter.sumOfRect(0, 0, 0, 200, 200));
         telemetry.update();
     }
 }
