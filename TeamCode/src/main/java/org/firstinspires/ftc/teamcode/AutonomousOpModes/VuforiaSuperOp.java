@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.PIXEL_FORMAT;
 
@@ -12,18 +11,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.ObjectLocator;
 import org.firstinspires.ftc.teamcode.VuforiaFrameGetter;
 
-@Autonomous
 public abstract class VuforiaSuperOp extends OpMode {
 
     private final static String VUFORIA_KEY = "ARgYuCf/////AAABmUYfc1+dVEQsgUBCPA2kCAFRmuTRB/XUfAJzLsRyFDRg6uMMjj6EXM8YNiY5l3oTw83H+PKgfF46gctdzrln2nnVXMebpgN9ULy1cOfdSsPk0hwSZqzcY0LWCj+rPPrZ3JyQT7gf2aw7bo8ZvWedWB7skuGIjg+9cyTJdDyXmXrQ8Bo4r4siTFNTVFxg21OH/Gd8wrVJF4RqjE+kcez3MzcnE2EPCqWTNixSge5yLg+tN87/R/dMPzqHWvmjE6F6J/7/sahPt7FQ9G6tYWnV1impzZsH7T/JT6pGr2SALwHdaNjBGbYY76ZfvAxixEdob9g6qMBhKOyLg6HTP9VzRZ06ksUhErmR2K2LSkyjxBBz";
-    private static final float mmPerInch = 25.4f;
-
-    private VuforiaLocalizer vuforia;
+    public static final float mmPerInch = 25.4f;
 
     // Class Members
-    private OpenGLMatrix lastLocation = null;
-    private VuforiaFrameGetter frameGetter = null;
-    private ObjectLocator objectLocator = null;
+    public VuforiaLocalizer vuforia;
+    public VuforiaFrameGetter frameGetter = null;
+    public ObjectLocator objectLocator = null;
+    public OpenGLMatrix lastLocation = null;
 
     public void init(){
         /*
