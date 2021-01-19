@@ -93,10 +93,10 @@ public class VuforiaFrameGetter {
             return 0;
         }
         return
-                +integralImg[c][y+h][x+w]
-                -integralImg[c][y+h][x]
-                -integralImg[c][y][x+w]
-                +integralImg[c][y][x];
+                +integralImg[c][x+w][y+h]
+                -integralImg[c][x][y+h]
+                -integralImg[c][x+w][y]
+                +integralImg[c][x][y];
     }
 
     public void updateMaxRect(int c, int w, int h) {
