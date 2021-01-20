@@ -1,5 +1,16 @@
 package com.lcrobotics.easyftclib.commandCenter.controllers;
-
+/**
+ * This is a PID controller (https://en.wikipedia.org/wiki/PID_controller)
+ * for your robot. Internally, it performs all the calculations for you.
+ * You need to tune your values to the appropriate amounts in order
+ * to properly utilize these calculations.
+ *
+ * The equation we will use is:
+ * u(t) = kP * e(t) + kI * int(0,t)[e(t')dt'] + kD * e'(t) + kF
+ * where e(t) = r(t) - y(t) and r(t) is the setpoint and y(t) is the
+ * measured value. If we consider e(t) the positional error, then
+ * int(0,t)[e(t')dt'] is the total error and e'(t) is the velocity error.
+ */
 public class PIDFController {
 
     private double kP, kI, kD, kF;
@@ -23,7 +34,7 @@ public class PIDFController {
      * base constructor
      */
     public PIDFController(double kp, double ki, double kd, double kf) {
-
+        this(kp, ki, kd, kf, 0, 0);
     }
     /**
      * full constructor

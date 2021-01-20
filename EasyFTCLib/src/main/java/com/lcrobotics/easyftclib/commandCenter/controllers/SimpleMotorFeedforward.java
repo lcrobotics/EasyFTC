@@ -10,7 +10,6 @@ package com.lcrobotics.easyftclib.commandCenter.controllers;
 /**
  * A helper class that computes feedforward outputs for a simple permanent-magnet DC motor.
  */
-@SuppressWarnings("MemberName")
 public class SimpleMotorFeedforward {
     public final double ks;
     public final double kv;

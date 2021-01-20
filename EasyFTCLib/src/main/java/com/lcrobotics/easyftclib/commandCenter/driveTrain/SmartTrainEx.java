@@ -1,15 +1,10 @@
 
 package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
-import android.support.annotation.NonNull;
-
-import com.lcrobotics.easyftclib.commandCenter.hardware.MotorEx;
 import com.lcrobotics.easyftclib.tools.MathUtils;
 
-import java.util.Arrays;
-
 /**
- * Bingo Bango Bongo, this code is shit
+ * Base class for all drivebases, users should only use this when defining their own drivebases.
  */
 public abstract class SmartTrainEx {
 

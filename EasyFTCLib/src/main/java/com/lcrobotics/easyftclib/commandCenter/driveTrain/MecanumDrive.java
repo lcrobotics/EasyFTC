@@ -3,6 +3,9 @@ package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
 import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
 
+/**
+ *  Class to drive Mecanum robots.
+ */
 public class MecanumDrive extends SmartTrainEx {
 
     private double rightMultiplier;
@@ -62,17 +65,28 @@ public class MecanumDrive extends SmartTrainEx {
         }
     }
 
+    /**
+     * Drives the mecanum drivebase with given powers. For TeleOp, call this repeatedly in
+     * {@code void loop()} in an OpMode or {@code while (!isStopRequested() && opModeIsActive())}
+     * in a LinearOpMode.
+     *
+     * @param strafe strafing power
+     * @param forward driving power
+     * @param turn turning power
+     * @param square whether to square the inputs
+     */
     public void drive(double strafe, double forward, double turn, boolean square) {
+        // square inputs if needed
         strafe = square? square(strafe) : strafe;
         forward = square? square(forward) : forward;
         turn = square? square(turn) : turn;
-
+        // clip ranges
         strafe = clipRange(strafe);
         forward = clipRange(forward);
         turn = clipRange(turn);
 
         double[] wheelSpeeds = new double[4];
-
+        // calculate base speeds
         wheelSpeeds[WheelPosition.FRONT_LEFT.value] = forward - strafe + turn;
         wheelSpeeds[WheelPosition.FRONT_RIGHT.value] = forward + strafe - turn;
         wheelSpeeds[WheelPosition.BACK_LEFT.value] = forward + strafe + turn;
@@ -88,10 +102,24 @@ public class MecanumDrive extends SmartTrainEx {
         setPower(wheelSpeeds);
     }
 
+    /**
+     * Drive method that defaults to not squaring the inputs.
+     * See {@link #drive(double, double, double, boolean)}
+     *
+     * @param strafe strafing power
+     * @param forward driving power
+     * @param turn turning power
+     */
     public void drive(double strafe, double forward, double turn) {
         drive(strafe, forward, turn, false);
     }
-    public void setPower(double[] powers) {
+
+    /**
+     * Convenience method to set motor powers using array
+     *
+     * @param powers array of motor powers
+     */
+    public void setPower(double... powers) {
         if (powers.length != motors.length) {
             throw new RuntimeException("Array length mismatch when setting motor powers");
         }
