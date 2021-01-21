@@ -25,25 +25,25 @@ import org.ejml.simple.SimpleMatrix;
  * field using encoders and a gyro.
  */
 public class MecanumDriveKinematics {
-    private SimpleMatrix inverseKinematics;
     private final SimpleMatrix forwardKinematics;
-
     private final Translation2d frontLeftWheel;
     private final Translation2d frontRightWheel;
     private final Translation2d backLeftWheel;
     private final Translation2d backRightWheel;
+    private SimpleMatrix inverseKinematics;
+    private Translation2d prevCoR = new Translation2d();
 
     /**
      * Constructs kinematics for a mecanum dirve.
      *
-     * @param frontLeftWheel The location of the front-left wheel relative to the physical
-     *     center of the robot.
+     * @param frontLeftWheel  The location of the front-left wheel relative to the physical
+     *                        center of the robot.
      * @param frontRightWheel The location of the front-right wheel relative to the physical
-     *     center of the robot.
-     * @param backLeftWheel The location of the back-left wheel relative to the physical
-     *     center of the robot.
-     * @param backRightWheel The location of the back-right wheel relative to the physical
-     *     center of the robot.
+     *                        center of the robot.
+     * @param backLeftWheel   The location of the back-left wheel relative to the physical
+     *                        center of the robot.
+     * @param backRightWheel  The location of the back-right wheel relative to the physical
+     *                        center of the robot.
      */
     public MecanumDriveKinematics(Translation2d frontLeftWheel, Translation2d frontRightWheel,
                                   Translation2d backLeftWheel, Translation2d backRightWheel) {
@@ -58,6 +58,75 @@ public class MecanumDriveKinematics {
         forwardKinematics = inverseKinematics.pseudoInverse();
     }
 
+    public MecanumDriveWheelSpeeds toWheelSpeeds(
+            ChassisSpeeds chassisSpeeds, Translation2d centerOfRotation) {
+        // compute matrix if new center of rotation
+        if (!centerOfRotation.equals(prevCoR)) {
+            Translation2d fl = frontLeftWheel.minus(centerOfRotation);
+            Translation2d fr = frontRightWheel.minus(centerOfRotation);
+            Translation2d bl = backLeftWheel.minus(centerOfRotation);
+            Translation2d br = backRightWheel.minus(centerOfRotation);
+
+            setInverseKinematics(fl, fr, bl, br);
+            prevCoR = centerOfRotation;
+        }
+
+        SimpleMatrix chassisSpeedsVector = new SimpleMatrix(3, 1);
+
+        chassisSpeedsVector.setColumn(
+                0, 0,
+                chassisSpeeds.velocityX,
+                chassisSpeeds.velocityY,
+                chassisSpeeds.omegaRadiansPerSecond
+        );
+
+        SimpleMatrix wheelsMatrix = inverseKinematics.mult(chassisSpeedsVector);
+
+        return new MecanumDriveWheelSpeeds(
+                wheelsMatrix.get(0, 0),
+                wheelsMatrix.get(1, 0),
+                wheelsMatrix.get(2, 0),
+                wheelsMatrix.get(3, 0)
+        );
+    }
+
+    /**
+     * Performs inverse kinematics. See {@link #toWheelSpeeds(ChassisSpeeds, Translation2d)} for
+     * more information.
+     *
+     * @param chassisSpeeds The desired chassis speeds.
+     * @return The wheel speeds.
+     */
+    public MecanumDriveWheelSpeeds toWheelSpeeds(ChassisSpeeds chassisSpeeds) {
+        return toWheelSpeeds(chassisSpeeds, new Translation2d());
+    }
+
+    /**
+     * Performs forward kinematics to return the resulting chassis speed from the given wheel
+     * speeds. This method is often used for odometry.
+     *
+     * @param wheelSpeeds The current mecanum drive wheel speeds.
+     * @return The resulting chassis speed
+     */
+    public ChassisSpeeds toChassisSpeeds(MecanumDriveWheelSpeeds wheelSpeeds) {
+        SimpleMatrix wheelSpeedsMatrix = new SimpleMatrix(4, 1);
+
+        wheelSpeedsMatrix.setColumn(
+                0, 0,
+                wheelSpeeds.frontLeftSpeed,
+                wheelSpeeds.frontRightSpeed,
+                wheelSpeeds.backLeftSpeed,
+                wheelSpeeds.backRightSpeed
+        );
+
+        SimpleMatrix chassisSpeedsVector = forwardKinematics.mult(wheelSpeedsMatrix);
+
+        return new ChassisSpeeds(
+                chassisSpeedsVector.get(0, 0),
+                chassisSpeedsVector.get(1, 0),
+                chassisSpeedsVector.get(2, 0)
+        );
+    }
 
     /**
      * Construct inverse kinematics matrix from wheel locations.
@@ -69,10 +138,10 @@ public class MecanumDriveKinematics {
      */
     private void setInverseKinematics(Translation2d fl, Translation2d fr,
                                       Translation2d bl, Translation2d br) {
-       inverseKinematics.setRow(0, 0, 1, -1, -(fl.getX() + fl.getY()));
-       inverseKinematics.setRow(1, 0, 1, 1, fr.getX() - fr.getY());
-       inverseKinematics.setRow(2, 0, 1, 1, bl.getX() - bl.getY());
-       inverseKinematics.setRow(3, 0, 1, -1, -(br.getX() + br.getY()));
-       inverseKinematics = inverseKinematics.scale(1.0 / Math.sqrt(2));
+        inverseKinematics.setRow(0, 0, 1, -1, -(fl.getX() + fl.getY()));
+        inverseKinematics.setRow(1, 0, 1, 1, fr.getX() - fr.getY());
+        inverseKinematics.setRow(2, 0, 1, 1, bl.getX() - bl.getY());
+        inverseKinematics.setRow(3, 0, 1, -1, -(br.getX() + br.getY()));
+        inverseKinematics = inverseKinematics.scale(1.0 / Math.sqrt(2));
     }
 }

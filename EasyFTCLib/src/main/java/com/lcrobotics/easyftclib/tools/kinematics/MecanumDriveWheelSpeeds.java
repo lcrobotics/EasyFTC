@@ -6,30 +6,39 @@ import java.util.Locale;
 import java.util.stream.DoubleStream;
 
 public class MecanumDriveWheelSpeeds {
-    /** Speed of the front left wheel. */
+    /**
+     * Speed of the front left wheel.
+     */
     public double frontLeftSpeed;
 
-    /** Speed of the front right wheel. */
+    /**
+     * Speed of the front right wheel.
+     */
     public double frontRightSpeed;
 
-    /** Speed of the back left wheel. */
+    /**
+     * Speed of the back left wheel.
+     */
     public double backLeftSpeed;
 
-    /** Speed of the back right wheel. */
+    /**
+     * Speed of the back right wheel.
+     */
     public double backRightSpeed;
 
     /**
      * Constructs a MecanumDriveWheelSpeeds with zeros for all speeds.
      */
-    public MecanumDriveWheelSpeeds() {}
+    public MecanumDriveWheelSpeeds() {
+    }
 
     /**
-     * Constructs a MecanumDriveWheelSpeeds
+     * Constructs a MecanumDriveWheelSpeeds with given speeds.
      *
-     * @param frontLeftSpeed The speed of the front-left wheel.
+     * @param frontLeftSpeed  The speed of the front-left wheel.
      * @param frontRightSpeed The speed of the front-right wheel.
-     * @param backLeftSpeed The speed of the back-left wheel.
-     * @param backRightSpeed The speed of the back-right wheel.
+     * @param backLeftSpeed   The speed of the back-left wheel.
+     * @param backRightSpeed  The speed of the back-right wheel.
      */
     public MecanumDriveWheelSpeeds(double frontLeftSpeed, double frontRightSpeed,
                                    double backLeftSpeed, double backRightSpeed) {
@@ -61,6 +70,7 @@ public class MecanumDriveWheelSpeeds {
             backRightSpeed = backRightSpeed / realMaxSpeed * attainableMaxSpeed;
         }
     }
+
     @NonNull
     @Override
     public String toString() {
