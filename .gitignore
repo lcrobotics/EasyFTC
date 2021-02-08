@@ -21,7 +21,7 @@ Thumbs.db
                 
 # OSX files
 .DS_Store
-                            
+
 # Android Studio
 *.iml
 .idea
@@ -31,7 +31,13 @@ build/
 .navigation
 captures/
 output.json 
-    
-#NDK
+
+# NDK
 obj/
 .externalNativeBuild
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/build
+/captures
+/TeamCode/build/
