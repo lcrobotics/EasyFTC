@@ -74,9 +74,9 @@ public class ViewLogsActivity extends ThemedActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_view_logs);
 
-    textAdbLogs = (TextView) findViewById(R.id.textAdbLogs);
+    textAdbLogs = findViewById(R.id.textAdbLogs);
 
-    final ScrollView scrollView = ((ScrollView) findViewById(R.id.scrollView));
+    final ScrollView scrollView = findViewById(R.id.scrollView);
     scrollView.post(new Runnable() {
       @Override
       public void run() {

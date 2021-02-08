@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.lcrobotics.easyftclib.AdvancedOpMode;
-import com.lcrobotics.easyftclib.CommandCenter.driveTrain.DriveMotor;
-import com.lcrobotics.easyftclib.CommandCenter.driveTrain.DriveTrain;
-import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelPosition;
-import com.lcrobotics.easyftclib.CommandCenter.driveTrain.WheelType;
+import com.lcrobotics.easyftclib.commandCenter.driveTrain.DriveMotor;
+import com.lcrobotics.easyftclib.commandCenter.old.DriveTrain;
+import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
+import com.lcrobotics.easyftclib.commandCenter.old.WheelType;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp

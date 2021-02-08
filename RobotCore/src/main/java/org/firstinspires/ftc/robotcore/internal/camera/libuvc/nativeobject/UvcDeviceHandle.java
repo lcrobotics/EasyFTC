@@ -143,7 +143,7 @@ public class UvcDeviceHandle extends NativeObject<UvcDevice> implements RefCount
         {
         synchronized (lock)
             {
-            refCountedCameraHelper.addRefExternal();;
+            refCountedCameraHelper.addRefExternal();
             }
         }
     @Override public int releaseRefExternal()

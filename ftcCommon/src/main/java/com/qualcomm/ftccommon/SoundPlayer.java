@@ -671,7 +671,7 @@ public class SoundPlayer implements SoundPool.OnLoadCompleteListener, SoundPoolI
                 }
             catch (IOException e)
                 {
-                tracer.traceError(e,"exception preparing media sizer; media duration taken to be zero");;
+                tracer.traceError(e,"exception preparing media sizer; media duration taken to be zero");
                 }
             }
         return msDuration < 0 ? 0 : msDuration;
@@ -691,7 +691,7 @@ public class SoundPlayer implements SoundPool.OnLoadCompleteListener, SoundPoolI
                 }
             catch (IOException e)
                 {
-                tracer.traceError(e,"exception preparing media sizer; media duration taken to be zero");;
+                tracer.traceError(e,"exception preparing media sizer; media duration taken to be zero");
                 }
             }
         return msDuration < 0 ? 0 : msDuration;
@@ -1225,9 +1225,9 @@ public class SoundPlayer implements SoundPool.OnLoadCompleteListener, SoundPoolI
                     }
                 return removed;
                 }
-            };
+            }
 
-        //------------------------------------------------------------------------------------------
+            //------------------------------------------------------------------------------------------
         // Construction
         //------------------------------------------------------------------------------------------
 

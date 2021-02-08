@@ -69,7 +69,7 @@ public class LynxNack extends LynxMessage
             ABANDONED_WAITING_FOR_RESPONSE(256),
             ABANDONED_WAITING_FOR_ACK(257);
 
-        private int iVal;
+        private final int iVal;
         ReasonCode(int i) { this.iVal = i; }
         public int getValue() { return this.iVal; }
         public static ReasonCode fromInt(int i)

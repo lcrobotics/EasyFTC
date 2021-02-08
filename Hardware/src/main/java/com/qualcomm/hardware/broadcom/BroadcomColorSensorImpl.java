@@ -123,7 +123,7 @@ public abstract class BroadcomColorSensorImpl extends I2cDeviceSynchDeviceWithPa
             setGain(parameters.gain);
             setLEDParameters(parameters.pulseModulation, parameters.ledCurrent);
             setProximityPulseCount(parameters.proximityPulseCount);
-            setPSRateAndRes(parameters.proximityResolution, parameters.proximityMeasRate);
+            setPSRateAndRes(Parameters.proximityResolution, parameters.proximityMeasRate);
 
             // Enable the device
             enable();

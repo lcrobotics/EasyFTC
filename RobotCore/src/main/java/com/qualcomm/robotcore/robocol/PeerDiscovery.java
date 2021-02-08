@@ -62,7 +62,7 @@ public class PeerDiscovery extends RobocolParsableBase {
     GROUP_OWNER(2);
 
     private static final PeerType[] VALUES_CACHE = PeerType.values();
-    private int type;
+    private final int type;
 
     /**
      * Create a PeerType from a byte
@@ -79,7 +79,7 @@ public class PeerDiscovery extends RobocolParsableBase {
       return p;
     }
 
-    private PeerType(int type) {
+    PeerType(int type) {
       this.type = type;
     }
 

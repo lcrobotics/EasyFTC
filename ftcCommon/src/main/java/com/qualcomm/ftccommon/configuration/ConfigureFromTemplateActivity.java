@@ -120,7 +120,7 @@ public class ConfigureFromTemplateActivity extends EditActivity implements RecvL
             RobotLog.ee(TAG, e, "Failed to open usb scan manager: " + e.toString());
             }
 
-        this.feedbackAnchor = (ViewGroup)findViewById(R.id.feedbackAnchor);
+        this.feedbackAnchor = findViewById(R.id.feedbackAnchor);
         }
 
     @Override
@@ -148,14 +148,14 @@ public class ConfigureFromTemplateActivity extends EditActivity implements RecvL
     // RC has informed DS of the list of configurations
     protected CallbackResult handleCommandRequestConfigurationsResp(String extra) throws RobotCoreException
         {
-        configurationList = robotConfigFileManager.deserializeXMLConfigList(extra);
+        configurationList = RobotConfigFileManager.deserializeXMLConfigList(extra);
         return CallbackResult.HANDLED;
         }
 
     // RC has informed DS of the list of configuration templates
     protected CallbackResult handleCommandRequestTemplatesResp(String extra) throws RobotCoreException
         {
-        templateList = robotConfigFileManager.deserializeXMLConfigList(extra);
+        templateList = RobotConfigFileManager.deserializeXMLConfigList(extra);
         warnIfNoTemplates();
         populate();
         return CallbackResult.HANDLED;
@@ -214,7 +214,7 @@ public class ConfigureFromTemplateActivity extends EditActivity implements RecvL
             @Override
             public void run()
                 {
-                ViewGroup parent = (ViewGroup) findViewById(R.id.templateList);
+                ViewGroup parent = findViewById(R.id.templateList);
                 parent.removeAllViews();
 
                 final Collator coll = Collator.getInstance();
@@ -232,7 +232,7 @@ public class ConfigureFromTemplateActivity extends EditActivity implements RecvL
                     View child = LayoutInflater.from(context).inflate(R.layout.template_info, null);
                     parent.addView(child);
 
-                    TextView name = (TextView) child.findViewById(R.id.templateNameText);
+                    TextView name = child.findViewById(R.id.templateNameText);
                     name.setText(template.getName());
                     name.setTag(template);
                     }
@@ -385,7 +385,7 @@ public class ConfigureFromTemplateActivity extends EditActivity implements RecvL
     protected RobotConfigFile getTemplateMeta(View v)
         {
         ViewGroup viewGroup = (ViewGroup) v.getParent();
-        TextView name = (TextView)viewGroup.findViewById(R.id.templateNameText);
+        TextView name = viewGroup.findViewById(R.id.templateNameText);
         return (RobotConfigFile) name.getTag();
         }
 

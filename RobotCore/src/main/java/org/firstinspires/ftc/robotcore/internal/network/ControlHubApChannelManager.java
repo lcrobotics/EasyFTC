@@ -14,7 +14,7 @@ public final class ControlHubApChannelManager implements ApChannelManager
 
     private final static String TAG = "ControlHubApChannelManager";
     private final static int FACTORY_DEFAULT_AP_CHANNEL = 0;
-    private Context context;
+    private final Context context;
 
     public ControlHubApChannelManager()
     {

@@ -1248,7 +1248,7 @@ public class LynxModule extends LynxCommExceptionHandler implements LynxModuleIn
                 }
             catch (InterruptedException e)
                 {
-                Thread.currentThread().interrupt();;
+                Thread.currentThread().interrupt();
                 }
             }
         }
@@ -1467,7 +1467,7 @@ public class LynxModule extends LynxCommExceptionHandler implements LynxModuleIn
                             Assert.assertTrue(incomingMessage.isResponse());
 
                             // Process the response
-                            originatingCommand.onResponseReceived((LynxResponse) incomingMessage);
+                            originatingCommand.onResponseReceived(incomingMessage);
 
                             // After a response is received, we're always done with a command
                             finishedWithMessage(originatingCommand);

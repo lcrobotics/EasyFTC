@@ -524,7 +524,7 @@ public class Gamepad extends RobocolParsableBase {
    */
   @Override
   public String toString() {
-    String buttons = new String();
+    String buttons = "";
     if (dpad_up) buttons += "dpad_up ";
     if (dpad_down) buttons += "dpad_down ";
     if (dpad_left) buttons += "dpad_left ";
@@ -636,10 +636,8 @@ public class Gamepad extends RobocolParsableBase {
     }
 
     // check updated cache
-    if (gameControllerDeviceIdCache.contains(deviceId))
-      return true;
+      return gameControllerDeviceIdCache.contains(deviceId);
 
     // this is not an event from a game pad
-    return false;
   }
 }

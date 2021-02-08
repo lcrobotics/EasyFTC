@@ -240,7 +240,7 @@ public class OpModeManagerImpl implements OpModeServices, OpModeManagerNotifier 
   }
 
   public void setMatchNumber(int matchNumber) {
-    this.matchNumber = matchNumber;
+    OpModeManagerImpl.matchNumber = matchNumber;
   }
 
   // called on DS receive thread
@@ -656,7 +656,7 @@ public class OpModeManagerImpl implements OpModeServices, OpModeManagerNotifier 
 
     private long nanoNextSafe;
     private boolean firstTimeRun = true;
-    private ElapsedTime blinkerTimer = new ElapsedTime();
+    private final ElapsedTime blinkerTimer = new ElapsedTime();
 
     //----------------------------------------------------------------------------------------------
     // Construction

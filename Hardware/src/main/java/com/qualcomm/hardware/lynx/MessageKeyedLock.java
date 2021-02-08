@@ -62,7 +62,7 @@ public class MessageKeyedLock
     private volatile LynxMessage   lockOwner;
     private          int           lockCount;
     private          long          lockAquisitionTime;
-    private          long          nanoLockAquisitionTimeMax;
+    private final long          nanoLockAquisitionTimeMax;
 
     //----------------------------------------------------------------------------------------------
     // Construction

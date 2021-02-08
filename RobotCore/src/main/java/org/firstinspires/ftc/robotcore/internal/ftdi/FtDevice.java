@@ -67,6 +67,7 @@ import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbException;
 import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbUnspecifiedException;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -287,7 +288,7 @@ public class FtDevice extends FtConstants
                                 serialNumber = serialNumber + (char) serialNumberBytes[m * 2];
                                 }
 
-                            this.mDeviceInfo.serialNumber = new String(serialNumber);
+                            this.mDeviceInfo.serialNumber = serialNumber;
                             }
                         /* fall through */
                     default:
@@ -300,7 +301,7 @@ public class FtDevice extends FtConstants
                             default:
                                 this.getConnection().releaseInterface(this.mUsbInterface);
                                 this.getConnection().close();
-                                this.setConnection((UsbDeviceConnection) null);
+                                this.setConnection(null);
                                 this.setClosed();
                             }
                     }
@@ -399,7 +400,7 @@ public class FtDevice extends FtConstants
 
     private String stringFromUtf16le(byte[] data) throws UnsupportedEncodingException
         {
-        return new String(data, 2, data[0] - 2, "UTF-16LE");
+        return new String(data, 2, data[0] - 2, StandardCharsets.UTF_16LE);
         }
 
     public MonitoredUsbDeviceConnection getConnection()
@@ -881,7 +882,7 @@ public class FtDevice extends FtConstants
 
             if (rc == 1)
                 {
-                int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_SET_BAUDRATE, divisors[0], divisors[1], (byte[]) null, 0, 0);
+                int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_SET_BAUDRATE, divisors[0], divisors[1], null, 0, 0);
                 if (status != 0)
                     {
                     throw new RobotUsbUnspecifiedException("setBaudRate: status=%d", status);
@@ -929,7 +930,7 @@ public class FtDevice extends FtConstants
             }
         else
             {
-            int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_SET_DATA, wValue, this.mInterfaceID, (byte[]) null, 0, 0);
+            int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_SET_DATA, wValue, this.mInterfaceID, null, 0, 0);
             throwIfStatus(status, "setBreak");
             }
         }
@@ -958,7 +959,7 @@ public class FtDevice extends FtConstants
                 wValue = (short) (wValue | xon & 255);
                 }
 
-            int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_SET_FLOW_CTRL, wValue, this.mInterfaceID | flowControl, (byte[]) null, 0, 0);
+            int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_SET_FLOW_CTRL, wValue, this.mInterfaceID | flowControl, null, 0, 0);
             if (status == 0)
                 {
                 rc = true;
@@ -1175,7 +1176,7 @@ public class FtDevice extends FtConstants
             {
             // Notice that this isn't sent to a specific interface, but rather the whole device
             RobotLog.vv(TAG, "resetting %s", getSerialNumber());
-            int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_RESET, FTDI_SIO_RESET_SIO, 0, (byte[]) null, 0, 0);
+            int status = this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, FTDI_SIO_RESET, FTDI_SIO_RESET_SIO, 0, null, 0, 0);
             return (status==0);
             }
         }
@@ -1188,7 +1189,7 @@ public class FtDevice extends FtConstants
             }
         else
             {
-            return this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, request, wValue, this.mInterfaceID, (byte[]) null, 0, 0);
+            return this.getConnection().controlTransfer(UsbConstants.USB_TYPE_VENDOR | UsbConstants.USB_DIR_OUT, request, wValue, this.mInterfaceID, null, 0, 0);
             }
         }
 

@@ -101,9 +101,9 @@ public abstract class OpMode {
    * This method will be called repeatedly when the INIT button is pressed.
    * This method is optional. By default this method takes no action.
    */
-  public void init_loop() {};
+  public void init_loop() {}
 
-  /**
+    /**
    * User defined start method.
    * <p>
    * This method will be called once when the PLAY button is first pressed.
@@ -111,9 +111,9 @@ public abstract class OpMode {
    * Example usage: Starting another thread.
    *
    */
-  public void start() {};
+  public void start() {}
 
-  /**
+    /**
    * User defined loop method
    * <p>
    * This method will be called repeatedly in a loop while this op mode is running
@@ -127,9 +127,9 @@ public abstract class OpMode {
    *
    * The stop method is optional. By default this method takes no action.
    */
-  public void stop() {};
+  public void stop() {}
 
-  /**
+    /**
    * Requests that this OpMode be shut down if it the currently active opMode, much as if the stop
    * button had been pressed on the driver station; if this is not the currently active OpMode,
    * then this function has no effect. Note as part of this processing, the OpMode's {@link #stop()}
