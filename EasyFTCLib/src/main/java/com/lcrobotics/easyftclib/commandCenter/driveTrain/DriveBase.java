@@ -6,7 +6,7 @@ import com.lcrobotics.easyftclib.tools.MathUtils;
 /**
  * Base class for all drivebases, users should only use this when defining their own drivebases.
  */
-public abstract class SmartTrainEx {
+public abstract class DriveBase {
 
     public static final double defaultRangeMin = -1.0;
     public static final double defaultRangeMax = 1.0;
@@ -16,8 +16,7 @@ public abstract class SmartTrainEx {
     protected double rangeMax = defaultRangeMax;
     protected double maxSpeed = defaultMaxSpeed;
 
-
-    public SmartTrainEx() {
+    public DriveBase() {
 
     }
 
@@ -58,7 +57,13 @@ public abstract class SmartTrainEx {
     }
 
     public abstract void stop();
-
+    /**
+     * Normalize wheel speeds, scaling the max speed down to the provided magnitude
+     * while keeping the ratios in between the speeds the same
+     *
+     * @param wheelSpeeds wheel speeds to normalize
+     * @param magnitude max speed allowed
+     */
     protected void normalize(double[] wheelSpeeds, double magnitude) {
         double max = Math.abs(wheelSpeeds[0]);
         // find max wheel speed
@@ -74,6 +79,12 @@ public abstract class SmartTrainEx {
         }
     }
 
+    /**
+     * Normalize wheel speeds, scaling the max speed down to 1 while keeping the ratios
+     * in between the speeds the same
+     *
+     * @param wheelSpeeds wheel speeds to normalize
+     */
     protected void normalize(double[] wheelSpeeds) {
         double max = Math.abs(wheelSpeeds[0]);
         // find max wheel speed

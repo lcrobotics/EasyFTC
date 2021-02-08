@@ -10,6 +10,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.function.Supplier;
 
+/**
+ * Wrapper around {@link DcMotor}
+ */
 public class Motor implements HardwareDevice {
 
     public enum Direction {
@@ -54,6 +57,11 @@ public class Motor implements HardwareDevice {
         private Direction direction;
         private double lastTimeStamp, velo, dpp;
 
+        /**
+         * Construct an encoder, using the given supplier as a way to get position
+         *
+         * @param pos Supplier of encoder position in ticks
+         */
         public Encoder(Supplier<Integer> pos) {
             position = pos;
             dpp = 1;

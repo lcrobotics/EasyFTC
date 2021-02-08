@@ -29,7 +29,7 @@ public class MecanumTest extends OpMode {
         bl.setVelocityCoefficients(2.0, 0.5, 1);
         br.setVelocityCoefficients(2.0, 0.5, 1);
 
-        wheels = new MecanumDrive(5, fl, fr, bl, br);
+        wheels = new MecanumDrive(fl, fr, bl, br);
     }
 
     @Override

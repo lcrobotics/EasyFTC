@@ -6,24 +6,22 @@ import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
 /**
  *  Class to drive Mecanum robots.
  */
-public class MecanumDrive extends SmartTrainEx {
+public class MecanumDrive extends DriveBase {
 
     private double rightMultiplier;
 
-    private final double radius;
     private final Motor[] motors;
 
     /**
      * Base constructor for the mecanum drive. Reverses right side by default.
      *
-     * @param radius     the wheel radius
      * @param frontLeft  the front left motor
      * @param frontRight the front right motor
      * @param backLeft   the back left motor
      * @param backRight  the back right motor
      */
-    public MecanumDrive(double radius, Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight) {
-        this(true, radius, frontLeft, frontRight, backLeft, backRight);
+    public MecanumDrive(Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight) {
+        this(true, frontLeft, frontRight, backLeft, backRight);
     }
 
     /**
@@ -35,9 +33,8 @@ public class MecanumDrive extends SmartTrainEx {
      * @param backLeft   the back left motor
      * @param backRight  the back right motor
      */
-    public MecanumDrive(boolean autoInvert, double radius, Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight) {
+    public MecanumDrive(boolean autoInvert, Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight) {
         motors = new Motor[]{frontLeft, frontRight, backLeft, backRight};
-        this.radius = radius;
         setRightSideInverted(autoInvert);
     }
 
