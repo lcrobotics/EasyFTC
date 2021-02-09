@@ -15,7 +15,12 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+// ObjectLocator gets the robots location and orientation
+// (relative to the center of the field)
+// based on nav targets
+
 public class ObjectLocator {
+
     // Since ImageTarget trackables use mm to specify their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
@@ -31,8 +36,10 @@ public class ObjectLocator {
     final float CAMERA_VERTICAL_DISPLACEMENT = 8.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
     final float CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
+    // Stores (Vuforia's representation of) the nav targets
     List<VuforiaTrackable> allTrackables;
 
+    // The targets in question
     VuforiaTrackable blueTowerGoalTarget;
     VuforiaTrackable redTowerGoalTarget;
     VuforiaTrackable redAllianceTarget;
@@ -42,6 +49,8 @@ public class ObjectLocator {
     public boolean targetVisible = false;
     public OpenGLMatrix lastLocation = null;
 
+    // Constructor receives VuforiaTrackables object from vuforia
+    // (see VuforiaSuperOp for use)
     public ObjectLocator(VuforiaTrackables targetsUltimateGoal){
 
         blueTowerGoalTarget = targetsUltimateGoal.get(0);
@@ -96,6 +105,7 @@ public class ObjectLocator {
                 .translation(halfField, -quadField, mmTargetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
+        // Webcam orientation
         float phoneXRotate = 0;
         float phoneYRotate = 90;
         float phoneZRotate = 0;
@@ -115,10 +125,8 @@ public class ObjectLocator {
         targetVisible = false;
         OpenGLMatrix avgLocation = null;
         int numTargetsVisible = 0;
-        //ArrayList<OpenGLMatrix> robotLocations = new ArrayList<>();
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                //telemetry.addData("Visible Target", trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -126,31 +134,21 @@ public class ObjectLocator {
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
                     numTargetsVisible++;
+                    // Add all location matrices based on targets as the first step of the average
                     if (avgLocation == null) {
                         avgLocation = robotLocationTransform;
                     }
                     else {
                         avgLocation.add(robotLocationTransform);
                     }
-                    //robotLocations.add(robotLocationTransform);
                 }
             }
         }
 
+        // Divide by the number of targets to turn the sum into an average
         if (numTargetsVisible != 0){
             avgLocation.multiply(1.0f / numTargetsVisible);
             lastLocation = avgLocation;
         }
-
-        /*
-        if (!robotLocations.isEmpty()) {
-            // Average all values in robotLocations
-            OpenGLMatrix avgLocation = robotLocations.get(0);
-            for (int i = 1; i < robotLocations.size(); i++)
-                avgLocation.add(robotLocations.get(i));
-            avgLocation.multiply(1.0f / robotLocations.size());
-            lastLocation = avgLocation;
-        }
-         */
     }
 }
