@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.commandCenter.controllers;
+package com.lcrobotics.easyftclib.CommandCenter.controllers;
 
 public class PController extends PDController {
     /**

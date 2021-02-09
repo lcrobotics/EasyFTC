@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.commandCenter.controllers;
+package com.lcrobotics.easyftclib.CommandCenter.controllers;
 
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019 FIRST. All Rights Reserved.                             */

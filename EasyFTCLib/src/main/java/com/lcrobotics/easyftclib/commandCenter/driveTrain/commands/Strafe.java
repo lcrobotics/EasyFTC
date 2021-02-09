@@ -1,8 +1,6 @@
-package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
+package com.lcrobotics.easyftclib.CommandCenter.driveTrain.commands;
 
-import com.lcrobotics.easyftclib.commandCenter.old.CommandData;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 

@@ -1,10 +1,10 @@
-package com.lcrobotics.easyftclib.commandCenter.hardware;
+package com.lcrobotics.easyftclib.CommandCenter.hardware;
 
 import android.support.annotation.NonNull;
 
-import com.lcrobotics.easyftclib.commandCenter.controllers.PController;
-import com.lcrobotics.easyftclib.commandCenter.controllers.PIDController;
-import com.lcrobotics.easyftclib.commandCenter.controllers.SimpleMotorFeedforward;
+import com.lcrobotics.easyftclib.CommandCenter.controllers.PController;
+import com.lcrobotics.easyftclib.CommandCenter.controllers.PIDController;
+import com.lcrobotics.easyftclib.CommandCenter.controllers.SimpleMotorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 

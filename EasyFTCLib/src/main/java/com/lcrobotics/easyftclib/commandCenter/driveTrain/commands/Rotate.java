@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
+package com.lcrobotics.easyftclib.CommandCenter.driveTrain.commands;
 
 /**
  * This Command is designed to rotate a robot in place a certain angle,

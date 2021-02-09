@@ -1,12 +1,12 @@
 package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
-import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
-import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
+
+import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
 
 /**
  *  Class to drive Mecanum robots.
  */
-public class MecanumDrive extends com.lcrobotics.easyftclib.commandCenter.driveTrain.DriveBase {
+public class MecanumDrive extends DriveBase {
 
     private double rightMultiplier;
 

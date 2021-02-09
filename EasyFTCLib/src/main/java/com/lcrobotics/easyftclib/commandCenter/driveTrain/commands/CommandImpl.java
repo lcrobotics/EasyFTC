@@ -3,11 +3,9 @@
  * RISK.
  */
 
-package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
+package com.lcrobotics.easyftclib.CommandCenter.driveTrain.commands;
 
 import android.support.annotation.NonNull;
-
-import com.lcrobotics.easyftclib.commandCenter.old.CommandData;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.Range;
 

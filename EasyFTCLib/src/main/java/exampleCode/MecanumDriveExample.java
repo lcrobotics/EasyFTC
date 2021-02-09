@@ -1,7 +1,7 @@
 package exampleCode;
 
-import com.lcrobotics.easyftclib.commandCenter.driveTrain.MecanumDrive;
-import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
+import com.lcrobotics.easyftclib.CommandCenter.driveTrain.MecanumDrive;
+import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class MecanumDriveExample extends OpMode {
@@ -21,7 +21,7 @@ public class MecanumDriveExample extends OpMode {
         BackLeftDrive = new Motor(hardwareMap, "BackLeftDrive", cpr, rpm);
         BackRightDrive = new Motor(hardwareMap, "BackRightDrive", cpr, rpm);
         // initialize drive
-        drive  = new MecanumDrive(true, 5, FrontLeftDrive, FrontRightDrive, BackLeftDrive, BackRightDrive);
+        drive  = new MecanumDrive(true, FrontLeftDrive, FrontRightDrive, BackLeftDrive, BackRightDrive);
     }
 
     @Override
