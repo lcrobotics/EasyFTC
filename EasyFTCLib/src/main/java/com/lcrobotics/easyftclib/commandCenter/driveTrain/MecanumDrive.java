@@ -2,15 +2,15 @@ package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
 
 import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
+import com.lcrobotics.easyftclib.tools.geometry.Vector2d;
 
 /**
- *  Class to drive Mecanum robots.
+ * Class to drive Mecanum robots.
  */
 public class MecanumDrive extends DriveBase {
 
-    private double rightMultiplier;
-
     private final Motor[] motors;
+    private double rightMultiplier;
 
     /**
      * Base constructor for the mecanum drive. Reverses right side by default.
@@ -49,7 +49,7 @@ public class MecanumDrive extends DriveBase {
      * @param inverted If true, sets the right multiplier to -1, 1 otherwise
      */
     public void setRightSideInverted(boolean inverted) {
-        rightMultiplier = inverted? -1.0 : 1.0;
+        rightMultiplier = inverted ? -1.0 : 1.0;
     }
 
     /**
@@ -67,20 +67,50 @@ public class MecanumDrive extends DriveBase {
      * {@code void loop()} in an OpMode or {@code while (!isStopRequested() && opModeIsActive())}
      * in a LinearOpMode.
      *
-     * @param strafe strafing power
+     * @param strafe  strafing power
      * @param forward driving power
-     * @param turn turning power
-     * @param square whether to square the inputs
+     * @param turn    turning power
+     * @param square  whether to square the inputs
      */
-    public void drive(double strafe, double forward, double turn, boolean square) {
+    public void driveRobotCentric(double strafe, double forward, double turn, boolean square) {
         // square inputs if needed
-        strafe = square? square(strafe) : strafe;
-        forward = square? square(forward) : forward;
-        turn = square? square(turn) : turn;
-        // clip ranges
-        strafe = clipRange(strafe);
-        forward = clipRange(forward);
-        turn = clipRange(turn);
+        strafe = square ? clipRange(square(strafe)) : clipRange(strafe);
+        forward = square ? clipRange(square(forward)) : clipRange(forward);
+        turn = square ? clipRange(square(turn)) : clipRange(turn);
+
+        driveRobotCentric(strafe, forward, turn);
+    }
+
+    /**
+     * Drive method that defaults to not squaring the inputs.
+     * See {@link #driveRobotCentric(double, double, double, boolean)}
+     *
+     * @param strafe  strafing power
+     * @param forward driving power
+     * @param turn    turning power
+     */
+    public void driveRobotCentric(double strafe, double forward, double turn) {
+        driveFieldCentric(strafe, forward, turn, 0.0);
+    }
+
+    /**
+     * Drives the robot from the perspective of the driver rather than that of the robot.
+     * This means that pushing forward on the drive stick will always make the robot move away
+     * from the driver, regardless of its orientation.
+     *
+     * @param strafe    strafing power
+     * @param forward   driving power
+     * @param turn      turning power
+     * @param gyroAngle angle reported by the gyroscope
+     */
+    public void driveFieldCentric(double strafe, double forward, double turn, double gyroAngle) {
+
+        // compensate for gyro angle
+        Vector2d input = new Vector2d(strafe, forward);
+        input.rotateBy(-gyroAngle);
+
+        forward = input.getX();
+        strafe = input.getY();
 
         double[] wheelSpeeds = new double[4];
         // calculate base speeds
@@ -100,15 +130,22 @@ public class MecanumDrive extends DriveBase {
     }
 
     /**
-     * Drive method that defaults to not squaring the inputs.
-     * See {@link #drive(double, double, double, boolean)}
+     * Drives the robot from the perspective of the driver rather than that of the robot.
+     * This means that pushing forward on the drive stick will always make the robot move away
+     * from the driver, regardless of its orientation.
      *
-     * @param strafe strafing power
-     * @param forward driving power
-     * @param turn turning power
+     * @param strafe    strafing power
+     * @param forward   driving power
+     * @param turn      turning power
+     * @param gyroAngle angle reported by the gyroscope
+     * @param square    whether to square the inputs, allowing for finer control
      */
-    public void drive(double strafe, double forward, double turn) {
-        drive(strafe, forward, turn, false);
+    public void driveFieldCentric(double strafe, double forward, double turn, double gyroAngle, boolean square) {
+        strafe = square ? clipRange(square(strafe)) : clipRange(strafe);
+        forward = square ? clipRange(square(forward)) : clipRange(forward);
+        turn = square ? clipRange(square(turn)) : clipRange(turn);
+
+        driveFieldCentric(strafe, forward, turn, gyroAngle);
     }
 
     /**
