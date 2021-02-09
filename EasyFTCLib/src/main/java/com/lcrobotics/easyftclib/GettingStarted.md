@@ -6,7 +6,7 @@ overall structure is very similar to FRC's WPILib, also using systems and subsys
 about command based programming check out the [FRC docs](https://docs.wpilib.org/en/stable/docs/software/commandbased/index.html)
 
 ## How to Use the Existing CodeBase
-1. We've rewritten the DcMotor class to be more user friendly, so when declsaaring motors, you'll 
+1. We've rewritten the DcMotor class to be more user friendly, so when declaring motors, you'll 
 want to use ```Motor [name]``` instead of ```DcMotor [name]```.
 
 2. We've written an example subsystem for mecanum driving. To use it, you need to declare the motors and
