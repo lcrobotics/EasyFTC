@@ -27,6 +27,6 @@ public class MecanumDriveExample extends OpMode {
     @Override
     public void loop() {
         // move forward (values correspond to desired motor powers)
-        drive.drive(0, 1, 0);
+        drive.driveRobotCentric(0, 1, 0);
     }
 }
