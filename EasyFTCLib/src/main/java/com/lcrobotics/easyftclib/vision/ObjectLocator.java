@@ -1,6 +1,7 @@
 package com.lcrobotics.easyftclib.vision;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -48,6 +49,7 @@ public class ObjectLocator {
 
     public boolean targetVisible = false;
     public OpenGLMatrix lastLocation = null;
+    public float x, y, w;
 
     // Constructor receives VuforiaTrackables object from vuforia
     // (see VuforiaSuperOp for use)
@@ -149,6 +151,11 @@ public class ObjectLocator {
         if (numTargetsVisible != 0){
             avgLocation.multiply(1.0f / numTargetsVisible);
             lastLocation = avgLocation;
+            VectorF translation = lastLocation.getTranslation();
+            x = translation.get(0) / mmPerInch;
+            y = translation.get(1) / mmPerInch;
+            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+            w = rotation.thirdAngle;
         }
     }
 }

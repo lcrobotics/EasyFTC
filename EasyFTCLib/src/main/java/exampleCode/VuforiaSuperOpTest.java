@@ -24,9 +24,9 @@ public class VuforiaSuperOpTest extends VuforiaSuperOp {
                 String.format(Locale.US, "%d %d", frameGetter.xMax, frameGetter.yMax));
 
         objectLocator.updateRobotLocation();
-        lastLocation = objectLocator.lastLocation;
         // Provide feedback as to where the robot is located (if we know).
         if (objectLocator.targetVisible) {
+            /*
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
             telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
@@ -34,6 +34,9 @@ public class VuforiaSuperOpTest extends VuforiaSuperOp {
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+             */
+            telemetry.addData("Pos (in)", "{X, Y} = %.1f, %.1f", objectLocator.x, objectLocator.y);
+            telemetry.addData("Rot (deg)", "{Yaw} = %.0f", objectLocator.w);
         }
         else {
             telemetry.addData("Visible Target", "none");
