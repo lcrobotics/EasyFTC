@@ -1,4 +1,8 @@
-/**
+apply plugin: 'io.codearte.nexus-staging'
+ext {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+} /**
  * Top-level build file for ftc_app project.
  *
  * It is extraordinarily rare that you will ever need to edit this file.
@@ -9,7 +13,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0'
     }
 }
 
@@ -20,7 +25,11 @@ allprojects {
         google()
         jcenter()
         maven {
-            url 'https://dl.bintray.com/openftc/maven';
+            url 'https://dl.bintray.com/openftc/maven'
         }
+        maven { url = "https://dl.bintray.com/first-tech-challenge/ftcsdk/" }
     }
+}
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
