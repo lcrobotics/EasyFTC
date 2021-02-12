@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.commandCenter.driveTrain;
+package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
 
 import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
 import com.lcrobotics.easyftclib.commandCenter.old.WheelPosition;
