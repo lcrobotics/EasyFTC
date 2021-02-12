@@ -70,7 +70,7 @@ Please follow these steps to have your contribution considered by the maintainer
 ### Git Commit Messages
 
 * Use the present tense ("Add feature" not "Added feature")
-* Use the imperative xmood ("Move cursor to..." not "Moves cursor to...")
+* Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 * Limit the first line to 72 characters or less
 * Reference issues and pull requests liberally after the first line
 
