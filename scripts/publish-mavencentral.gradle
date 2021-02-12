@@ -62,8 +62,10 @@ publishing {
             } else {
                 artifact("$buildDir/libs/${project.getName()}-${version}.jar")
             }
+
             artifact androidSourcesJar
             artifact androidJavadocsJar
+
             pom {
                 packaging 'aar'
                 name = PUBLISH_ARTIFACT_ID
@@ -85,7 +87,7 @@ publishing {
                 scm {
                     connection = 'scm:git:github.com/lcrobotics/EasyFTC.git'
                     developerConnection = 'scm:git:ssh://github.com/lcrobotics/EasyFTC.git'
-                    url = 'https://github.com/lcrobotics/EasyFTC'
+                    url = 'https://github.com/lcrobotics/EasyFTC/tree/release'
                 }
 
                 withXml {

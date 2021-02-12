@@ -35,9 +35,6 @@ public class Vector2d {
         return new Vector2d(x2, y2);
     }
 
-    public double magnitude() {
-        return Math.hypot(x, y);
-    }
     /**
      * @return angle of the vector
      */
