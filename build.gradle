@@ -30,3 +30,6 @@ allprojects {
         maven { url = "https://dl.bintray.com/first-tech-challenge/ftcsdk/" }
     }
 }
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

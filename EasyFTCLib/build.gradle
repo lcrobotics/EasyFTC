@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 ext {
     PUBLISH_GROUP_ID = 'io.github.lcrobotics'
-    PUBLISH_VERSION = '0.0.1'
+    PUBLISH_VERSION = '0.0.2'
     PUBLISH_ARTIFACT_ID = 'easyftc'
 }
 android {
@@ -31,11 +31,14 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation('org.ejml:ejml-simple:0.40')
+    implementation 'org.ejml:ejml-simple:0.40'
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.1'
 
     compileOnly 'org.firstinspires.ftc:Inspection:6.0.1'
     compileOnly 'org.firstinspires.ftc:Blocks:6.0.1'

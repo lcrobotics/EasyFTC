@@ -1,5 +1,6 @@
 package exampleCode;
 
+import com.lcrobotics.easyftclib.vision.VuforiaFrameGetter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.Image;
@@ -8,7 +9,6 @@ import com.vuforia.PIXEL_FORMAT;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.VuforiaFrameGetter;
 
 import java.util.Locale;
 
