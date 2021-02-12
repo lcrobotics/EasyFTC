@@ -1,10 +1,12 @@
 package exampleCode;
 
+import com.lcrobotics.easyftclib.vision.ObjectLocator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.io.ObjectStreamException;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
@@ -35,8 +37,8 @@ public class VuforiaSuperOpTest extends VuforiaSuperOp {
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
              */
-            telemetry.addData("Pos (in)", "{X, Y} = %.1f, %.1f", objectLocator.x, objectLocator.y);
-            telemetry.addData("Rot (deg)", "{Yaw} = %.0f", objectLocator.w);
+            ObjectLocator.RobotPos lastPos = objectLocator.lastPos;
+            telemetry.addData("Pos (in) and rot (deg)", "{X, Y, W} = %.1f, %.1f, %.0f", lastPos.x, lastPos.y, lastPos.w);
         }
         else {
             telemetry.addData("Visible Target", "none");
