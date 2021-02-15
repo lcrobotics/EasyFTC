@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.hardware;
+package com.lcrobotics.easyftclib.commandCenter.hardware;
 
 import com.lcrobotics.easyftclib.tools.geometry.Rotation2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;

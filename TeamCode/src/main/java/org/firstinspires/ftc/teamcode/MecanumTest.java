@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.lcrobotics.easyftclib.CommandCenter.driveTrain.MecanumDrive;
-import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
+import com.lcrobotics.easyftclib.commandCenter.driveTrain.MecanumDrive;
+import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
