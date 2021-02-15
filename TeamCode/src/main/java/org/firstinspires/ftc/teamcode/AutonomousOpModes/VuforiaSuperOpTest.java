@@ -3,15 +3,7 @@ package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 import com.lcrobotics.easyftclib.vision.ObjectLocator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import java.io.ObjectStreamException;
 import java.util.Locale;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 @Autonomous
 public class VuforiaSuperOpTest extends VuforiaSuperOp {
