@@ -2,12 +2,12 @@
 
 name: Publish
 
-# Controls when the action will run.
+# Controls when the action will run. 
 on:
+  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches:
+    branches: 
       - release
-
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
         run: |
           git fetch --unshallow
           sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > '$SIGNING_SECRET_KEY_RING_FILE'"
-
+          
       - name: Release build
         run: ./gradlew EasyFTC:assemble
 

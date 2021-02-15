@@ -114,9 +114,9 @@ public class VuforiaFrameGetter {
         }
         return
                 +integralImg[c][x+w][y+h]
-                        -integralImg[c][x][y+h]
-                        -integralImg[c][x+w][y]
-                        +integralImg[c][x][y];
+                -integralImg[c][x][y+h]
+                -integralImg[c][x+w][y]
+                +integralImg[c][x][y];
     }
 
     // Find the coordinates of (the top-left corner of)
