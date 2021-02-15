@@ -1,9 +1,8 @@
-package exampleCode;
+package examples;
 
 import com.lcrobotics.easyftclib.vision.VuforiaFrameGetter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;

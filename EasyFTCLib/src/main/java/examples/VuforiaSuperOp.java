@@ -1,4 +1,4 @@
-package exampleCode;
+package examples;
 
 import com.lcrobotics.easyftclib.vision.ObjectLocator;
 import com.lcrobotics.easyftclib.vision.VuforiaFrameGetter;
