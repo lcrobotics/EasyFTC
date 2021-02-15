@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -47,7 +48,9 @@ public class ObjectLocator {
     VuforiaTrackable frontWallTarget;
 
     public boolean targetVisible = false;
-    public OpenGLMatrix lastLocation = null;
+    //public OpenGLMatrix lastLocation = null;
+    //public float x, y, w;
+    public RobotPos lastPos = new RobotPos(0, 0, 0);
 
     // Constructor receives VuforiaTrackables object from vuforia
     // (see VuforiaSuperOp for use)
@@ -148,7 +151,28 @@ public class ObjectLocator {
         // Divide by the number of targets to turn the sum into an average
         if (numTargetsVisible != 0){
             avgLocation.multiply(1.0f / numTargetsVisible);
-            lastLocation = avgLocation;
+            lastPos.setFromMatrix(avgLocation);
+        }
+    }
+
+    public static class RobotPos{
+        public float x = 0, y = 0, w = 0;
+        public RobotPos(float x, float y, float w){
+            this.x = x;
+            this.y = y;
+            this.w = w;
+        }
+        public void setFromMatrix(OpenGLMatrix M){
+            VectorF translation = M.getTranslation();
+            x = translation.get(0) / mmPerInch;
+            y = translation.get(1) / mmPerInch;
+            Orientation rotation = Orientation.getOrientation(M, EXTRINSIC, XYZ, DEGREES);
+            w = rotation.thirdAngle;
+        }
+        public OpenGLMatrix toMatrix(){
+            return OpenGLMatrix
+                    .translation(x, y, 0)
+                    .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, 0, w));
         }
     }
 }
