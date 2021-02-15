@@ -1,9 +1,12 @@
-package exampleCode;
+package examples;
 
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.MecanumDrive;
 import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
+@Autonomous
+@Disabled
 public class MecanumDriveExample extends OpMode {
     // declare Motors
     Motor FrontLeftDrive, FrontRightDrive, BackLeftDrive, BackRightDrive;
@@ -27,6 +30,6 @@ public class MecanumDriveExample extends OpMode {
     @Override
     public void loop() {
         // move forward (values correspond to desired motor powers)
-        drive.drive(0, 1, 0);
+        drive.driveRobotCentric(0, 1, 0);
     }
 }

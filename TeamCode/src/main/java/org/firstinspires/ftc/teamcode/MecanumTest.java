@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.lcrobotics.easyftclib.CommandCenter.driveTrain.MecanumDrive;
 import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
+@Disabled
 public class MecanumTest extends OpMode {
     final int CPR = 448;
     final int MAX_RPM = 64;
@@ -34,6 +36,6 @@ public class MecanumTest extends OpMode {
 
     @Override
     public void loop() {
-        wheels.drive(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, true);
+        wheels.driveRobotCentric(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, true);
     }
 }

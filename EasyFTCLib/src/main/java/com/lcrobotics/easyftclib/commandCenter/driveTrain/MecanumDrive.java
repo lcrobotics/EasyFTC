@@ -107,7 +107,7 @@ public class MecanumDrive extends DriveBase {
 
         // compensate for gyro angle
         Vector2d input = new Vector2d(strafe, forward);
-        input.rotateBy(-gyroAngle);
+        input.rotateBy(gyroAngle);
 
         forward = input.getX();
         strafe = input.getY();
