@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
-import com.lcrobotics.easyftclib.CommandCenter.hardware.MotorEx;
+import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
+import com.lcrobotics.easyftclib.commandCenter.hardware.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;

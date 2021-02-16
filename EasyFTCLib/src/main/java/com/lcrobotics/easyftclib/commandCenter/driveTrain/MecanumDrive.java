@@ -1,7 +1,7 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain;
 
 
-import com.lcrobotics.easyftclib.CommandCenter.hardware.Motor;
+import com.lcrobotics.easyftclib.commandCenter.hardware.Motor;
 import com.lcrobotics.easyftclib.tools.geometry.Vector2d;
 
 /**

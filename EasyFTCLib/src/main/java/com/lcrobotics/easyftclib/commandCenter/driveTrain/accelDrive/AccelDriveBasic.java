@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain.accelDrive;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain.accelDrive;
 
 import android.support.annotation.NonNull;
 
