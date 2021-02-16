@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain.commands;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
 
 /**
  * This command is designed to drive on a given angle for a certain distance.

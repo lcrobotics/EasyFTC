@@ -22,7 +22,7 @@ public abstract class VuforiaSuperOp extends OpMode {
     public ObjectLocator objectLocator = null;
     public OpenGLMatrix lastLocation = null;
 
-    public void init(){
+    public void init() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -31,7 +31,7 @@ public abstract class VuforiaSuperOp extends OpMode {
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        parameters.useExtendedTracking = false;
+        parameters.useExtendedTracking = true;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);

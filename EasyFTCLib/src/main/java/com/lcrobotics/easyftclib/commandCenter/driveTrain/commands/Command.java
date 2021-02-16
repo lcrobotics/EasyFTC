@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain.commands;
+package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
 
 import android.support.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
