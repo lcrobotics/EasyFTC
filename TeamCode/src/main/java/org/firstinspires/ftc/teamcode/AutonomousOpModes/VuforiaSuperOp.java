@@ -4,10 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.PIXEL_FORMAT;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamServer;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
+
 import com.lcrobotics.easyftclib.vision.ObjectLocator;
 import com.lcrobotics.easyftclib.vision.VuforiaFrameGetter;
 
@@ -30,9 +34,12 @@ public abstract class VuforiaSuperOp extends OpMode {
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        //parameters.useExtendedTracking = false;
+        CameraName cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = cameraName;
         parameters.useExtendedTracking = true;
+
+
+        CameraStreamServer.getInstance().setSource(vuforia);
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);

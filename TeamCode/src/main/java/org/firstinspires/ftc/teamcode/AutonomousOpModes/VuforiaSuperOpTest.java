@@ -9,6 +9,7 @@ import java.util.Locale;
 public class VuforiaSuperOpTest extends VuforiaSuperOp {
     public void loop(){
 
+        
         frameGetter.updateFrame();
         telemetry.addData("image dims", String.format(Locale.US, "%d %d", frameGetter.imgWidth, frameGetter.imgHeight));
         int w = 100, h = 100;
