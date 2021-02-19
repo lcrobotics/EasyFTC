@@ -150,6 +150,7 @@ public class Motor implements HardwareDevice {
     protected SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 1, 0);
     private boolean targetIsSet = false;
 
+    public double multiplier = 1;
     public Motor(){}
 
     /**
@@ -159,8 +160,19 @@ public class Motor implements HardwareDevice {
      * @param name motor name from Robot Controller config
      */
     public Motor(@NonNull HardwareMap hw, String name) {
+        this(hw, name, 1.0);
+    }
+    /**
+     * Constructs a Motor object
+     *
+     * @param hw   hardware map from the OpMode
+     * @param name motor name from Robot Controller config
+     * @param scalar scales power values
+     */
+    public Motor(@NonNull HardwareMap hw, String name, double scalar) {
         motor = hw.get(DcMotor.class, name);
         runMode = RunMode.RawPower;
+        multiplier = scalar;
         ACHIEVABLE_MAX_TICKS_PER_SECOND = motor.getMotorType().getAchieveableMaxTicksPerSecond();
         encoder = new Encoder(motor::getCurrentPosition);
     }
@@ -173,18 +185,32 @@ public class Motor implements HardwareDevice {
      * @param rpm  max revolutions per minute of the motor
      */
     public Motor(@NonNull HardwareMap hw, String name, double cpr, double rpm) {
+        this(hw, name, cpr, rpm, 1.0);
+    }
+    /**
+     * Constructs a Motor object
+     *
+     * @param hw   hardware map from the OpMode
+     * @param name motor name from Robot Controller config
+     * @param cpr  encoder counts per revolution of the motor
+     * @param rpm  max revolutions per minute of the motor
+     * @param scalar scales power values
+     */
+    public Motor(@NonNull HardwareMap hw, String name, double cpr, double rpm, double scalar) {
+        multiplier = scalar;
         motor = hw.get(DcMotor.class, name);
         runMode = RunMode.RawPower;
         ACHIEVABLE_MAX_TICKS_PER_SECOND = cpr * rpm / 60;
         encoder = new Encoder(motor::getCurrentPosition);
     }
-
     /**
      * Set the speed of a motor
      *
      * @param power percentage of total power to set, between -1.0 and 1.0
      */
     public void set(double power) {
+        // scale by multiplier
+        power *= multiplier;
         switch (runMode) {
             case VelocityControl:
                 double speed = power * ACHIEVABLE_MAX_TICKS_PER_SECOND;
