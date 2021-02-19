@@ -109,15 +109,15 @@ public class MecanumDrive extends DriveBase {
         Vector2d input = new Vector2d(strafe, forward);
         input.rotateBy(gyroAngle);
 
-        forward = input.getX();
-        strafe = input.getY();
+        double xSpeed = input.getX();
+        double ySpeed = input.getY();
 
         double[] wheelSpeeds = new double[4];
         // calculate base speeds
-        wheelSpeeds[WheelPosition.FRONT_LEFT.value] = forward - strafe + turn;
-        wheelSpeeds[WheelPosition.FRONT_RIGHT.value] = forward + strafe - turn;
-        wheelSpeeds[WheelPosition.BACK_LEFT.value] = forward + strafe + turn;
-        wheelSpeeds[WheelPosition.BACK_RIGHT.value] = forward - strafe - turn;
+        wheelSpeeds[WheelPosition.FRONT_LEFT.value] = ySpeed - xSpeed + turn;
+        wheelSpeeds[WheelPosition.FRONT_RIGHT.value] = ySpeed + xSpeed - turn;
+        wheelSpeeds[WheelPosition.BACK_LEFT.value] = ySpeed + xSpeed + turn;
+        wheelSpeeds[WheelPosition.BACK_RIGHT.value] = ySpeed - xSpeed - turn;
 
         normalize(wheelSpeeds);
 
