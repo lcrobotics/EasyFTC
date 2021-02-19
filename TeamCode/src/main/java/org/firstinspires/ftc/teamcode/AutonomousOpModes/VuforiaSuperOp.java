@@ -34,8 +34,7 @@ public abstract class VuforiaSuperOp extends OpMode {
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        CameraName cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        parameters.cameraName = cameraName;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
         parameters.useExtendedTracking = true;
 
 

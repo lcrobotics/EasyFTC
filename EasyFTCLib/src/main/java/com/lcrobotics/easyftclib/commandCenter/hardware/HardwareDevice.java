@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.hardware;
+package com.lcrobotics.easyftclib.commandCenter.hardware;
 
 public interface HardwareDevice {
     void disable();
