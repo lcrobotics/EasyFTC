@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.Range;
 
 public class DriveTrain {
 
-    private WheelType wheelType;
+    private final WheelType wheelType;
     private DriveMotor[] motors;
 
 
@@ -66,7 +66,7 @@ public class DriveTrain {
         }
 
         // checks to ensure that its either 2wheel or 4wheel
-        boolean two_wheel = (positions[0] == WheelPosition.LEFT || positions[0] == WheelPosition.RIGHT) ? true : false;
+        boolean two_wheel = positions[0] == WheelPosition.LEFT || positions[0] == WheelPosition.RIGHT;
         for (int i = 1; i < positions.length; i++) {
             if ((!two_wheel && (positions[i] == WheelPosition.LEFT || positions[i] == WheelPosition.RIGHT)) || (!two_wheel && (positions[i] == WheelPosition.LEFT || positions[i] == WheelPosition.RIGHT))) {
                 throw new DriveTrainException("Invalid wheel positions: both 2 wheel and 4 wheel drive detected");
