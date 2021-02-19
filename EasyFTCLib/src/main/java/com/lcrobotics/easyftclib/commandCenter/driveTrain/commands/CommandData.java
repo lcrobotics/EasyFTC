@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 package com.lcrobotics.easyftclib.commandCenter.driveTrain.commands;
-=======
-package com.lcrobotics.easyftclib.CommandCenter.driveTrain.commands;
->>>>>>> master
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
