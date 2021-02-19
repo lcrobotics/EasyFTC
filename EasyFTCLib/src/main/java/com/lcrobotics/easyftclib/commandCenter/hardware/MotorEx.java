@@ -1,4 +1,4 @@
-package com.lcrobotics.easyftclib.CommandCenter.hardware;
+package com.lcrobotics.easyftclib.commandCenter.hardware;
 
 import android.support.annotation.NonNull;
 

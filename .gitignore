@@ -18,7 +18,6 @@ local.properties
 
 # Windows thumbnail db
 Thumbs.db
-
 # OSX files
 .DS_Store
 
@@ -35,3 +34,11 @@ output.json
 #NDK
 obj/
 .externalNativeBuild
+
+# NDK
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+/build
+/captures
+/TeamCode/build/

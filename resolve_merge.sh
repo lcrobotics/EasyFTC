@@ -12,7 +12,7 @@ do
   git checkout --ours "$file"
 done
 # choose development's version of lib files
-find EasyFTCLib/ -and -not -name "*.gradle" -type f | while read file
+find EasyFTCLib -and -not -name "*.gradle" -type f | while read file
 do
   git checkout --theirs "$file"
 done
