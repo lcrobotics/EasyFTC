@@ -6,7 +6,7 @@ If you would like to contribute to EasyFTC (file a bug report or add to the libr
 
 [How Can I Contribute?](#how-can-i-contribute)
 
-[Styleguides](#styleguides)
+[Style guides](#styleguides)
 
 
 ## How Can I Contribute?

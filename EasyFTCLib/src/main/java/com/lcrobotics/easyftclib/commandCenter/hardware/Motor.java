@@ -139,19 +139,18 @@ public class Motor implements HardwareDevice {
             return real;
         }
     }
-
     public DcMotor motor;
     public Encoder encoder;
     // max velocity in ticks per second
     public double ACHIEVABLE_MAX_TICKS_PER_SECOND;
+    public double multiplier = 1;
     protected RunMode runMode;
     protected PIDController velocityController = new PIDController(1, 0, 0);
     protected PController positionController = new PController(1);
     protected SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 1, 0);
     private boolean targetIsSet = false;
-
-    public Motor(){}
-
+    public Motor() {
+    }
     /**
      * Constructs a Motor object
      *
@@ -159,11 +158,23 @@ public class Motor implements HardwareDevice {
      * @param name motor name from Robot Controller config
      */
     public Motor(@NonNull HardwareMap hw, String name) {
+        this(hw, name, 1.0);
+    }
+    /**
+     * Constructs a Motor object
+     *
+     * @param hw     hardware map from the OpMode
+     * @param name   motor name from Robot Controller config
+     * @param scalar scales power values
+     */
+    public Motor(@NonNull HardwareMap hw, String name, double scalar) {
         motor = hw.get(DcMotor.class, name);
         runMode = RunMode.RawPower;
+        multiplier = scalar;
         ACHIEVABLE_MAX_TICKS_PER_SECOND = motor.getMotorType().getAchieveableMaxTicksPerSecond();
         encoder = new Encoder(motor::getCurrentPosition);
     }
+
     /**
      * Constructs a Motor object
      *
@@ -173,10 +184,28 @@ public class Motor implements HardwareDevice {
      * @param rpm  max revolutions per minute of the motor
      */
     public Motor(@NonNull HardwareMap hw, String name, double cpr, double rpm) {
+        this(hw, name, cpr, rpm, 1.0);
+    }
+
+    /**
+     * Constructs a Motor object
+     *
+     * @param hw     hardware map from the OpMode
+     * @param name   motor name from Robot Controller config
+     * @param cpr    encoder counts per revolution of the motor
+     * @param rpm    max revolutions per minute of the motor
+     * @param scalar scales power values
+     */
+    public Motor(@NonNull HardwareMap hw, String name, double cpr, double rpm, double scalar) {
+        multiplier = scalar;
         motor = hw.get(DcMotor.class, name);
         runMode = RunMode.RawPower;
         ACHIEVABLE_MAX_TICKS_PER_SECOND = cpr * rpm / 60;
         encoder = new Encoder(motor::getCurrentPosition);
+    }
+
+    public void setMultiplier(double multiplier) {
+        this.multiplier = multiplier;
     }
 
     /**
@@ -185,6 +214,8 @@ public class Motor implements HardwareDevice {
      * @param power percentage of total power to set, between -1.0 and 1.0
      */
     public void set(double power) {
+        // scale by multiplier
+        power *= multiplier;
         switch (runMode) {
             case VelocityControl:
                 double speed = power * ACHIEVABLE_MAX_TICKS_PER_SECOND;

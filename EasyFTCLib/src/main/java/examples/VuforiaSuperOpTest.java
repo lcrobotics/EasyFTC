@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import java.util.Locale;
 
-@Autonomous
-@Disabled
+@Autonomous(name = "VuforiaTest", group = "EasyFTC examples")
 public class VuforiaSuperOpTest extends VuforiaSuperOp {
     public void loop(){
 
