@@ -30,24 +30,25 @@ public abstract class VuforiaSuperOp extends OpMode {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
         parameters.useExtendedTracking = true;
 
-
-        CameraStreamServer.getInstance().setSource(vuforia);
-
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
+
+
         // This is necessary for getting pixels (integral image goal detection, etc)
-        boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
+        boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565);
         if (!results[0]) { // Failed to get Vuforia to convert to RGB565.
             throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
         }
+        vuforia.enableConvertFrameToBitmap();
         vuforia.setFrameQueueCapacity(1);
         frameGetter = new VuforiaFrameGetter(vuforia.getFrameQueue());
 
@@ -56,5 +57,6 @@ public abstract class VuforiaSuperOp extends OpMode {
         VuforiaTrackables targetsUltimateGoal = this.vuforia.loadTrackablesFromAsset("UltimateGoal");
         objectLocator = new ObjectLocator(targetsUltimateGoal);
         targetsUltimateGoal.activate();
+        CameraStreamServer.getInstance().setSource(vuforia);
     }
 }
