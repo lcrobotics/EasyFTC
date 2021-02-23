@@ -7,7 +7,7 @@ import java.util.Locale;
 
 @Autonomous
 public class VuforiaSuperOpTest extends VuforiaSuperOp {
-    public void loop(){
+    public void loop() {
 
         frameGetter.updateFrame();
         telemetry.addData("image dims", String.format(Locale.US, "%d %d", frameGetter.imgWidth, frameGetter.imgHeight));

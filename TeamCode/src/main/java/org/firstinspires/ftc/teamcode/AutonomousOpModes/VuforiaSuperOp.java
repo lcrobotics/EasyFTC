@@ -22,7 +22,7 @@ public abstract class VuforiaSuperOp extends OpMode {
     public ObjectLocator objectLocator = null;
     public OpenGLMatrix lastLocation = null;
 
-    public void init(){
+    public void init() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -31,7 +31,6 @@ public abstract class VuforiaSuperOp extends OpMode {
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        //parameters.useExtendedTracking = false;
         parameters.useExtendedTracking = true;
 
         //  Instantiate the Vuforia engine
@@ -39,7 +38,8 @@ public abstract class VuforiaSuperOp extends OpMode {
 
         // This is necessary for getting pixels (integral image goal detection, etc)
         boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
-        if (!results[0]) { // Failed to get Vuforia to convert to RGB565.
+        if (!results[0]) {
+            // Failed to get Vuforia to convert to RGB565.
             throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
         }
         vuforia.setFrameQueueCapacity(1);

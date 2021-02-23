@@ -54,7 +54,7 @@ public class ObjectLocator {
 
     // Constructor receives VuforiaTrackables object from vuforia
     // (see VuforiaSuperOp for use)
-    public ObjectLocator(VuforiaTrackables targetsUltimateGoal){
+    public ObjectLocator(VuforiaTrackables targetsUltimateGoal) {
 
         blueTowerGoalTarget = targetsUltimateGoal.get(0);
         blueTowerGoalTarget.setName("Blue Tower Goal Target");
@@ -123,7 +123,7 @@ public class ObjectLocator {
         }
     }
 
-    public void updateRobotLocation(){
+    public void updateRobotLocation() {
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         OpenGLMatrix avgLocation = null;
@@ -149,27 +149,27 @@ public class ObjectLocator {
         }
 
         // Divide by the number of targets to turn the sum into an average
-        if (numTargetsVisible != 0){
+        if (numTargetsVisible != 0) {
             avgLocation.multiply(1.0f / numTargetsVisible);
             lastPos.setFromMatrix(avgLocation);
         }
     }
 
-    public static class RobotPos{
-        public float x = 0, y = 0, w = 0;
+    public static class RobotPos {
+        public float x, y, w;
         public RobotPos(float x, float y, float w){
             this.x = x;
             this.y = y;
             this.w = w;
         }
-        public void setFromMatrix(OpenGLMatrix M){
+        public void setFromMatrix(OpenGLMatrix M) {
             VectorF translation = M.getTranslation();
             x = translation.get(0) / mmPerInch;
             y = translation.get(1) / mmPerInch;
             Orientation rotation = Orientation.getOrientation(M, EXTRINSIC, XYZ, DEGREES);
             w = rotation.thirdAngle;
         }
-        public OpenGLMatrix toMatrix(){
+        public OpenGLMatrix toMatrix() {
             return OpenGLMatrix
                     .translation(x, y, 0)
                     .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, 0, w));

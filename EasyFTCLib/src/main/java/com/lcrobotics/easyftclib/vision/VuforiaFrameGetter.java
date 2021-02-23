@@ -16,7 +16,7 @@ import java.util.concurrent.BlockingQueue;
 public class VuforiaFrameGetter {
 
     // Pixel values are retrieved from here...
-    private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue = null;
+    private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue;
     // ...and stored in here: indexed by channel, then x-coordinate, then y-coordinate
     // (0=red, 1=green, 2=blue)
     public int[][][] rgbValues = null;
@@ -37,7 +37,7 @@ public class VuforiaFrameGetter {
 
     // Store pixel values retrieved from frameQueue in rgbValues
     // and calculate the integral image
-    public void updateFrame(){
+    public void updateFrame() {
 
         // There are a number of unimportant intermediate stages
         // which begin here...
