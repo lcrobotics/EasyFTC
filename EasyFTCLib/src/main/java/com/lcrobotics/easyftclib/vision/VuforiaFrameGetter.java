@@ -9,6 +9,7 @@ import com.vuforia.PIXEL_FORMAT;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 // VuforiaFrameGetter gets RGB values from the webcam
 // and can efficiently sum values within a rectangle thanks to integral imaging.
@@ -16,7 +17,7 @@ import java.util.concurrent.BlockingQueue;
 public class VuforiaFrameGetter {
 
     // Pixel values are retrieved from here...
-    private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue;
+    private final BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue;
     // ...and stored in here: indexed by channel, then x-coordinate, then y-coordinate
     // (0=red, 1=green, 2=blue)
     public int[][][] rgbValues = null;
@@ -43,7 +44,7 @@ public class VuforiaFrameGetter {
         // which begin here...
         VuforiaLocalizer.CloseableFrame frame;
         try {
-            frame = frameQueue.take();
+            frame = frameQueue.poll(10, TimeUnit.MILLISECONDS);
             for (int i = 0; i < frame.getNumImages(); i++) {
                 Image img = frame.getImage(i);
                 if (img.getFormat() == PIXEL_FORMAT.RGB565) {
@@ -107,29 +108,29 @@ public class VuforiaFrameGetter {
         }
     }
 
-    // Return the sum of the values in channel c of the image
-    public int sumOfRect(int c, int x, int y, int w, int h) {
+    // Return the sum of the values in channel channel of the image
+    public int sumOfRect(int channel, int x, int y, int w, int h) {
         if (integralImg == null) {
             return 0;
         }
         return
-                +integralImg[c][x+w][y+h]
-                -integralImg[c][x][y+h]
-                -integralImg[c][x+w][y]
-                +integralImg[c][x][y];
+                integralImg[channel][x+w][y+h]
+                -integralImg[channel][x][y+h]
+                -integralImg[channel][x+w][y]
+                +integralImg[channel][x][y];
     }
 
     // Find the coordinates of (the top-left corner of)
     // the rectangle of a given width/height
     // whose value sum in a given channel is maximized
     // and store them in xMax and yMax
-    public void updateMaxRect(int c, int w, int h) {
+    public void updateMaxRect(int channel, int width, int height) {
         xMax = -1;
         yMax = -1;
         int sMax = -1;
-        for (int x = 0; x <= imgWidth-w; x++) {
-            for (int y = 0; y <= imgHeight-h; y++) {
-                int s = sumOfRect(c, x, y, w, h);
+        for (int x = 0; x <= imgWidth - width; x++) {
+            for (int y = 0; y <= imgHeight - height; y++) {
+                int s = sumOfRect(channel, x, y, width, height);
                 if (s > sMax) {
                     xMax = x;
                     yMax = y;

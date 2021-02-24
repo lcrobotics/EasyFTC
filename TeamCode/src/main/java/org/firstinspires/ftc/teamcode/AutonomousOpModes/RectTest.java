@@ -33,7 +33,7 @@ public class RectTest extends OpMode {
     private BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue;
     float[] size;
 
-    public void init(){
+    public void init() {
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
@@ -92,7 +92,7 @@ public class RectTest extends OpMode {
         size = vuforia.getCameraCalibration().getSize().getData();
 
     }
-    public void loop(){
+    public void loop() {
         float left = 100, top = 100, right = 200, bottom = 200;
         RectF location = new RectF(left, top, right, bottom);
         VuforiaLocalizer.CloseableFrame vuforiaFrame = null;
