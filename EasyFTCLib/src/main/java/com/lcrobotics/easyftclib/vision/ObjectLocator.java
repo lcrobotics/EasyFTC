@@ -154,7 +154,7 @@ public class ObjectLocator {
             lastPos.setFromMatrix(avgLocation);
         }
     }
-
+    // TODO: replace this with use of Pose2d
     public static class RobotPos {
         public float x, y, w;
         public RobotPos(float x, float y, float w){

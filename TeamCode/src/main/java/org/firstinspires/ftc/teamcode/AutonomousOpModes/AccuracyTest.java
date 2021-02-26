@@ -5,10 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
@@ -26,7 +24,7 @@ public class AccuracyTest extends VuforiaSuperOp {
     public void init() {
         super.init();
         imageSaverThread = Executors.newSingleThreadScheduledExecutor();
-
+        vuforia.enableConvertFrameToBitmap();
         Runnable imageThings = () -> {
             try {
                 int postWidth = 100;
@@ -46,6 +44,7 @@ public class AccuracyTest extends VuforiaSuperOp {
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(10);
                 // canvas to draw on bitmap
+                assert bmp != null;
                 Canvas canvas = new Canvas(bmp);
 
                 int bottom = frameGetter.yMax + postHeight;
@@ -55,6 +54,8 @@ public class AccuracyTest extends VuforiaSuperOp {
                 FileOutputStream out = new FileOutputStream("ACCURACY_TEST" + count);
                 // save bitmap as png to file
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+                out.close();
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }

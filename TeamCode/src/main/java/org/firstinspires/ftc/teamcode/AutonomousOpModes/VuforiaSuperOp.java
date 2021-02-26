@@ -26,7 +26,8 @@ public abstract class VuforiaSuperOp extends OpMode {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -34,6 +35,7 @@ public abstract class VuforiaSuperOp extends OpMode {
         parameters.useExtendedTracking = true;
 
         //  Instantiate the Vuforia engine
+
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // This is necessary for getting pixels (integral image goal detection, etc)
