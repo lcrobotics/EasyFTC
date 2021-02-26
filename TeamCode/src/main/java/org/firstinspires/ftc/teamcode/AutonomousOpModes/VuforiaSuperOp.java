@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamServer;
+
 import com.lcrobotics.easyftclib.vision.ObjectLocator;
 import com.lcrobotics.easyftclib.vision.VuforiaFrameGetter;
 
@@ -52,5 +54,6 @@ public abstract class VuforiaSuperOp extends OpMode {
         VuforiaTrackables targetsUltimateGoal = this.vuforia.loadTrackablesFromAsset("UltimateGoal");
         objectLocator = new ObjectLocator(targetsUltimateGoal);
         targetsUltimateGoal.activate();
+        CameraStreamServer.getInstance().setSource(vuforia);
     }
 }

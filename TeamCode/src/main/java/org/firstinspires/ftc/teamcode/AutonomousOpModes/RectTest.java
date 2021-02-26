@@ -10,16 +10,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Canvas;
-import android.app.Activity;
-import android.hardware.Camera;
-import android.view.Surface;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingQueue;
@@ -45,38 +39,6 @@ public class RectTest extends OpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        final AppUtil appUtil = AppUtil.getInstance();
-        Activity activity = appUtil.getRootActivity();
-        CameraName cameraName = vuforia.getCameraName();
-        int rotation = 0;
-
-        if (cameraName instanceof BuiltinCameraName) {
-            int displayRotation = 0;
-            switch (activity.getWindowManager().getDefaultDisplay().getRotation()) {
-                case Surface.ROTATION_0: displayRotation = 0; break;
-                case Surface.ROTATION_90: displayRotation = 90; break;
-                case Surface.ROTATION_180: displayRotation = 180; break;
-                case Surface.ROTATION_270: displayRotation = 270; break;
-            }
-            VuforiaLocalizer.CameraDirection cameraDirection = ((BuiltinCameraName) cameraName).getCameraDirection();
-            for (int cameraId = 0; cameraId < Camera.getNumberOfCameras(); cameraId++) {
-                Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-                Camera.getCameraInfo(cameraId, cameraInfo);
-                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT && cameraDirection == VuforiaLocalizer.CameraDirection.FRONT) {
-                    rotation = - displayRotation - cameraInfo.orientation;
-                    break;
-                }
-                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK && cameraDirection == VuforiaLocalizer.CameraDirection.BACK) {
-                    rotation = displayRotation - cameraInfo.orientation;
-                    break;
-                }
-            }
-        }
-        while (rotation < 0) {
-            rotation += 360;
-        }
-        rotation %= 360;
 
         boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
         if (!results[0]) { // Failed to get Vuforia to convert to RGB565.
