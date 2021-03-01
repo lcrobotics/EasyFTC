@@ -31,13 +31,13 @@ public class VuforiaFrameGetter {
 
     // Constructor receives BlockingQueue<VuforiaLocalizer.CloseableFrame> object from vuforia
     // (see VuforiaSuperOp for use)
-    public VuforiaFrameGetter(BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue){
+    public VuforiaFrameGetter(BlockingQueue<VuforiaLocalizer.CloseableFrame> frameQueue) {
         this.frameQueue = frameQueue;
     }
 
     // Store pixel values retrieved from frameQueue in rgbValues
     // and calculate the integral image
-    public void updateFrame(){
+    public void updateFrame() {
 
         // There are a number of unimportant intermediate stages
         // which begin here...
