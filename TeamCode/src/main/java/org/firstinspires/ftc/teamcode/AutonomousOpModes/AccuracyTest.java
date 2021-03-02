@@ -26,6 +26,9 @@ public class AccuracyTest extends VuforiaSuperOp {
         imageSaverThread = Executors.newSingleThreadScheduledExecutor();
         vuforia.enableConvertFrameToBitmap();
         Runnable imageThings = () -> {
+            if (count == 0) {
+                imageSaverThread.shutdownNow();
+            }
             try {
                 int postWidth = 100;
                 int postHeight = 200;
@@ -70,8 +73,8 @@ public class AccuracyTest extends VuforiaSuperOp {
         telemetry.addData("Image count", count);
     }
 
-    @Override
-    public void stop() {
-        imageSaverThread.shutdownNow();
-    }
+    // @Override
+    // public void stop() {
+        // imageSaverThread.shutdownNow();
+    // }
 }
