@@ -47,14 +47,17 @@ public class ObjectLocator {
     VuforiaTrackable blueAllianceTarget;
     VuforiaTrackable frontWallTarget;
 
+    // Boolean to track if a target is visible
     public boolean targetVisible = false;
+    // Stores most recent position and orientation of the robot
+    public RobotPos lastPos = new RobotPos(0, 0, 0);
+
     // public OpenGLMatrix lastLocation = null;
     // public float x, y, w;
-    public RobotPos lastPos = new RobotPos(0, 0, 0);
 
     // Constructor receives VuforiaTrackables object from vuforia
     // (see VuforiaSuperOp for use)
-    public ObjectLocator(VuforiaTrackables targetsUltimateGoal){
+    public ObjectLocator(VuforiaTrackables targetsUltimateGoal) {
 
         blueTowerGoalTarget = targetsUltimateGoal.get(0);
         blueTowerGoalTarget.setName("Blue Tower Goal Target");
@@ -123,6 +126,7 @@ public class ObjectLocator {
         }
     }
 
+    // Attempts to find a target and update lastPos (robot's position and orientation)
     public void updateRobotLocation(){
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
@@ -157,6 +161,7 @@ public class ObjectLocator {
 
     // Class that stores robot's coordinates and orientation
     public static class RobotPos {
+        // x, y is the robot's coordinates, w is the angle
         public float x = 0, y = 0, w = 0;
         public RobotPos(float x, float y, float w) {
             this.x = x;

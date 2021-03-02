@@ -20,12 +20,15 @@ public class VuforiaFrameGetter {
     // ...and stored in here: indexed by channel, then x-coordinate, then y-coordinate
     // (0=red, 1=green, 2=blue)
     public int[][][] rgbValues = null;
+
     // Stores the integral image values:
     // the sum of all values in a given channel inside a rectangle starting at (0, 0)
     public int[][][] integralImg = null;
+
     // Image dimensions: 800x448 in our case, assumed not to change!
     public int imgWidth = 0;
     public int imgHeight = 0;
+
     // Store position of the goal (top left corner) to be retrieved by other classes
     public int xMax = -1, yMax = -1;
 
@@ -107,7 +110,8 @@ public class VuforiaFrameGetter {
         }
     }
 
-    // Return the sum of the values in channel c of the image
+    // Return the sum of the pixel values in channel c of the image
+    // of a rectangle with top left corner (x, y), width w, and height h
     public int sumOfRect(int c, int x, int y, int w, int h) {
         if (integralImg == null) {
             return 0;
