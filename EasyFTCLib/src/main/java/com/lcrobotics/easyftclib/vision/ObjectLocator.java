@@ -47,10 +47,13 @@ public class ObjectLocator {
     VuforiaTrackable blueAllianceTarget;
     VuforiaTrackable frontWallTarget;
 
+    // Boolean to track if a target is visible
     public boolean targetVisible = false;
-    //public OpenGLMatrix lastLocation = null;
-    //public float x, y, w;
+    // Stores most recent position and orientation of the robot
     public RobotPos lastPos = new RobotPos(0, 0, 0);
+
+    // public OpenGLMatrix lastLocation = null;
+    // public float x, y, w;
 
     // Constructor receives VuforiaTrackables object from vuforia
     // (see VuforiaSuperOp for use)
@@ -88,7 +91,7 @@ public class ObjectLocator {
          *  coordinate system (the center of the field), facing up.
          */
 
-        //Set the position of the perimeter targets with relation to origin (center of field)
+        // Set the position of the perimeter targets with relation to origin (center of field)
         redAllianceTarget.setLocation(OpenGLMatrix
                 .translation(0, -halfField, mmTargetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180)));
@@ -122,8 +125,8 @@ public class ObjectLocator {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, VuforiaLocalizer.CameraDirection.BACK);
         }
     }
-
-    public void updateRobotLocation() {
+    // Attempts to find a target and update lastPos (robot's position and orientation)
+    public void updateRobotLocation(){
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         OpenGLMatrix avgLocation = null;
@@ -154,14 +157,16 @@ public class ObjectLocator {
             lastPos.setFromMatrix(avgLocation);
         }
     }
-    // TODO: replace this with use of Pose2d
+    // Class that stores robot's coordinates and orientation
     public static class RobotPos {
-        public float x, y, w;
-        public RobotPos(float x, float y, float w){
+        // x, y is the robot's coordinates, w is the angle
+        public float x = 0, y = 0, w = 0;
+        public RobotPos(float x, float y, float w) {
             this.x = x;
             this.y = y;
             this.w = w;
         }
+        // Accepts an OpenGLMatrix to extract the position and orientation and update class variables
         public void setFromMatrix(OpenGLMatrix M) {
             VectorF translation = M.getTranslation();
             x = translation.get(0) / mmPerInch;
@@ -169,6 +174,7 @@ public class ObjectLocator {
             Orientation rotation = Orientation.getOrientation(M, EXTRINSIC, XYZ, DEGREES);
             w = rotation.thirdAngle;
         }
+        // Returns an OpenGLMatrix that includes information of the position and orientation
         public OpenGLMatrix toMatrix() {
             return OpenGLMatrix
                     .translation(x, y, 0)
