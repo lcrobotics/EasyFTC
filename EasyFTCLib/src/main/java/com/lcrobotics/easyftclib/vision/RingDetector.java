@@ -60,9 +60,9 @@ public class RingDetector {
         frameGetter.updateFrame();
 
         // Calculate the average red, green, and blue pixel values in the predicted orange region
-        double avgR = frameGetter.sumOfRect(0, x, y, w, h) / (w * h);
-        double avgG = frameGetter.sumOfRect(1, x, y, w, h) / (w * h);
-        double avgB = frameGetter.sumOfRect(2, x, y, w, h) / (w * h);
+        double avgR = frameGetter.sumOfRect(0, x, y, w, h) / (double)(w * h);
+        double avgG = frameGetter.sumOfRect(1, x, y, w, h) / (double)(w * h);
+        double avgB = frameGetter.sumOfRect(2, x, y, w, h) / (double)(w * h);
 
         // Check if average RGB value is close to orange (255, 165, 0)
         if (avgR > 235 && avgG > 145 && avgB < 185 && avgG < 20) {
