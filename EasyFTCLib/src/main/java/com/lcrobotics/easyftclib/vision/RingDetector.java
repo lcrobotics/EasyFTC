@@ -5,6 +5,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
+// RingDetector accepts TFObjectDetector and VuforiaFrameGetter object
+// to detect the number of rings at the beginning of autonomous
+// It analyzes the picture from the webcam to distinguish between 0 and 1 rings (which are inaccurate with TF)
 public class RingDetector {
 
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
