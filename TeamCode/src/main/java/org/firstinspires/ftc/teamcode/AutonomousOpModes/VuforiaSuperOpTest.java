@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
 import com.lcrobotics.easyftclib.vision.ObjectLocator;
+import com.lcrobotics.easyftclib.vision.VuforiaSuperOp;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import java.util.Locale;

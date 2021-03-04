@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.AutonomousOpModes;
 
 import android.graphics.Bitmap;
 
+import com.lcrobotics.easyftclib.vision.VuforiaSuperOp;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 

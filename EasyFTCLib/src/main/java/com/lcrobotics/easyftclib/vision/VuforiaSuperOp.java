@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutonomousOpModes;
+package com.lcrobotics.easyftclib.vision;
 
 import com.lcrobotics.easyftclib.vision.RingDetector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
