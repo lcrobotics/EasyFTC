@@ -111,7 +111,7 @@ public class VuforiaFrameGetter {
         }
     }
 
-    // Return the sum of the values in channel channel of the image
+    // Return the sum of the values in channel of the image
     public int sumOfRect(int channel, int x, int y, int w, int h) {
         if (integralImg == null) {
             return 0;
