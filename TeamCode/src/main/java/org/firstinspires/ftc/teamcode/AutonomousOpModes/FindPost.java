@@ -11,19 +11,26 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous
 public class FindPost extends VuforiaSuperOp {
-    // where the post starts from the top of the image
-    final double TOP_RECT_RATIO = 0.3;
+    // width of rectangle to sample average red from
+    final int SAMPLE_WIDTH = 10;
+    // height of rectangle to sample average red from
+    final int SAMPLE_HEIGHT = 10;
+    // amount of pixels to skip in between samples
+    final int SAMPLE_SKIP = SAMPLE_HEIGHT / 2;
 
+    int firstX = 100;
+    int firstY = 100;
+    int imgHeight;
+    int imgWidth;
     @Override
     public void init() {
         super.init();
+        vuforia.enableConvertFrameToBitmap();
     }
 
     @Override
     public void init_loop() {
         try {
-            vuforia.enableConvertFrameToBitmap();
-
             VuforiaLocalizer.CloseableFrame frame = vuforia
                     .getFrameQueue()
                     .poll(10, TimeUnit.MILLISECONDS);
@@ -31,8 +38,9 @@ public class FindPost extends VuforiaSuperOp {
             Bitmap bmp = vuforia.convertFrameToBitmap(frame);
             frame.close();
             assert bmp != null;
-            int imgHeight = bmp.getHeight();
-            int imgWidth = bmp.getWidth();
+            imgHeight = bmp.getHeight();
+            imgWidth = bmp.getWidth();
+
 
 
 
