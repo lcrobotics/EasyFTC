@@ -34,7 +34,9 @@ public class FindPost extends VuforiaSuperOp {
             VuforiaLocalizer.CloseableFrame frame = vuforia
                     .getFrameQueue()
                     .poll(10, TimeUnit.MILLISECONDS);
-
+            if (frame == null) {
+                return;
+            }
             Bitmap bmp = vuforia.convertFrameToBitmap(frame);
             frame.close();
             assert bmp != null;
