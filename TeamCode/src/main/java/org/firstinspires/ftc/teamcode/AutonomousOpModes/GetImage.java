@@ -6,7 +6,9 @@ import com.lcrobotics.easyftclib.vision.VuforiaSuperOp;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -19,16 +21,16 @@ public class GetImage extends VuforiaSuperOp {
         super.init();
 
         vuforia.enableConvertFrameToBitmap();
-        VuforiaLocalizer.CloseableFrame frame = null;
+        VuforiaLocalizer.CloseableFrame frame;
         try {
             frame = vuforia
                     .getFrameQueue()
-                    .poll(10, TimeUnit.MILLISECONDS);
+                    .take();
 
             Bitmap bmp = vuforia.convertFrameToBitmap(frame);
             frame.close();
-
-            FileOutputStream out = new FileOutputStream("IMAGE");
+            File file = AppUtil.getInstance().getSettingsFile("RingDetectionTest.png");
+            FileOutputStream out = new FileOutputStream(file);
             // save bitmap as png to file
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
 

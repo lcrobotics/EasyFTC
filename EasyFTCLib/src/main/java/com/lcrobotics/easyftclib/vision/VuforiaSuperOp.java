@@ -34,12 +34,7 @@ public abstract class VuforiaSuperOp extends OpMode {
 
     public void init() {
 
-        // initialize tfod
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
+
 
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -72,6 +67,12 @@ public abstract class VuforiaSuperOp extends OpMode {
         targetsUltimateGoal.activate();
         CameraStreamServer.getInstance().setSource(vuforia);
 
+        // initialize tfod
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
         // initialize ringDetector
         ringDetector = new RingDetector(tfod, frameGetter);
     }
