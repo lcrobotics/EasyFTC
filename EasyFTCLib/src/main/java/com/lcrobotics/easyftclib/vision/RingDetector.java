@@ -52,9 +52,9 @@ public class RingDetector {
     // If it detects orange, numRings = 1, if not, numRings = 0
     private void frameGetterCheck() {
         // Predicted top left corner coordinates of the orange region of image
-        int x = 400, y = 224;
+        int x = 90, y = 350;
         // Predicted width and height of the orange region of image
-        int w = 100, h = 100;
+        int w = 200, h = 70;
 
         // Update frame to get update rgb array
         frameGetter.updateFrame();
@@ -64,8 +64,8 @@ public class RingDetector {
         double avgG = frameGetter.sumOfRect(1, x, y, w, h) / (double)(w * h);
         double avgB = frameGetter.sumOfRect(2, x, y, w, h) / (double)(w * h);
 
-        // Check if average RGB value is close to orange (255, 165, 0)
-        if (avgR > 235 && avgG > 145 && avgB < 185 && avgG < 20) {
+        // Check if average RGB value is within the threshold
+        if (avgR < 100 && avgG < 90 && avgB < 80) {
             // if it is close to orange, numRings is 1
             numRings = 1;
         } else {
