@@ -36,7 +36,7 @@ public class RingDetector {
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 
         // make sure objects were detected
-        if (updatedRecognitions != null) {
+        if (updatedRecognitions != null && updatedRecognitions.size() != 0) {
 
             // if 4 rings were detected
             if (updatedRecognitions.get(0).getLabel().equals(LABEL_FIRST_ELEMENT)) {
