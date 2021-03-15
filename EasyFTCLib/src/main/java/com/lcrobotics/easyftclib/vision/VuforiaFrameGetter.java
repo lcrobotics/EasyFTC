@@ -45,9 +45,14 @@ public class VuforiaFrameGetter {
 
         // There are a number of unimportant intermediate stages
         // which begin here...
-        VuforiaLocalizer.CloseableFrame frame;
+        VuforiaLocalizer.CloseableFrame frame = null;
         try {
             frame = frameQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (frame != null) {
             for (int i = 0; i < frame.getNumImages(); i++) {
                 Image img = frame.getImage(i);
                 if (img.getFormat() == PIXEL_FORMAT.RGB565) {
@@ -65,7 +70,7 @@ public class VuforiaFrameGetter {
                         imgWidth = bmp.getWidth();
                         imgHeight = bmp.getHeight();
                         rgbValues = new int[3][imgWidth][imgHeight];
-                        integralImg = new int[3][imgWidth+1][imgHeight+1];
+                        integralImg = new int[3][imgWidth + 1][imgHeight + 1];
                     }
 
                     // Set rgbValues
@@ -82,32 +87,30 @@ public class VuforiaFrameGetter {
                             rgbValues[2][x][y] = blue;
 
                             // Integral image needs to be initialized to original
-                            integralImg[0][x+1][y+1] = red;
-                            integralImg[1][x+1][y+1] = green;
-                            integralImg[2][x+1][y+1] = blue;
+                            integralImg[0][x + 1][y + 1] = red;
+                            integralImg[1][x + 1][y + 1] = green;
+                            integralImg[2][x + 1][y + 1] = blue;
                         }
                     }
 
                     // Calculate the integral image
                     for (int x = 1; x < imgWidth; x++) {
-                        for (int y = 1; y < imgHeight+1; y++) {
-                            integralImg[0][x+1][y] += integralImg[0][x][y];
-                            integralImg[1][x+1][y] += integralImg[1][x][y];
-                            integralImg[2][x+1][y] += integralImg[2][x][y];
+                        for (int y = 1; y < imgHeight + 1; y++) {
+                            integralImg[0][x + 1][y] += integralImg[0][x][y];
+                            integralImg[1][x + 1][y] += integralImg[1][x][y];
+                            integralImg[2][x + 1][y] += integralImg[2][x][y];
                         }
                     }
 
-                    for (int x = 1; x < imgWidth+1; x++) {
+                    for (int x = 1; x < imgWidth + 1; x++) {
                         for (int y = 1; y < imgHeight; y++) {
-                            integralImg[0][x][y+1] += integralImg[0][x][y];
-                            integralImg[1][x][y+1] += integralImg[1][x][y];
-                            integralImg[2][x][y+1] += integralImg[2][x][y];
+                            integralImg[0][x][y + 1] += integralImg[0][x][y];
+                            integralImg[1][x][y + 1] += integralImg[1][x][y];
+                            integralImg[2][x][y + 1] += integralImg[2][x][y];
                         }
                     }
                 }
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
