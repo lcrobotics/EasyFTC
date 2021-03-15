@@ -41,10 +41,11 @@ public class RingDetector {
             // if 4 rings were detected
             if (updatedRecognitions.get(0).getLabel().equals(LABEL_FIRST_ELEMENT)) {
                 numRings = 4;
-            } else {
-                // if 0 or 1 rings were detected, use frameGetter to confirm
-                frameGetterCheck();
             }
+
+        } else {
+            // if 0 or 1 rings were detected, use frameGetter to confirm
+            frameGetterCheck();
         }
     }
 
