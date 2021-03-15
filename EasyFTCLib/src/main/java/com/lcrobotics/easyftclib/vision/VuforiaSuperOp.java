@@ -55,6 +55,7 @@ public abstract class VuforiaSuperOp extends OpMode {
         }
         vuforia.setFrameQueueCapacity(1);
 
+
         // Load the data sets for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsUltimateGoal = this.vuforia.loadTrackablesFromAsset("UltimateGoal");

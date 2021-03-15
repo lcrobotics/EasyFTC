@@ -47,7 +47,7 @@ public class VuforiaFrameGetter {
         // which begin here...
         VuforiaLocalizer.CloseableFrame frame;
         try {
-            frame = frameQueue.poll(10, TimeUnit.MILLISECONDS);
+            frame = frameQueue.take();
             for (int i = 0; i < frame.getNumImages(); i++) {
                 Image img = frame.getImage(i);
                 if (img.getFormat() == PIXEL_FORMAT.RGB565) {
