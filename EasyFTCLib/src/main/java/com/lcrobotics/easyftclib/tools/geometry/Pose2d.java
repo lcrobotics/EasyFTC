@@ -105,6 +105,15 @@ public class Pose2d {
         );
     }
 
+    // rotates position by deltaTheta (radians)
+    public Pose2d rotate(double deltaTheta) {
+        return new Pose2d(translation, new Rotation2d(getHeading() + deltaTheta));
+    }
+
+    public double getHeading() {
+        return rotation.getRadians();
+    }
+
     /**
      * Returns the other pose relative to the current pose.
      *

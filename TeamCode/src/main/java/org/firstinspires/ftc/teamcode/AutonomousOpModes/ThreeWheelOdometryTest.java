@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous
 public class ThreeWheelOdometryTest extends OpMode {
 
+    // constants (not accurate yet)
+    private static final double TRACKWIDTH = 18;
+    private static final double CENTERWHEELOFFSET = 5;
+
     // declare drive motors
     public Motor frontLeftDrive;
     public Motor backLeftDrive;
@@ -17,7 +21,7 @@ public class ThreeWheelOdometryTest extends OpMode {
     // declare encoders
     public Motor.Encoder leftEncoder;
     public Motor.Encoder rightEncoder;
-    public Motor.Encoder frontEncoder;
+    public Motor.Encoder horizontalEncoder;
 
     public EncoderOdometry odometry;
 
@@ -30,9 +34,9 @@ public class ThreeWheelOdometryTest extends OpMode {
 
         leftEncoder = backRightDrive.encoder;
         rightEncoder = frontRightDrive.encoder;
-        frontEncoder = backLeftDrive.encoder;
+        horizontalEncoder = backLeftDrive.encoder;
 
-        odometry = new EncoderOdometry(leftEncoder, rightEncoder, frontEncoder);
+        odometry = new EncoderOdometry(leftEncoder::getPosition, rightEncoder::getPosition, horizontalEncoder::getPosition, TRACKWIDTH, CENTERWHEELOFFSET);
 
     }
 
