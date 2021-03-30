@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class ThreeWheelOdometryTest extends OpMode {
 
     // constants (not accurate yet)
-    private static final double TRACKWIDTH = 18;
-    private static final double CENTERWHEELOFFSET = 5;
+    private static final double TRACKWIDTH = 14.25;
+    private static final double CENTERWHEELOFFSET = 2;
 
     // declare drive motors
     public Motor frontLeftDrive;
@@ -42,6 +42,7 @@ public class ThreeWheelOdometryTest extends OpMode {
 
     @Override
     public void loop() {
-
+        odometry.updatePose();
+        telemetry.addData("Position", odometry.robotPose);
     }
 }

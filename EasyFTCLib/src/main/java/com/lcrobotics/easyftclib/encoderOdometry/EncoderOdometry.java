@@ -10,7 +10,7 @@ public class EncoderOdometry extends Odometry {
 
     private double prevLeftEncoder, prevRightEncoder, prevHorizontalEncoder;
     private Rotation2d previousAngle;
-    private double centerWheelOffset;
+    private final double centerWheelOffset;
 
     IntSupplier leftEncoder, rightEncoder, horizontalEncoder;
 
