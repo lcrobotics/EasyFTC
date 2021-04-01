@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import com.lcrobotics.easyftclib.vision.ObjectLocator;
 import com.lcrobotics.easyftclib.vision.VuforiaFrameGetter;
+import com.vuforia.Vuforia;
 
 public abstract class VuforiaSuperOp extends OpMode {
 
@@ -58,6 +59,7 @@ public abstract class VuforiaSuperOp extends OpMode {
             throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
         }
         vuforia.setFrameQueueCapacity(1);
+        Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
         frameGetter = new VuforiaFrameGetter(vuforia.getFrameQueue());
 
         // Load the data sets for the trackable objects. These particular data

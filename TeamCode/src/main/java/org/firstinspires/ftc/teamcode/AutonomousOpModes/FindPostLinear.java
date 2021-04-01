@@ -5,13 +5,17 @@ import android.graphics.Color;
 import android.util.Pair;
 
 import com.lcrobotics.easyftclib.tools.geometry.Translation2d;
-import com.lcrobotics.easyftclib.vision.VuforiaSuperOp;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Vuforia;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,10 +23,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
-
-// EVERYTHING HERE IS IN MILLIMETERS
+@Disabled
 @Autonomous
-public class FindPost extends VuforiaSuperOp {
+public class FindPostLinear extends LinearOpMode {
+
+    private final static String VUFORIA_KEY = "ARgYuCf/////AAABmUYfc1+dVEQsgUBCPA2kCAFRmuTRB/XUfAJzLsRyFDRg6uMMjj6EXM8YNiY5l3oTw83H+PKgfF46gctdzrln2nnVXMebpgN9ULy1cOfdSsPk0hwSZqzcY0LWCj+rPPrZ3JyQT7gf2aw7bo8ZvWedWB7skuGIjg+9cyTJdDyXmXrQ8Bo4r4siTFNTVFxg21OH/Gd8wrVJF4RqjE+kcez3MzcnE2EPCqWTNixSge5yLg+tN87/R/dMPzqHWvmjE6F6J/7/sahPt7FQ9G6tYWnV1impzZsH7T/JT6pGr2SALwHdaNjBGbYY76ZfvAxixEdob9g6qMBhKOyLg6HTP9VzRZ06ksUhErmR2K2LSkyjxBBz";
     // width of rectangle to sample average red from
     final int SAMPLE_WIDTH = 10;
     // height of rectangle to sample average red from
@@ -35,17 +40,36 @@ public class FindPost extends VuforiaSuperOp {
     final int postWidth = 30;
     int i = 1;
     final int threshold = 15;
+
+    final int RED_THRESHOLD = 120;
     int[] pixels;
     // where posts are
     Translation2d post1 = new Translation2d(595/2.0, 0);
     Translation2d post2 = new Translation2d(-595/2.0,0);
 
     Translation2d centerField = new Translation2d();
+
+    public VuforiaLocalizer vuforia;
     @Override
-    public void init() {
-        msStuckDetectInit = Integer.MAX_VALUE;
-        telemetry.setAutoClear(false);
-        super.init();
+    public void runOpMode() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //  Instantiate the Vuforia engine
+
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // This is necessary for getting pixels (integral image goal detection, etc)
+        boolean[] results = vuforia.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
+        if (!results[0]) {
+            // Failed to get Vuforia to convert to RGB565.
+            throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
+        }
+        vuforia.setFrameQueueCapacity(1);
+        Vuforia.setFrameFormat(PIXEL_FORMAT.YUV, true);
         vuforia.enableConvertFrameToBitmap();
         VuforiaLocalizer.CloseableFrame frame = null;
         try {
@@ -100,11 +124,11 @@ public class FindPost extends VuforiaSuperOp {
     }
 
     public Pair<Integer, Integer> findFirstPixel(Bitmap bmp) {
-        for (int x = 0; x < bmp.getWidth(); x++) {
-            for (int y = 0; y < bmp.getHeight(); y++) {
+        for (int x = 0; x < bmp.getWidth() - SAMPLE_WIDTH; x++) {
+            for (int y = 0; y < bmp.getHeight() - SAMPLE_HEIGHT; y++) {
                 int[] pixels = new int[SAMPLE_HEIGHT*SAMPLE_WIDTH];
                 bmp.getPixels(pixels, 0, SAMPLE_WIDTH, x, y, SAMPLE_WIDTH, SAMPLE_HEIGHT);
-                if (otherAverage(pixels) > 0.75) {
+                if (otherAverage(pixels) > 0.5) {
                     return new Pair<>(x, y);
                 }
             }
@@ -139,7 +163,7 @@ public class FindPost extends VuforiaSuperOp {
             testArea.getPixels(half, 0, SAMPLE_WIDTH, 0, 0, SAMPLE_WIDTH, SAMPLE_HEIGHT/2);
 
             // if top half is good, take midline of sample as bottom of post
-            if (redAverage(half) > 120) {
+            if (otherAverage(half) > 0.75) {
                 int postHeightPixels = (currentY + SAMPLE_HEIGHT / 2) - firstPixel.second;
                 // assume distance is calculated from center of post
                 double distance = (focalLength * postHeight) / postHeightPixels;
@@ -149,7 +173,7 @@ public class FindPost extends VuforiaSuperOp {
                 Arrays.fill(blackout, Color.BLACK);
 
                 bmp.setPixels(blackout, 0, postWidth, firstPixel.first, firstPixel.second, postWidth, postHeightPixels);
-                File file = AppUtil.getInstance().getSettingsFile(String.format("FindPost%d.png", i));
+                File file = AppUtil.getInstance().getSettingsFile(String.format(Locale.ENGLISH, "FindPost%d.png", i));
                 FileOutputStream out = new FileOutputStream(file);
                 // save bitmap as png to file
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -166,9 +190,9 @@ public class FindPost extends VuforiaSuperOp {
     // get average red value in pixels
     public double redAverage(int[] pixels) {
         return Arrays.stream(pixels)
-                    .map(Color::red)
-                    .average()
-                    .getAsDouble();
+                .map(Color::red)
+                .average()
+                .getAsDouble();
     }
 
     public double otherAverage(int[] pixels) {
@@ -182,7 +206,7 @@ public class FindPost extends VuforiaSuperOp {
         int g = Color.green(color);
         int b = Color.blue(color);
 
-        return (r > Math.max(g, b) * 2 && Math.abs(g-b) < threshold);
+        return (r > Math.max(g, b) * 2 && Math.abs(g-b) < threshold && r > RED_THRESHOLD);
     }
     // see http://paulbourke.net/geometry/circlesphere/ for explanation
     public Translation2d intersection(Translation2d post1, double radius1, Translation2d post2, double radius2) {
@@ -208,9 +232,5 @@ public class FindPost extends VuforiaSuperOp {
         double y3 = midpoint.getY() - (h*(post2.getX() - post1.getX()))/d;
 
         return new Translation2d(x3, y3);
-    }
-    @Override
-    public void loop() {
-
     }
 }
