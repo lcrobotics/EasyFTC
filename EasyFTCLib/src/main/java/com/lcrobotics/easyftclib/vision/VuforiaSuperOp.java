@@ -34,9 +34,6 @@ public abstract class VuforiaSuperOp extends OpMode {
     public OpenGLMatrix lastLocation = null;
 
     public void init() {
-
-
-
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -49,7 +46,6 @@ public abstract class VuforiaSuperOp extends OpMode {
         parameters.useExtendedTracking = true;
 
         //  Instantiate the Vuforia engine
-
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // This is necessary for getting pixels (integral image goal detection, etc)
@@ -65,9 +61,11 @@ public abstract class VuforiaSuperOp extends OpMode {
         // Load the data sets for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsUltimateGoal = this.vuforia.loadTrackablesFromAsset("UltimateGoal");
-        objectLocator = new ObjectLocator(targetsUltimateGoal);
         targetsUltimateGoal.activate();
         CameraStreamServer.getInstance().setSource(vuforia);
+
+        objectLocator = new ObjectLocator(targetsUltimateGoal);
+        frameGetter = new VuforiaFrameGetter(vuforia.getFrameQueue());
 
         // initialize tfod
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
