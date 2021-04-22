@@ -4,32 +4,32 @@ import com.lcrobotics.easyftclib.tools.geometry.Pose2d;
 import com.lcrobotics.easyftclib.tools.geometry.Rotation2d;
 import com.lcrobotics.easyftclib.tools.geometry.Twist2d;
 
-import java.util.function.IntSupplier;
+import java.util.function.DoubleSupplier;
 
-public class EncoderOdometry extends Odometry {
+public class HolonomicOdometry extends Odometry {
 
     private double prevLeftEncoder, prevRightEncoder, prevHorizontalEncoder;
     private Rotation2d previousAngle;
     private final double centerWheelOffset;
 
-    IntSupplier leftEncoder, rightEncoder, horizontalEncoder;
+    DoubleSupplier leftEncoder, rightEncoder, horizontalEncoder;
 
-    public EncoderOdometry(IntSupplier leftEncoder, IntSupplier rightEncoder,
-                             IntSupplier horizontalEncoder, double trackWidth, double centerWheelOffset) {
+    public HolonomicOdometry(DoubleSupplier leftEncoder, DoubleSupplier rightEncoder,
+                             DoubleSupplier horizontalEncoder, double trackWidth, double centerWheelOffset) {
         this(trackWidth, centerWheelOffset);
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
         this.horizontalEncoder = horizontalEncoder;
     }
 
-    public EncoderOdometry(Pose2d initialPose, double trackwidth, double centerWheelOffset) {
+    public HolonomicOdometry(Pose2d initialPose, double trackwidth, double centerWheelOffset) {
         super(initialPose, trackwidth);
         previousAngle = initialPose.getRotation();
         this.centerWheelOffset = centerWheelOffset;
     }
 
-    public EncoderOdometry(double trackwidth, double centerWheelOffset) {
-        this(new Pose2d(), trackwidth, centerWheelOffset);
+    public HolonomicOdometry(double trackWidth, double centerWheelOffset) {
+        this(new Pose2d(), trackWidth, centerWheelOffset);
     }
 
     /**
@@ -37,7 +37,7 @@ public class EncoderOdometry extends Odometry {
      */
     @Override
     public void updatePose() {
-        update(leftEncoder.getAsInt(), rightEncoder.getAsInt(), horizontalEncoder.getAsInt());
+        update(leftEncoder.getAsDouble(), rightEncoder.getAsDouble(), horizontalEncoder.getAsDouble());
     }
 
     @Override

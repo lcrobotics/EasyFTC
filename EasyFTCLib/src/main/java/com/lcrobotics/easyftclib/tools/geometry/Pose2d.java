@@ -53,6 +53,7 @@ public class Pose2d {
     public Pose2d plus(Transform2d other) {
         return transformBy(other);
     }
+
     /**
      * Returns the Transform2d that maps the one pose to another.
      *
