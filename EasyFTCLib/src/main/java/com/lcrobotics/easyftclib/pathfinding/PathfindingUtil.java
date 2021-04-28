@@ -1,7 +1,5 @@
 package com.lcrobotics.easyftclib.pathfinding;
 
-import android.util.Range;
-
 import com.lcrobotics.easyftclib.tools.geometry.Pose2d;
 import com.lcrobotics.easyftclib.tools.geometry.Translation2d;
 
@@ -58,7 +56,7 @@ public final class PathfindingUtil {
      * @return Whether they are equal given the margin of error.
      */
     public static boolean positionEqualsWithBuffer(Translation2d p1, Translation2d p2, double buffer) {
-        return p1.getDistance(p2) <= buffer;
+        return Math.abs(p1.getX() - p2.getX()) < buffer && Math.abs(p1.getY() - p2.getY()) < buffer;
     }
 
     /**
@@ -70,7 +68,7 @@ public final class PathfindingUtil {
      * @return Whether the two angles are equal given the margin of error.
      */
     public static boolean rotationEqualsWithBuffer(double a1, double a2, double buffer) {
-        return Math.abs(a1 - a2) <= buffer;
+        return Math.abs(a1 - a2) < buffer;
     }
 
     /**
@@ -88,7 +86,7 @@ public final class PathfindingUtil {
         final double dxAbsolute = target.getX() - current.getX();
         final double dyAbsolute = target.getY() - current.getY();
 
-        final double dthetaAbsolute = Math.atan2(dxAbsolute, dyAbsolute);
+        final double dthetaAbsolute = Math.atan2(dyAbsolute, dxAbsolute);
         final double distance = Math.hypot(dxAbsolute, dyAbsolute);
 
         final double dthetaRelative = angleWrap(dthetaAbsolute + current.getHeading());
@@ -104,71 +102,55 @@ public final class PathfindingUtil {
         return new double[]{powerX, powerY, powerTurn};
     }
 
-    /**
-     * This method finds points where a line intersects with a circle.
-     *
-     * @param circleCenter Center of the circle.
-     * @param radius       Radius of the circle.
-     * @param linePoint1   One of the line's end points.
-     * @param linePoint2   The other end point of the line.
-     * @return A list containing all points where the line and circle intersect.
-     * @see
-     * <a href=https://mathworld.wolfram.com/Circle-LineIntersection.html>https://mathworld.wolfram.com/Circle-LineIntersection.html</a>
-     * for explanation
-     */
     public static List<Translation2d> lineCircleIntersection(Translation2d circleCenter, double radius,
             Translation2d linePoint1, Translation2d linePoint2) {
+        // This method was lifted from Team 11115 Gluten Free's code.
 
-        linePoint1 = linePoint1.minus(circleCenter);
-        linePoint2 = linePoint2.minus(circleCenter);
+        double baX = linePoint2.getX() - linePoint1.getX();
+        double baY = linePoint2.getY() - linePoint1.getY();
+        double caX = circleCenter.getX() - linePoint1.getX();
+        double caY = circleCenter.getY() - linePoint1.getY();
 
-        final double dx = linePoint2.getX() - linePoint1.getX();
-        final double dy = linePoint2.getY() - linePoint1.getY();
-        final double dr = Math.hypot(dx, dy);
+        double a = baX * baX + baY * baY;
+        double bBy2 = baX * caX + baY * caY;
+        double c = caX * caX + caY * caY - radius * radius;
 
-        final double det = linePoint1.getX() * linePoint2.getY() - linePoint2.getX() * linePoint1.getY();
+        double pBy2 = bBy2 / a;
+        double q = c / a;
 
-        final double discriminant = radius * radius * dr * dr - det * det;
-
-        List<Translation2d> allPoints = null;
-        // no intersections
-        if (discriminant < 0) {
+        double disc = pBy2 * pBy2 - q;
+        if (disc < 0) {
             return Collections.emptyList();
         }
 
-        final double tempSqrt = Math.sqrt(discriminant);
+        double tmpSqrt = Math.sqrt(disc);
+        double abScalingFactor1 = -pBy2 + tmpSqrt;
+        double abScalingFactor2 = -pBy2 - tmpSqrt;
 
-        final double scaleX = tempSqrt * Math.signum(dy) * dx;
-        final double scaleY = tempSqrt * Math.abs(dy);
+        List<Translation2d> allPoints = null;
 
-        Translation2d p1 = new Translation2d(
-                (det * dy + scaleX) / (dr * dr),
-                (-det * dx + scaleY) / (dr * dr)
-        );
-        // tangent
-        if (discriminant == 0) {
+        Translation2d p1 = new Translation2d(linePoint1.getX() - baX * abScalingFactor1,
+                linePoint1.getY() - baY * abScalingFactor1);
+        if (disc == 0) {
             allPoints = Collections.singletonList(p1);
         }
-        // two intersections
+
         if (allPoints == null) {
-            Translation2d p2 = new Translation2d(
-                    (det * dy - scaleX) / (dr * dr),
-                    (-det * dx - scaleY) / (dr * dr)
-            );
+            Translation2d p2 = new Translation2d(linePoint1.getX() - baX * abScalingFactor2,
+                    linePoint1.getY() - baY * abScalingFactor2);
             allPoints = Arrays.asList(p1, p2);
         }
 
-        final double maxX = Math.max(linePoint1.getX(), linePoint2.getX());
-        final double maxY = Math.max(linePoint1.getY(), linePoint2.getY());
-        final double minX = Math.min(linePoint1.getX(), linePoint2.getX());
-        final double minY = Math.min(linePoint1.getY(), linePoint2.getY());
+        double maxX = Math.max(linePoint1.getX(), linePoint2.getX());
+        double maxY = Math.max(linePoint1.getY(), linePoint2.getY());
+        double minX = Math.min(linePoint1.getX(), linePoint2.getX());
+        double minY = Math.min(linePoint1.getY(), linePoint2.getY());
 
-        Range<Double> xInterval = new Range<>(minX, maxX);
-        Range<Double> yInterval = new Range<>(minY, maxY);
-        // only grab points on the line segment
-        return allPoints
-                .stream()
-                .filter(p -> xInterval.contains(p.getX()) && yInterval.contains(p.getY()))
-                .collect(Collectors.toList());
+        // make sure points are on the line segment
+        return allPoints.stream().filter(
+                (p) ->
+                        p.getX() <= maxX && p.getX() >= minX
+                                && p.getY() <= maxY && p.getY() >= minY
+        ).collect(Collectors.toList());
     }
 }

@@ -40,6 +40,7 @@ public class PathfindingTest extends LinearOpMode {
         backLeftDrive = new Motor(hardwareMap, "BackLeftDrive");
         frontRightDrive = new Motor(hardwareMap, "FrontRightDrive");
         frontLeftDrive = new Motor(hardwareMap, "FrontLeftDrive");
+        frontRightDrive.setInverted(true);
         // set distance per pulse (how far each encoder tick is in inches)
         leftEncoder = backRightDrive.setDistancePerPulse(DISTANCE_PER_PULSE);
         rightEncoder = frontRightDrive.setDistancePerPulse(DISTANCE_PER_PULSE);

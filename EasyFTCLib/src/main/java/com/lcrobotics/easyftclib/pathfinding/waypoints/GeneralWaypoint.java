@@ -59,8 +59,8 @@ public class GeneralWaypoint extends Pose2d implements Waypoint {
         this.followRadius = followRadius;
 
         timeoutMilliseconds = -1;
-        usePreferredAngle = false;
-        preferredAngle = 0;
+        usePreferredAngle = true;
+        preferredAngle = rotation.getRadians();
         copyMode = false;
     }
 
@@ -86,7 +86,14 @@ public class GeneralWaypoint extends Pose2d implements Waypoint {
      * @param followRadius  The distance at which the robot follows this waypoint.
      */
     public GeneralWaypoint(double x, double y, double movementSpeed, double turnSpeed, double followRadius) {
-        this(new Translation2d(x, y), new Rotation2d(), movementSpeed, turnSpeed, followRadius);
+        super(x, y, new Rotation2d(0));
+        this.movementSpeed = normalizeSpeed(movementSpeed);
+        this.turnSpeed = normalizeSpeed(turnSpeed);
+        this.followRadius = followRadius;
+        timeoutMilliseconds = -1;
+        usePreferredAngle = false;
+        preferredAngle = 0;
+        copyMode = false;
     }
 
     /**

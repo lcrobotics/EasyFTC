@@ -479,8 +479,12 @@ public class Path extends ArrayList<Waypoint> {
             return PathfindingUtil.moveToPosition(robotPos,
                     new Pose2d(intersection.intersection, new Rotation2d(targetAngle)), true);
         } else {
-            // degenerates to a general intersection
-            return handleGeneralIntersection(intersection, robotPos);
+            targetAngle = waypoint.usingPreferredAngle() ? waypoint.getPreferredAngle() :
+                                 Math.atan2(intersection.intersection.getY() - robotPos.getY(),
+                                         intersection.intersection.getX() - robotPos.getX());
+
+            return PathfindingUtil.moveToPosition(robotPos,
+                    new Pose2d(intersection.intersection, new Rotation2d(targetAngle)), false);
         }
     }
 

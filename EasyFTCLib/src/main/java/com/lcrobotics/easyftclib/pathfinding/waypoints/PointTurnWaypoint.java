@@ -39,8 +39,8 @@ public class PointTurnWaypoint extends GeneralWaypoint {
                              double positionBuffer, double rotationBuffer) {
 
         super(translation, rotation, movementSpeed, turnSpeed, followRadius);
-        this.positionBuffer = positionBuffer;
-        this.rotationBuffer = rotationBuffer;
+        this.positionBuffer = verifyBuffer(positionBuffer);
+        this.rotationBuffer = verifyBuffer(rotationBuffer);
 
     }
 
@@ -56,8 +56,8 @@ public class PointTurnWaypoint extends GeneralWaypoint {
      */
     public PointTurnWaypoint(Pose2d pose, double movementSpeed, double turnSpeed, double followRadius, double positionBuffer, double rotationBuffer) {
         super(pose, movementSpeed, turnSpeed, followRadius);
-        this.positionBuffer = positionBuffer;
-        this.rotationBuffer = rotationBuffer;
+        this.positionBuffer = verifyBuffer(positionBuffer);
+        this.rotationBuffer = verifyBuffer(rotationBuffer);
     }
 
     /**
@@ -73,8 +73,8 @@ public class PointTurnWaypoint extends GeneralWaypoint {
      */
     public PointTurnWaypoint(double x, double y, double movementSpeed, double turnSpeed, double followRadius, double positionBuffer, double rotationBuffer) {
         super(x, y, movementSpeed, turnSpeed, followRadius);
-        this.positionBuffer = positionBuffer;
-        this.rotationBuffer = rotationBuffer;
+        this.positionBuffer = verifyBuffer(positionBuffer);
+        this.rotationBuffer = verifyBuffer(rotationBuffer);
     }
 
     /**
@@ -91,8 +91,8 @@ public class PointTurnWaypoint extends GeneralWaypoint {
      */
     public PointTurnWaypoint(double x, double y, double rotationRadians, double movementSpeed, double turnSpeed, double followRadius, double positionBuffer, double rotationBuffer) {
         super(x, y, rotationRadians, movementSpeed, turnSpeed, followRadius);
-        this.positionBuffer = positionBuffer;
-        this.rotationBuffer = rotationBuffer;
+        this.positionBuffer = verifyBuffer(positionBuffer);
+        this.rotationBuffer = verifyBuffer(rotationBuffer);
     }
 
     /**
@@ -109,7 +109,7 @@ public class PointTurnWaypoint extends GeneralWaypoint {
      * @return This PointTurnWaypoint, used for chaining methods.
      */
     public PointTurnWaypoint setPositionBuffer(double buffer) {
-        positionBuffer = buffer;
+        positionBuffer = verifyBuffer(buffer);
         return this;
     }
 
@@ -127,7 +127,7 @@ public class PointTurnWaypoint extends GeneralWaypoint {
      * @return This PointTurnWaypoint, used for chaining methods.
      */
     public PointTurnWaypoint setRotationBuffer(double buffer) {
-        rotationBuffer = buffer;
+        rotationBuffer = verifyBuffer(buffer);
         return this;
     }
 
