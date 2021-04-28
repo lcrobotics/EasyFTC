@@ -18,8 +18,11 @@ public abstract class VuforiaSuperOp extends OpMode {
 
     // Class Members
     public VuforiaLocalizer vuforia;
+    public VuforiaLocalizer vuforiaTop;
     public VuforiaFrameGetter frameGetter = null;
     public ObjectLocator objectLocator = null;
+    public VuforiaFrameGetter frameGetterTop = null;
+    public ObjectLocator objectLocatorTop = null;
     public OpenGLMatrix lastLocation = null;
 
     public void init(){
@@ -49,5 +52,33 @@ public abstract class VuforiaSuperOp extends OpMode {
         VuforiaTrackables targetsUltimateGoal = this.vuforia.loadTrackablesFromAsset("UltimateGoal");
         objectLocator = new ObjectLocator(targetsUltimateGoal);
         targetsUltimateGoal.activate();
+
+
+
+
+        // Same thing for top webcam
+        VuforiaLocalizer.Parameters parametersTop = new VuforiaLocalizer.Parameters();
+
+        parametersTop.vuforiaLicenseKey = VUFORIA_KEY;
+        parametersTop.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parametersTop.cameraName = hardwareMap.get(WebcamName.class, "Webcam 2");
+        parametersTop.useExtendedTracking = false;
+
+        //  Instantiate the Vuforia engine
+        vuforiaTop = ClassFactory.getInstance().createVuforia(parametersTop);
+
+        // This is necessary for getting pixels (integral image goal detection, etc)
+        boolean[] resultsTop = vuforiaTop.enableConvertFrameToFormat(PIXEL_FORMAT.RGB565, PIXEL_FORMAT.YUV);
+        if (!resultsTop[0]) { // Failed to get Vuforia to convert to RGB565.
+            throw new RuntimeException("Unable to convince Vuforia to generate RGB565 frames!");
+        }
+        vuforiaTop.setFrameQueueCapacity(1);
+        frameGetterTop = new VuforiaFrameGetter(vuforiaTop.getFrameQueue());
+
+        // Load the data sets for the trackable objects. These particular data
+        // sets are stored in the 'assets' part of our application.
+        VuforiaTrackables targetsUltimateGoalTop = this.vuforiaTop.loadTrackablesFromAsset("UltimateGoal");
+        objectLocatorTop = new ObjectLocator(targetsUltimateGoalTop);
+        targetsUltimateGoalTop.activate();
     }
 }
