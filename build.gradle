@@ -25,5 +25,6 @@ allprojects {
         maven {
             url 'https://dl.bintray.com/openftc/maven'
         }
+        maven { url = 'https://maven.brott.dev/' }
     }
 }
